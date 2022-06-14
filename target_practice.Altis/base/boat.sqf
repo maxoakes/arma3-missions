@@ -1,0 +1,1 @@
+target_boat setPos [(originalBoatPosition select 0)+(_this select 3),(originalBoatPosition select 1),(originalBoatPosition select 2)];

@@ -1,0 +1,26 @@
+respawn=3;
+respawnDelay=8;
+onLoadName="Wasteland Lite";
+onLoadMission = "The concept of Arma Wasteland without the 3MB mission file";
+author="Scouter";
+saving = 0;
+onLoadIntro = "The concept of Arma Wasteland without the 3MB mission file";
+onLoadIntroTime = 1;
+onLoadMissionTime = 1;
+disabledAI = 1;
+joinUnassigned = 0;
+corpseManagerMode = 1;
+corpseLimit = 20;
+corpseRemovalMinTime = 60;
+corpseRemovalMaxTime = 120;
+wreckManagerMode = 1;
+wreckLimit = 5;
+wreckRemovalMinTime = 30;
+wreckRemovalMaxTime = 60;
+
+class Header
+	{
+	gameType = Sandbox;
+	minPlayers = 1;
+	maxPlayers = 64;
+	};

@@ -1,0 +1,92 @@
+#include "cfgRespawnInventory.hpp"
+
+author="Scouter";
+briefingName = "Zeus 16+1 Compound Defense";
+OnLoadName = "Zeus Escape";
+
+onLoadMission = "NATO is unable to mount a rescue of your team, so you and your team must traverse the map to get to an airport or seaport. Once there, your team must acquire a vehicle to reach the aircraft carrier off of the northeast coast of the island. If there is no more means of escape, you lose! Note that you can also steal vehicles of deceased OPFOR and use them to either escape the island or progress toward one of the ports. Reach checkpoints to stop OPFOR from spawning there, and enable spawn points for your team.";
+
+disabledAI = 1;
+saving = 0;
+enableDebugConsole = 1;
+
+respawn = BASE;
+respawnTemplatesWest[] = {"MenuSpectator","MenuPosition","MenuInventory"};
+respawnTemplatesVirtual[] = {};
+respawnDelay = 5;
+
+corpseLimit = 4;
+corpseRemovalMinTime = 10;
+corpseRemovalMaxTime = 20;
+wreckManagerMode = 3;
+wreckLimit = 1;
+wreckRemovalMinTime = 10;
+wreckRemovalMaxTime = 20;
+minPlayerDistance = 5;
+
+class Header
+{
+	gameType = Zeus;
+	minPlayers = 1;
+	maxPlayers = 10;
+};
+
+class Params
+{
+	class Time
+	{
+		title = "Time of day";
+		values[] = {0,6,12,18};
+		texts[] = {"Midnight","Dawn","High Noon","Dusk"};
+		default = 12;
+	};
+	class Fog
+	{
+		title = "Fog Level";
+		values[] = {0,10,25,50,75,90,100};
+		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		default = 0;
+	};
+	class Clouds
+	{
+		title = "Overcast Amount";
+		values[] = {0,10,25,50,75,90,100};
+		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		default = 0;
+	};
+	class TimeDrop
+	{
+		title = "Time between airdrop availability";
+		values[] = {15,60,120,180,240,300,600};
+		texts[] = {"15 seconds (Debug)","1 minute","2 minutes (Default)","3 minutes","4 minutes","5 minutes","10 minutes"};
+		default = 120;
+	};
+	class CostMultiplier
+	{
+		title = "Zeus Cost Multiplier";
+		values[] = {0,15,25,50,75,100,200,300};
+		texts[] = {"No Costs","15%","25%","50%","75%","100%","200%","300%"};
+		default = 200;
+	};
+	class RewardKill
+	{
+		title = "Zeus point reward for a BLUFOR kill";
+		values[] = {0,25,50,100,200,300,400,500,1000};
+		texts[] = {"None","2.5%","5%","10%","20%","30%","40%","50%","100%"};
+		default = 200;
+	};
+	class RewardHit
+	{
+		title = "Zeus point reward for a BLUFOR damage";
+		values[] = {0,25,50,100,200,300,400,500,1000};
+		texts[] = {"None","0.25%","0.5%","1%","2%","3%","4%","5%","10%"};
+		default = 25;
+	};
+	class RewardDeath
+	{
+		title = "Zeus point reward for an OPFOR death";
+		values[] = {0,25,50,100,200,300,400,500,1000};
+		texts[] = {"None","0.25%","0.5%","1%","2%","3%","4%","5%","10%"};
+		default = 100;
+	};
+};

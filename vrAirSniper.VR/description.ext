@@ -1,0 +1,24 @@
+respawn=BASE;
+respawndelay=3;
+onLoadName="Air Snipers";
+onLoadMission = "Air Snipers";
+author="Scouter";
+onLoadIntroTime = 1;
+onLoadMissionTime = 1;
+disabledAI = 1;
+joinUnassigned = 0;
+corpseManagerMode = 1;
+corpseLimit = 1;
+corpseRemovalMinTime = 10;
+corpseRemovalMaxTime = 20;
+wreckManagerMode = 1;
+wreckLimit = 1;
+wreckRemovalMinTime = 10;
+wreckRemovalMaxTime = 20;
+
+class Header
+	{
+	gameType = DM;
+	minPlayers = 1;
+	maxPlayers = 16;
+	};

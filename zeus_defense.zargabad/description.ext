@@ -1,0 +1,97 @@
+#include "cfgRespawnInventory.hpp"
+
+author="Scouter";
+briefingName = "Zeus 9+1 Compound Defense";
+OnLoadName = "Zeus Defense";
+onLoadMission = "Defend the BLUFOR base from the Zeus-Controlled OPFOR AI before they overrun the base. BLUFOR must rundown the clock until an evac arrives.";
+disabledAI = 1;
+saving = 0;
+enableDebugConsole = 1;
+
+respawn = BASE;
+respawnTemplatesWest[] = {"MenuSpectator","MenuPosition","MenuInventory"};
+respawnTemplatesVirtual[] = {};
+respawnDelay = 5;
+
+corpseLimit = 4;
+corpseRemovalMinTime = 10;
+corpseRemovalMaxTime = 20;
+wreckManagerMode = 1;
+wreckLimit = 1;
+wreckRemovalMinTime = 10;
+wreckRemovalMaxTime = 20;
+minPlayerDistance = 5;
+
+class Header
+{
+	gameType = Zeus;
+	minPlayers = 1;
+	maxPlayers = 10;
+};
+
+class Params
+{
+	class Time
+	{
+		title = "Time of day";
+		values[] = {0,6,12,18};
+		texts[] = {"Midnight","Dawn","High Noon","Dusk"};
+		default = 12;
+	};
+	class Fog
+	{
+		title = "Fog Level";
+		values[] = {0,10,25,50,75,90,100};
+		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		default = 0;
+	};
+	class Clouds
+	{
+		title = "Overcast Amount";
+		values[] = {0,10,25,50,75,90,100};
+		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		default = 0;
+	};
+	class TimeEvac
+	{
+		title = "Minutes until until extraction is ready";
+		values[] = {60,600,900,1200,1500,1800,2700,3600};
+		texts[] = {"1 minute (Debug)","10 minutes (Easy)","15 minutes","20 minutes (Default)","25 minutes","30 minutes","45 minutes","60 (Lengthy)"};
+		default = 1200;
+	};
+	class TimeDrop
+	{
+		title = "Time between airdrop availability";
+		values[] = {15,60,120,180,240,300,600};
+		texts[] = {"15 seconds (Debug)","1 minute","2 minutes (Default)","3 minutes","4 minutes","5 minutes","10 minutes"};
+		default = 120;
+	};
+	class RewardKill
+	{
+		title = "Zeus point reward for a BLUFOR kill";
+		values[] = {0,25,50,100,200,300,400,500,1000};
+		texts[] = {"None","2.5%","5%","10%","20%","30%","40%","50%","100%"};
+		default = 200;
+	};
+	class RewardHit
+	{
+		title = "Zeus point reward for a BLUFOR damage";
+		values[] = {0,25,50,100,200,300,400,500,1000};
+		texts[] = {"None","0.25%","0.5%","1%","2%","3%","4%","5%","10%"};
+		default = 25;
+	};
+	class RewardDeath
+	{
+		title = "Zeus point reward for an OPFOR death";
+		values[] = {0,25,50,100,200,300,400,500,1000};
+		texts[] = {"None","0.25%","0.5%","1%","2%","3%","4%","5%","10%"};
+		default = 100;
+	};
+	class AmountEnemyCapture
+	{
+		title = "Number of enemies needed to capture the base";
+		values[] = {1,2,4,6,8,10,12,14,16};
+		texts[] = {"1 (Flawless)","2 Hardcore","4","6","8 (Default)","10","12","14","16 (Easy)"};
+		default = 8;
+	};
+};

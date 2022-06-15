@@ -2,46 +2,46 @@ class CfgRespawnInventory
 {
 	class US1
 	{
-		vehicle = "CUP_B_US_Soldier";
+		vehicle = "B_Soldier_F";
 	};
 	class US2
 	{
-		vehicle = "CUP_B_US_Soldier_AR";
+		vehicle = "B_soldier_AR_F";
 	};
 	class US3
 	{
-		vehicle = "CUP_B_US_Soldier_Engineer_EOD";
+		vehicle = "B_engineer_F";
 	};
 	class US4
 	{
-		vehicle = "CUP_B_US_Soldier_GL";
+		vehicle = "B_Soldier_GL_F";
 	};
 	class US5
 	{
-		vehicle = "CUP_B_US_Soldier_MG";
+		vehicle = "B_support_MG_F";
 	};
 	class US6
 	{
-		vehicle = "CUP_B_US_Soldier_Marksman";
+		vehicle = "B_soldier_M_F";
 	};
 	class US7
 	{
-		vehicle = "CUP_B_US_Soldier_Engineer_Sapper";
+		vehicle = "B_CTRG_soldier_engineer_exp_F";
 	};
 	class US8
 	{
-		vehicle = "CUP_B_US_Sniper";
+		vehicle = "B_sniper_F";
 	};
 	class US9
 	{
-		vehicle = "CUP_B_US_Spotter";
+		vehicle = "B_T_Spotter_F";
 	};
 	class US10
 	{
-		vehicle = "CUP_B_FR_Soldier_Marksman_DES";
+		vehicle = "B_medic_F";
 	};
 	class US11
 	{
-		vehicle = "CUP_B_FR_Soldier_AR_DES";
+		vehicle = "B_soldier_repair_F";
 	};
 };

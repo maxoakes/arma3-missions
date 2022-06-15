@@ -1,3 +1,6 @@
+#include "initCurator.sqf"
+
+//set weather conditions, settings based on parameters
 setDate [2018, 4, 2, ("Time" call BIS_fnc_getParamValue), 30];
 0 setFog ("Fog" call BIS_fnc_getParamValue)/100;
 0 setOvercast ("Clouds" call BIS_fnc_getParamValue)/100;
@@ -26,56 +29,51 @@ ENEMY_CAP = "AmountEnemyCapture" call BIS_fnc_getParamValue;
 [west,"US11"] call BIS_fnc_addRespawnInventory;
 
 airdropAvailable = true;
-campMarkers = ["ec_0","ec_1","ec_2","ec_3","ec_4","ec_5","ec_6","ec_7","ec_8","ec_9","ec_10","ec_11","ec_12","ec_13","ec_14","ec_15","ec_16","ec_17","ec_18","ec_19"];
+campMarkers = [
+	"ec_0", "ec_1", "ec_2", "ec_3", "ec_4", "ec_5", "ec_6", "ec_7", "ec_8",
+	"ec_9", "ec_10","ec_11", "ec_12", "ec_13", "ec_14", "ec_15", "ec_16", 
+	"ec_17", "ec_18", "ec_19"];
 
-safeDist = getMarkerSize "safeArea" select 0;
-escapeVehicles =	[exit_veh_0,exit_veh_1,exit_veh_2,exit_veh_3,
-					exit_veh_4,exit_veh_5,exit_veh_6,exit_veh_7,exit_veh_8,
-					exit_veh_9,exit_veh_10,exit_veh_11,exit_veh_12,exit_veh_13];
-
-#include "initCurator.sqf"
 if (isServer) then
 {
+	//if a player is damaged or killed, the zeus gets points
 	{
-		_x addMPEventHandler ["MPKilled",{gm addCuratorPoints KILL_REWARD;}];
-		_x addMPEventHandler ["MPHit",{gm addCuratorPoints HIT_REWARD;}];
+		_x addMPEventHandler ["MPKilled", {gm addCuratorPoints KILL_REWARD;}];
+		_x addMPEventHandler ["MPHit", {gm addCuratorPoints HIT_REWARD;}];
 	} forEach units (playableUnits select 0);
 	
+	//make a zeus editing area around each capture and hold point
 	{
 		_thisEditAreaID = parseNumber mapGridPosition getPos _x;
-		gm addCuratorEditingArea [_thisEditAreaID,getPos _x,100];
-	} forEach nearestObjects [getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), ["ModuleSector_F"], worldSize];
+		gm addCuratorEditingArea [_thisEditAreaID, getPos _x, 100];
+	} forEach nearestObjects [
+		getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), ["ModuleSector_F"], worldSize];
 	
+	//make a zeus editing area around each enemy camp
 	{
 		_thisEditAreaID = parseNumber mapGridPosition getMarkerPos _x;
-		gm addCuratorEditingArea [_thisEditAreaID,getMarkerPos _x,200];
+		gm addCuratorEditingArea [_thisEditAreaID,getMarkerPos _x, 200];
 	} forEach campMarkers;
 	
-	//check for win condition = everyone gets outside of the island
+	//spawn a thread to check for win condition: everyone gets outside of the island
 	[] spawn
 	{
-		waitUntil	{
-						sleep 300;
-						//count number of west players that are on the island
-						_n = {(_x distance2D getMarkerPos "safeArea" < safeDist) and (side group _x == west)} count allPlayers;
-						systemchat str _n;
-						_n == 0
-					};
-		["Everyone as escaped the island. Good job.","systemChat"] call BIS_fnc_MP;
+		waitUntil {
+			sleep 30;
+			//count number of west players that are on the island
+			_westOnCarrier = {
+				(_x distance2D getMarkerPos "carrier" < 150) and (side group _x == west)
+			} count allPlayers;
+			_westTotal = west countSide allPlayers;
+			_westOnCarrier == _westTotal; //wait until this is true
+		};
+		["Everyone as escaped the island. Good job."] remoteExec ["systemChat"];
 		sleep 3;
 		"EveryoneWon" call BIS_fnc_endMissionServer;
 	};
-	
-	//check for loss condition = no escape vehicles alive
-	[] spawn
-	{
-		waitUntil {sleep 10; _n = {(alive _x)} count escapeVehicles; systemchat str _n; _n == 0};
-		["All escape vehicles have been destroyed. You are trapped on the island. SAD!","systemChat"] call BIS_fnc_MP;
-		sleep 3;
-		"EveryoneLost" call BIS_fnc_endMissionServer;
-	};
 };
 	
+//fill list of usable west weapons, items and ammo
 _weaponList = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;
 _magList = (configFile >> "cfgMagazines") call BIS_fnc_getCfgSubClasses;
 _weaponTypes = ["AssaultRifle","MachineGun","SniperRifle","Shotgun","Rifle","SubmachineGun","MissileLauncher","RocketLauncher"];
@@ -118,7 +116,17 @@ ammoClassnames = [];
 				{
 					if ((_baseName find "CUP" != -1)) then
 					{
-						if ((_baseName find "_AK" == -1) and (_baseName find "_RPK" == -1) and (_baseName find "_SVD" == -1) and (_baseName find "_SA" == -1) and (_baseName find "_PK" == -1) and (_baseName find "_VSS" == -1) and (_baseName find "ksvk" == -1) and (_baseName find "RPG" == -1) and (_baseName find "CZ" == -1) and (_baseName find "_Sa58" == -1) and (_baseName find "_UK59" == -1)) then
+						if ((_baseName find "_AK" == -1) and
+						(_baseName find "_RPK" == -1) and
+						(_baseName find "_SVD" == -1) and
+						(_baseName find "_SA" == -1) and
+						(_baseName find "_PK" == -1) and
+						(_baseName find "_VSS" == -1) and
+						(_baseName find "ksvk" == -1) and
+						(_baseName find "RPG" == -1) and
+						(_baseName find "CZ" == -1) and
+						(_baseName find "_Sa58" == -1) and
+						(_baseName find "_UK59" == -1)) then
 						{
 							weaponClassnames pushBack _baseName;
 						};
@@ -132,17 +140,22 @@ ammoClassnames = [];
 //spawn carrier
 if (isServer) then {
 	// Spawn Carrier on Server
-	private _carrier = createVehicle ["Land_Carrier_01_base_F",getMarkerPos "marker_0",[],0,"None"];
+	_carrier = createVehicle ["Land_Carrier_01_base_F", getMarkerPos "marker_0", [], 0, "None"];
 	_carrier setPosWorld getMarkerPos "carrier";
 	_carrier setDir 270;
 	[_carrier] call BIS_fnc_Carrier01PosUpdate;
 
 	// Broadcast Carrier ID over network
-	missionNamespace setVariable ["USS_FREEDOM_CARRIER",_carrier]; publicVariable "USS_FREEDOM_CARRIER";
-} else {
+	missionNamespace setVariable ["USS_FREEDOM_CARRIER", _carrier];
+	publicVariable "USS_FREEDOM_CARRIER";
+}
+else
+{
 	[] spawn {
 		// Clients wait for carrier
-		waitUntil { !(isNull (missionNamespace getVariable ["USS_FREEDOM_CARRIER",objNull])) };
+		waitUntil {
+			!(isNull (missionNamespace getVariable ["USS_FREEDOM_CARRIER",objNull]))
+		};
 
 		// Work around for missing carrier data not being broadcast as expected
 		if (count (USS_FREEDOM_CARRIER getVariable ["bis_carrierParts", []]) == 0) then {

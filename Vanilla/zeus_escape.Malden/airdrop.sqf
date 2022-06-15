@@ -12,14 +12,14 @@ _wp1 = _grp addWaypoint [_endPos, 300];
 
 [_grp, 0] setWaypointType 'Move';
 
-_plane = createVehicle ["CUP_B_C130J_USMC",_startPos,[],100,'FLY'];
+_plane = createVehicle ["B_Plane_Fighter_01_F",_startPos,[],100,'FLY'];
 
 _dir = 90;
 _plane setDir _dir;
 _speed = 150;
 _plane setVelocity [(sin _dir * _speed),(cos _dir * _speed), 0];
 
-_pilot = _grp createUnit ["CUP_B_US_Soldier", _centerPos, [], 0, 'NONE'];
+_pilot = _grp createUnit ["B_Pilot_F", _centerPos, [], 0, 'NONE'];
 _pilot moveInDriver _plane;
 _pilot setSkill 1;
 

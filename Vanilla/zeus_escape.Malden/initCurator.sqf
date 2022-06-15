@@ -107,11 +107,12 @@ gm addEventHandler [
 	}
 ];
 
+//custom properties for a placed zeus object
 _curatorObjectPlaced = {
 
 	_object = _this select 1;
 	_veh = vehicle _object;
-	_object addeventhandler ["killed",{gm addCuratorPoints DEATH_REWARD;}];
+	_object addeventhandler ["killed", {gm addCuratorPoints DEATH_REWARD;}];
 	
 	_object allowCrewInImmobile false;
 	_object setskill 0.333;

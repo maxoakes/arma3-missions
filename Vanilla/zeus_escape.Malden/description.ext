@@ -1,10 +1,10 @@
 #include "cfgRespawnInventory.hpp"
 
 author="Scouter";
-briefingName = "Zeus 16+1 Compound Defense";
+briefingName = "Zeus 12+1 Compound Defense";
 OnLoadName = "Zeus Escape";
 
-onLoadMission = "NATO is unable to mount a rescue of your team, so you and your team must traverse the map to get to an airport or seaport. Once there, your team must acquire a vehicle to reach the aircraft carrier off of the northeast coast of the island. If there is no more means of escape, you lose! Note that you can also steal vehicles of deceased OPFOR and use them to either escape the island or progress toward one of the ports. Reach checkpoints to stop OPFOR from spawning there, and enable spawn points for your team.";
+onLoadMission = "NATO is unable to mount the rescue of your team. You and your team must fight your way through the island to find a helicopter or boat. Once some means of escape is found, your team must get to the aircraft carrier off of the northeast coast. Checkpoints can be captured which allow for more respawn locations for your team.";
 
 disabledAI = 1;
 saving = 0;
@@ -28,7 +28,7 @@ class Header
 {
 	gameType = Zeus;
 	minPlayers = 1;
-	maxPlayers = 10;
+	maxPlayers = 12;
 };
 
 class Params

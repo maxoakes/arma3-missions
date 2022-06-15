@@ -1,7 +1,8 @@
+_target = (_this select 0);
 _caller = (_this select 1);
 missionNamespace setVariable ["airdropAvailable", false, true]; 
 
-_centerPos = getPos _caller;
+_centerPos = getPos _target;
 _startPos = [(_centerPos select 0)-3000,(_centerPos select 1),200];
 _endPos = [(_centerPos select 0)+3000,(_centerPos select 1),200];
 
@@ -30,8 +31,13 @@ _grp setCurrentWaypoint [_grp, 1];
 _crateWeapons = createVehicle ["B_supplyCrate_F",[(getPos _plane select 0)-10, (getPos _plane select 1), (getPos _plane select 2)-10],[], 0, "CAN_COLLIDE"];
 _crateWeapons allowDamage false;
 _crateWeapons setVelocity [((velocity _plane select 0)/20),((velocity _plane select 1)/20), -5];
-_crateWeapons addAction ["Add Ammo for this Weapon","refill.sqf"];
-_crateWeapons addAction ["Destroy this crate","destroy.sqf"];
+_crateWeapons addAction ["Add Ammo for this Weapon","fn_refillWeapon.sqf", 4];
+_crateWeapons addAction [
+	"Destroy this crate", {
+		(_this select 0) setDamage 1;
+		sleep 5;
+		deleteVehicle (_this select 0);
+	}];
 
 sleep 0.25;
 //crate 2 - attachments

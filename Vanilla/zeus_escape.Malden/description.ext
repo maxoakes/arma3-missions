@@ -11,7 +11,7 @@ saving = 0;
 enableDebugConsole = 1;
 
 respawn = BASE;
-respawnTemplatesWest[] = {"MenuSpectator","MenuPosition","MenuInventory"};
+respawnTemplatesWest[] = {"MenuSpectator", "MenuPosition", "MenuInventory"};
 respawnTemplatesVirtual[] = {};
 respawnDelay = 5;
 
@@ -36,57 +36,58 @@ class Params
 	class Time
 	{
 		title = "Time of day";
-		values[] = {0,6,12,18};
-		texts[] = {"Midnight","Dawn","High Noon","Dusk"};
+		values[] = {0, 6, 12, 18};
+		texts[] = {"Midnight", "Dawn", "High Noon", "Dusk"};
 		default = 12;
 	};
 	class Fog
 	{
 		title = "Fog Level";
-		values[] = {0,10,25,50,75,90,100};
-		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
 	class Clouds
 	{
 		title = "Overcast Amount";
-		values[] = {0,10,25,50,75,90,100};
-		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
 	class TimeDrop
 	{
 		title = "Time between airdrop availability";
-		values[] = {15,60,120,180,240,300,600};
-		texts[] = {"15 seconds (Debug)","1 minute","2 minutes (Default)","3 minutes","4 minutes","5 minutes","10 minutes"};
+		values[] = {15, 60, 120, 180, 240, 300, 600};
+		texts[] = {"15 sec (Debug)", "1 min", "2 min (Default)", "3 min", 
+		"4 min", "5 min", "10 min"};
 		default = 120;
 	};
 	class CostMultiplier
 	{
 		title = "Zeus Cost Multiplier";
-		values[] = {0,15,25,50,75,100,200,300};
-		texts[] = {"No Costs","15%","25%","50%","75%","100%","200%","300%"};
+		values[] = {0, 15, 25, 50, 75, 100, 200, 300};
+		texts[] = {"No Costs", "15%", "25%", "50%", "75%", "100%", "200%", "300%"};
 		default = 200;
 	};
 	class RewardKill
 	{
 		title = "Zeus point reward for a BLUFOR kill";
-		values[] = {0,25,50,100,200,300,400,500,1000};
-		texts[] = {"None","2.5%","5%","10%","20%","30%","40%","50%","100%"};
+		values[] = {0, 25, 50, 100, 200, 300, 400, 500, 1000};
+		texts[] = {"None", "2.5%", "5%", "10%", "20%", "30%", "40%", "50%", "100%"};
 		default = 200;
 	};
 	class RewardHit
 	{
 		title = "Zeus point reward for a BLUFOR damage";
-		values[] = {0,25,50,100,200,300,400,500,1000};
-		texts[] = {"None","0.25%","0.5%","1%","2%","3%","4%","5%","10%"};
+		values[] = {0, 25, 50, 100, 200, 300, 400, 500, 1000};
+		texts[] = {"None", "0.25%", "0.5%", "1%", "2%", "3%", "4%", "5%", "10%"};
 		default = 25;
 	};
 	class RewardDeath
 	{
 		title = "Zeus point reward for an OPFOR death";
-		values[] = {0,25,50,100,200,300,400,500,1000};
-		texts[] = {"None","0.25%","0.5%","1%","2%","3%","4%","5%","10%"};
+		values[] = {0, 25, 50, 100, 200, 300, 400, 500, 1000};
+		texts[] = {"None", "0.25%", "0.5%", "1%", "2%", "3%", "4%", "5%", "10%"};
 		default = 100;
 	};
 };

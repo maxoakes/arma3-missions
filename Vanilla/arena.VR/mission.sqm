@@ -23,7 +23,7 @@ class EditorData
 	};
 };
 binarizationWanted=0;
-sourceName="vrPaintBall";
+sourceName="arena";
 addons[]=
 {
 	"A3_Ui_F",
@@ -18134,7 +18134,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={4045,7,4008.5};
-				angles[]={0,4.712389,-0};
+				angles[]={0,4.712389,0};
 			};
 			side="Empty";
 			flags=5;
@@ -18151,7 +18151,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={4045,7,4013.5};
-				angles[]={0,4.712389,-0};
+				angles[]={0,4.712389,0};
 			};
 			side="Empty";
 			flags=5;
@@ -18168,7 +18168,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={4045,7,3991.5};
-				angles[]={0,4.712389,-0};
+				angles[]={0,4.712389,0};
 			};
 			side="Empty";
 			flags=5;
@@ -18185,7 +18185,7 @@ class Mission
 			class PositionInfo
 			{
 				position[]={4045,7,3986.5};
-				angles[]={0,4.712389,-0};
+				angles[]={0,4.712389,0};
 			};
 			side="Empty";
 			flags=5;

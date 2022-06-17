@@ -73,7 +73,7 @@ _possibleAngles = [0, 90, 180, 270];
 		private _aliveEast = {alive _x} count (allPlayers select {side _x == east});
 		private _ticketsWest = [west, 0] call BIS_fnc_respawnTickets;
 		private _ticketsEast = [east, 0] call BIS_fnc_respawnTickets;
-		(format ["West: a=%1:t=%2. East: a=%3:t=%4", _aliveWest, _ticketsWest, _aliveEast, _ticketsEast]) remoteExec ["systemChat", 0];
+		//(format ["West: a=%1:t=%2. East: a=%3:t=%4", _aliveWest, _ticketsWest, _aliveEast, _ticketsEast]) remoteExec ["systemChat", 0];
 		private _isOver = false;
 		if ((_aliveWest == 0 and _ticketsWest <= 0) or (_aliveEast == 0 and _ticketsEast <= 0)) then
 		{

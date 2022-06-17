@@ -41,4 +41,4 @@ for "_k" from 1 to 2 do {
 {
 	_newUnit addItem _x;
 	_newUnit assignItem _x;
-} foreach ["ItemCompass", "ItemWatch", "ItemRadio"];
+} foreach ["ItemCompass", "ItemWatch"];

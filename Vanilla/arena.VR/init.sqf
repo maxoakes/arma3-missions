@@ -67,7 +67,6 @@ _possibleAngles = [0, 90, 180, 270];
 {
 	waitUntil {
 		sleep 2;
-		//check if 
 		//count number of west players that are on the island
 		private _aliveWest = {alive _x} count (allPlayers select {side _x == west});
 		private _aliveEast = {alive _x} count (allPlayers select {side _x == east});
@@ -84,7 +83,6 @@ _possibleAngles = [0, 90, 180, 270];
 	sleep 3;
 	"SideScore" call BIS_fnc_endMissionServer;
 };
-
 
 _stopTime = diag_tickTime;
 (format ["init.sqf took %1 sec to complete.",_stopTime - _startTime]) remoteExec ["systemChat", 0];

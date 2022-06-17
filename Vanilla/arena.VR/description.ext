@@ -5,10 +5,10 @@ onLoadName="VR Arena";
 onLoadMission = "VR Arena";
 author="Scouter";
 saving = 0;
-onLoadIntro = "A randomly generated arena!. Loose a respawn ticket when a team member dies, and 	gain one when an enemy is killed. First team to reach 0 tickets with everyone dead loses.";
+onLoadIntro = "A randomly generated arena! Loose a respawn ticket when a team member dies, and 	gain one when an enemy is killed. First team to reach 0 tickets with everyone dead loses.";
 onLoadIntroTime = 1;
 onLoadMissionTime = 1;
-disabledAI = 0;
+disabledAI = 1;
 
 respawn = BASE;
 respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory", "Tickets"};

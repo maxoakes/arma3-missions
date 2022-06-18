@@ -1,5 +1,7 @@
-private _target = (_this select 0);
-private _caller = (_this select 1);
+//give the caller a random primary weapon. Also give a number of mags, and random attachments.
+//if it is night time, try to add a mounted flashlight and tracer rounds.
+//returns nothing
+params ["_target", "_caller"];
 
 private _allWeapons = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;
 private _possibleWeaponTypes = [
@@ -23,7 +25,6 @@ private _possiblePrimaries = [];
 	};
 } foreach _allWeapons;
 
-
 //delete primary weapon and its ammo
 private _possibleCurrentPrimaryMags = getArray (configFile >> "CfgWeapons" >> primaryWeapon _caller >> "magazines");
 {
@@ -32,12 +33,12 @@ private _possibleCurrentPrimaryMags = getArray (configFile >> "CfgWeapons" >> pr
 removeAllPrimaryWeaponItems _caller;
 _caller removeWeapon primaryWeapon _caller;
 
-private _isDayTime = call fn_isDayTime;
+private _isDayTime = call compile preprocessFile "functions\fn_isDayTime.sqf";
 
 //add primary weapon
 private _selectedPrimary = selectRandom _possiblePrimaries;
 _caller addWeapon _selectedPrimary;
-private _selectedPrimaryMag = selectRandom ([_selectedPrimary, !_isDayTime] call fn_getRoundsForWeapon);
+private _selectedPrimaryMag = selectRandom ([_selectedPrimary, !_isDayTime] call compile preprocessFile "functions\fn_getRoundsForWeapon.sqf");
 _caller addPrimaryWeaponItem _selectedPrimaryMag;
 for "_i" from 1 to 4 do {
 	_caller addMagazine _selectedPrimaryMag;
@@ -49,3 +50,11 @@ for "_j" from 1 to 6 do {
 	_caller addPrimaryWeaponItem selectRandom _weaponItems;
 	sleep 0.1;
 };
+
+if (!_isDayTime) then
+{
+	_caller addPrimaryWeaponItem "acc_flashlight";
+	_caller addPrimaryWeaponItem "acc_flashlight_smg_01"; //in case the first one fails
+};
+
+hint format ["Obtained %1.", getText (configFile >> "cfgWeapons" >> _selectedPrimary >> "DisplayName")];

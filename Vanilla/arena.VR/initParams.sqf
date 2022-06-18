@@ -22,7 +22,7 @@ _useRamps = ("Ramps" call BIS_fnc_getParamValue);
 	{
 		private _angle = getDir _x;
 		private _pos = getPos _x;
-		_block = createVehicle ["Land_VR_Block_05_F", _pos, [], 0, "CAN_COLLIDE"];
+		private _block = createVehicle ["Land_VR_Block_05_F", _pos, [], 0, "CAN_COLLIDE"];
 		_block setDir _angle;
 		deleteVehicle _x;
 	};

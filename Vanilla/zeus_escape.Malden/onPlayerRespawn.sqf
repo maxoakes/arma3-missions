@@ -7,8 +7,8 @@ removeAllItems player;
 removeAllAssignedItems player;
 {player removeMagazine _x} forEach magazines player;
 
-_primaryMag = getArray (configFile >> "CfgWeapons" >> primaryWeapon player >> "magazines");
-_handgunMag = getArray (configFile >> "CfgWeapons" >> handgunWeapon player >> "magazines");
+private _primaryMag = getArray (configFile >> "CfgWeapons" >> primaryWeapon player >> "magazines");
+private _handgunMag = getArray (configFile >> "CfgWeapons" >> handgunWeapon player >> "magazines");
 
 player addPrimaryWeaponItem (_primaryMag select 0);
 for "_i" from 1 to 4 do {

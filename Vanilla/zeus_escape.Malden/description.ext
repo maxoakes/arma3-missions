@@ -65,9 +65,9 @@ class Params
 	class CostMultiplier
 	{
 		title = "Zeus Cost Multiplier";
-		values[] = {0, 15, 25, 50, 75, 100, 200, 300};
-		texts[] = {"No Costs", "15%", "25%", "50%", "75%", "100%", "200%", "300%"};
-		default = 200;
+		values[] = {0, 10, 25, 50, 75, 100, 200};
+		texts[] = {"No Costs", "10%", "25%", "50%", "75%", "100%", "200%"};
+		default = 100;
 	};
 	class RewardKill
 	{

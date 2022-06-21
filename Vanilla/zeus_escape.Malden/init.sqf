@@ -1,26 +1,34 @@
 #include "initCurator.sqf"
-#include "initParams.sqf"
 
-[west,"US1"] call BIS_fnc_addRespawnInventory;
-[west,"US2"] call BIS_fnc_addRespawnInventory;
-[west,"US3"] call BIS_fnc_addRespawnInventory;
-[west,"US4"] call BIS_fnc_addRespawnInventory;
-[west,"US5"] call BIS_fnc_addRespawnInventory;
-[west,"US6"] call BIS_fnc_addRespawnInventory;
-[west,"US7"] call BIS_fnc_addRespawnInventory;
-[west,"US8"] call BIS_fnc_addRespawnInventory;
-[west,"US9"] call BIS_fnc_addRespawnInventory;
-[west,"US10"] call BIS_fnc_addRespawnInventory;
-[west,"US11"] call BIS_fnc_addRespawnInventory;
+//set weather conditions, settings based on parameters
+setDate [2018, 4, 2, ("Time" call BIS_fnc_getParamValue), 30];
+0 setFog ("Fog" call BIS_fnc_getParamValue)/100;
+0 setOvercast ("Clouds" call BIS_fnc_getParamValue)/100;
+0 setRain ("Rain" call BIS_fnc_getParamValue)/100;
 
-airdropAvailable = true;
+if (rain > 0.5) then {0 setLightnings rain};
+forceWeatherChange;
+
+COST_MULT = ("CostMultiplier" call BIS_fnc_getParamValue)/100;
+AIRDROP_TIME = "TimeDrop" call BIS_fnc_getParamValue;
+KILL_REWARD = ("RewardKill" call BIS_fnc_getParamValue)/1000;
+HIT_REWARD = ("RewardHit" call BIS_fnc_getParamValue)/1000;
+DEATH_REWARD = ("RewardDeath" call BIS_fnc_getParamValue)/1000;
+ENEMY_CAP = "AmountEnemyCapture" call BIS_fnc_getParamValue;
+
+{
+	[west,_x] call BIS_fnc_addRespawnInventory;
+} forEach ["US1", "US2", "US3", "US4", "US5", "US6",
+	"US7", "US8", "US9", "US10", "US11"];
+
+AIRDROP_AVAILABLE = true;
 	
-//fill list of usable west weapons, items and ammo
-_weaponList = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;
-_magList = (configFile >> "cfgMagazines") call BIS_fnc_getCfgSubClasses;
-_weaponTypes = ["AssaultRifle","MachineGun","SniperRifle","Shotgun","Rifle","SubmachineGun","MissileLauncher","RocketLauncher"];
-_attchmentTypes = ["AccessoryMuzzle","AccessoryPointer","AccessorySights","AccessoryBipod"];
-_ammoTypes = ["Artillery","Flare","Grenade","Laser","Missile","Rocket","Shell","ShotgunShell","SmokeShell"];
+//fill list of usable west weapons, items and ammo. used in airdrop code
+private _weaponList = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;
+private _magList = (configFile >> "cfgMagazines") call BIS_fnc_getCfgSubClasses;
+private _weaponTypes = ["AssaultRifle","MachineGun","SniperRifle","Shotgun","Rifle","SubmachineGun","MissileLauncher","RocketLauncher"];
+private _attchmentTypes = ["AccessoryMuzzle","AccessoryPointer","AccessorySights","AccessoryBipod"];
+private _ammoTypes = ["Artillery","Flare","Grenade","Laser","Missile","Rocket","Shell","ShotgunShell","SmokeShell"];
 
 attachmentClassnames = [];
 weaponClassnames = [];

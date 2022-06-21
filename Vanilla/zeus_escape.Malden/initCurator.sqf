@@ -27,91 +27,84 @@ gm addCuratorPoints 0.5;
 gm addEventHandler [
 	"CuratorObjectRegistered",
 	{
-		_vehTier1 = ["Car","Motorcycle"];
-		_vehTier2 = ["Ship","Submarine","StaticWeapon"];
-		_vehTier3 = ["Helicopter","Plane"];
-		_vehTier4 = ["TrackedAPC","Tank","WheeledAPC"];
-		
-		_classes = _this select 1;
-		_costs = [];
+		params ["_curator", "_input"];
+		private _costs = [];
+		//for each CfgVehicle class, do the following:
 		{
-			_showing = false;
-			_cost = COST_MULT*0;
+			private _available = false;
+			private _cost = 0;
+
+			private _category = _x call BIS_fnc_objectType select 0;
+			private _type = _x call BIS_fnc_objectType select 1;
 			
-			_unitType0 = _x call BIS_fnc_objectType select 0;
-			_unitType1 = _x call BIS_fnc_objectType select 1;
-			if (_x find "CUP_O_" != -1) then
+			if ((toLower _x) find "o_" != 0) then
 			{
-				_showing = true;
-				if ((_unitType0 isEqualTo "Soldier") or (_unitType0 isEqualTo "Object")) then
+				if ("Animals" in _x) then
 				{
-					_cost = COST_MULT*0.0125;
+					_available = true;
+					_cost = COST_MULT * 0.1;
 				};
-				if ((_unitType0 isEqualTo "Vehicle") or (_unitType0 isEqualTo "VehicleAutonomous")) then
+				if (("CAS" in _x) or ("Ordnance" in _x)) then
 				{
-					_cost = COST_MULT*0.3;
-					if ((_unitType1 in _vehTier1)) then
+					_available = true;
+					_cost = COST_MULT * 0.6;
+				};
+				if (("Flare" in _x) or ("Smokeshell" in _x)) then
+				{
+					_available = true;
+					_cost = COST_MULT * 0.05;
+				};
+				if ("Lightning" in _x) then
+				{
+					_available = true;
+					_cost = COST_MULT * 0.6;
+				};
+			}
+			else
+			{
+				switch (_category) do
+				{
+					case "Soldier";
+					case "Object":
 					{
-						_cost = COST_MULT*0.1;
+						_cost = COST_MULT * 0.1;
+						_available = true;
 					};
-					if ((_unitType1 in _vehTier2)) then
+					case "Vehicle";
+					case "VehicleAutonomous":
 					{
-						_cost = COST_MULT*0.25;
-					};
-					if ((_unitType1 in _vehTier3)) then
-					{
-						_cost = COST_MULT*0.5;
-					};
-					if ((_unitType1 in _vehTier4)) then
-					{
-						_cost = COST_MULT*0.666;
+						_available = true;
+						if ((_type in ["Car","Motorcycle"])) then
+						{
+							_cost = COST_MULT*0.2;
+						};
+						if ((_type in ["Ship","Submarine","StaticWeapon"])) then
+						{
+							_cost = COST_MULT*0.3;
+						};
+						if ((_type in ["Helicopter","Plane"])) then
+						{
+							_cost = COST_MULT*0.5;
+						};
+						if ((_type in ["TrackedAPC","Tank","WheeledAPC"])) then
+						{
+							_cost = COST_MULT*0.7;
+						};
 					};
 				};
 			};
-			if (_x find "Module" != -1) then
-			{
-				_showing = true;
-				if (_x find "Animals" != -1) then
-				{
-					_cost = COST_MULT*0.1;
-				};
-				if ((_x find "CAS" != -1) or (_x find "Ordnance" != -1)) then
-				{
-					_cost = COST_MULT*0.6;
-				};
-				if ((_x find "Effects" != -1) or (_x find "Environment" != -1) or (_x find "Misc" != -1)) then
-				{
-					_cost = COST_MULT*0;
-				};
-				if ((_x find "Flares" != -1) or (_x find "Smokeshells" != -1)) then
-				{
-					_cost = COST_MULT*0.05;
-				};
-				if (_x find "Lightning" != -1) then
-				{
-					_cost = COST_MULT*0.6;
-				};
-				if (_x find "Mines" != -1) then
-				{
-					_cost = COST_MULT*0.25;
-				};
-				if ((_x find "Multiplayer" != -1) or (_x find "Objective" != -1) or (_x find "Respawn" != -1) or (_x find "Intel" != -1) or (_x find "Diary" != -1) or (_x find "Mission" != -1)) then
-				{
-					_showing = false;
-				};
-			};
-			_costs = _costs + [[_showing,_cost]];
+			_costs pushBack [_available, _cost];
 			
-		} forEach _classes; // Go through all classes and assign cost for each of them
-		_costs
+		} forEach _input; // Go through all classes and assign cost for each of them
+		_costs;
 	}
 ];
 
 //custom properties for a placed zeus object
 _curatorObjectPlaced = {
 
-	_object = _this select 1;
-	_veh = vehicle _object;
+	private _object = _this select 1;
+	private _veh = vehicle _object;
 	_object addeventhandler ["killed", {gm addCuratorPoints DEATH_REWARD;}];
 	
 	_object allowCrewInImmobile false;
@@ -121,7 +114,12 @@ _curatorObjectPlaced = {
 	if (_veh != _object) then
 	{
 		_veh flyinheight 40;
-		_veh addeventhandler ["fired",{if (side group (_this select 0) == east) then {(_this select 0) setvehicleammo 1;};}];
+		_veh addeventhandler ["fired", {
+			if (side group (_this select 0) == east) then
+			{
+				(_this select 0) setvehicleammo 1;
+			};
+		}];
 	}
 	else
 	{

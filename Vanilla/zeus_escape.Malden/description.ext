@@ -27,7 +27,7 @@ class Header
 {
 	gameType = Zeus;
 	minPlayers = 1;
-	maxPlayers = 12;
+	maxPlayers = 25;
 };
 
 class Params

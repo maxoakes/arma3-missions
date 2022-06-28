@@ -1,6 +1,7 @@
 params ["_target", "_caller", "_actionId", "_arguments"];
+
+//tell all clients that airdrops are no longer available
 missionNamespace setVariable ["AIRDROP_AVAILABLE", false, true];
-publicVariable "AIRDROP_AVAILABLE";
 
 private _centerPos = getPos _target;
 private _startPos = [(_centerPos select 0)-3000, (_centerPos select 1), 200];
@@ -80,5 +81,5 @@ deleteVehicle _plane;
 deleteVehicle _pilot;
 
 sleep AIRDROP_TIME;
+//tell all clients airdrops are available again
 missionNamespace setVariable ["AIRDROP_AVAILABLE", true, true];
-publicVariable "AIRDROP_AVAILABLE";

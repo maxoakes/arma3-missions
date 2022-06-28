@@ -56,10 +56,9 @@ class Params
 	class TimeDrop
 	{
 		title = "Time between airdrop availability";
-		values[] = {15, 60, 120, 180, 240, 300, 600};
-		texts[] = {"15 sec (Debug)", "1 min", "2 min (Default)", "3 min", 
-		"4 min", "5 min", "10 min"};
-		default = 120;
+		values[] = {60, 120, 300, 600, 1200};
+		texts[] = {"1 min", "2 min", "5 min", "10 min", "20 min"};
+		default = 300;
 	};
 	class CostMultiplier
 	{

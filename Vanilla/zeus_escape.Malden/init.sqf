@@ -9,7 +9,7 @@ forceWeatherChange;
 
 //global variables
 AIRDROP_AVAILABLE = true;
-publicVariable "AIRDROP_AVAILABLE";
+publicVariable "AIRDROP_AVAILABLE"; //send this to all clients to tell them airdrops are available
 COST_MULT = ("CostMultiplier" call BIS_fnc_getParamValue)/100;
 AIRDROP_TIME = "TimeDrop" call BIS_fnc_getParamValue;
 KILL_REWARD = ("RewardKill" call BIS_fnc_getParamValue)/1000;

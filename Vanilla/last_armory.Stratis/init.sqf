@@ -1,36 +1,34 @@
 private _startTime = diag_tickTime;
 
-//param inits
-setDate [2018, 3, 30, ("Time" call BIS_fnc_getParamValue), 0];
-0 setFog ("Fog" call BIS_fnc_getParamValue)/100;
-0 setOvercast ("Clouds" call BIS_fnc_getParamValue)/100;
-0 setRain ("Rain" call BIS_fnc_getParamValue)/100;
-if (rain > 0.6) then {0 setLightnings rain};
-0 setWaves (overcast+rain)/2;
-forceWeatherChange;
-
+//global variables
 SECTOR_CONTROL_UNITS_PER_WAVE = "SectorWaveUnitCount" call BIS_fnc_getParamValue;
 SECTOR_CONTROL_RADIUS = "SectorSize" call BIS_fnc_getParamValue;
 BATTLEGROUND_RADIUS = "TargetSize" call BIS_fnc_getParamValue;
-
-//global variables
 BLACKLISTED_MARKERS = ["respawn_west", "plane_spawn", "boat_spawn", "teleport"];
 MAX_GRADIENT = 0.45;
 SPAWN_POS = getMarkerPos "respawn_west";
-INTERACTABLE_SPAWN_OBJECTS = [];
+SPAWN_RADIUS = getMarkerSize "respawn_west" select 0;
 
+//easily accessible local variables
 private _vehicleNameColor = "#f7f0db";
 private _vehicleObjectTextColor = "#bababa";
-private _spawnRadius = getMarkerSize "respawn_west" select 0;
 
-//only the server creates the spawn border
-//any addActions are remoteExec'd to allow for all players to get them
 if (isServer) then
 {
+	//weather settings
+	//global effects to be broadcast to players
+	[2018, 3, 30, ("Time" call BIS_fnc_getParamValue), 0] remoteExec ["setDate", 0, true];
+	[0, ("Clouds" call BIS_fnc_getParamValue)/100] remoteExec ["setOvercast", 0, true];
+
+	//global effects that are automatically broadcast to players
+	0 setFog ("Fog" call BIS_fnc_getParamValue)/100;
+	0 setRain ("Rain" call BIS_fnc_getParamValue)/100;
+	forceWeatherChange;
+
 	//create the physical border of the spawn area
 	[
 		SPAWN_POS, //center of border circle
-		_spawnRadius * 1.1, //radius
+		SPAWN_RADIUS * 1.1, //radius
 		["Land_HBarrier_1_F"], //what can be the border be made of
 		1.65, //distance between objects
 		90, //relative rotation of the objects
@@ -44,13 +42,12 @@ if (isServer) then
 	_safeZoneTrigger setTriggerStatements ["player in thisList", "player allowDamage false", "player allowDamage true"];
 
 	//create spawn building
-	//"Land_Dome_Big_F", "Land_JumpTarget_F"
 	private _teleportAreaObject = createVehicle ["Land_JumpTarget_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
-	MAP_TELEPORT_ORIGIN_MARKER = [_teleportAreaObject] call BIS_fnc_boundingBoxMarker;
-	MAP_TELEPORT_ORIGIN_MARKER setMarkerShape "ELLIPSE";
-	MAP_TELEPORT_ORIGIN_MARKER setMarkerColor "ColorGreen";
-	MAP_TELEPORT_ORIGIN_MARKER setMarkerBrush "Border";
-	publicVariable "MAP_TELEPORT_ORIGIN_MARKER";
+	private _teleportAreaMarker = [_teleportAreaObject] call BIS_fnc_boundingBoxMarker;
+	_teleportAreaMarker setMarkerShape "ELLIPSE";
+	_teleportAreaMarker setMarkerColor "ColorGreen";
+	_teleportAreaMarker setMarkerBrush "Border";
+	missionNamespace setVariable ["MAP_TELEPORT_ORIGIN_MARKER", _teleportAreaMarker, true];
 
 	//anonymous grass cutter
 	createVehicle ["Land_ClutterCutter_large_F", SPAWN_POS, [], 0, "CAN_COLLIDE"];
@@ -87,8 +84,8 @@ if (isServer) then
 
 		//create the physical object and place them in a circle pattern using the specified object models
 		private _pos = [
-			(SPAWN_POS select 0)+(sin(_dir)*(_spawnRadius/1.3)),
-			(SPAWN_POS select 1)+(cos(_dir)*(_spawnRadius/1.3)),
+			(SPAWN_POS select 0)+(sin(_dir)*(SPAWN_RADIUS/1.3)),
+			(SPAWN_POS select 1)+(cos(_dir)*(SPAWN_RADIUS/1.3)),
 			(SPAWN_POS select 2)
 		];
 		private _obj = createVehicle [(_objectSet select _i) select 1, _pos, [], 0, "CAN_COLLIDE"];		

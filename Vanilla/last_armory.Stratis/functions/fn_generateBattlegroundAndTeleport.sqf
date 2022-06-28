@@ -87,6 +87,9 @@ private _counter = [_caller, _pos] spawn
 	hint "";
 };
 
+//TODO: if a player disconnects prematurely, all objects and markers from this script remain on the server.
+//If the player reconnects, they do not have the addActions.
+
 //clean up
 waitUntil {(not alive _caller) or (count actionIDs _spawn == 0) or (isNull _caller)};
 deleteVehicle _spawn;

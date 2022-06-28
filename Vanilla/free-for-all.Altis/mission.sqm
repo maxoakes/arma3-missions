@@ -1,0 +1,86 @@
+version=54;
+class EditorData
+{
+	moveGridStep=8;
+	angleGridStep=0.2617994;
+	scaleGridStep=1;
+	autoGroupingDist=10;
+	toggles=5;
+	class ItemIDProvider
+	{
+		nextID=1;
+	};
+	class MarkerIDProvider
+	{
+		nextID=1;
+	};
+	class Camera
+	{
+		pos[]={20894.832,42.628315,14571.239};
+		dir[]={-0.28647944,-0.39261562,0.87400544};
+		up[]={-0.1222938,0.91970599,0.37310112};
+		aside[]={0.95030546,-6.0236198e-007,0.31149098};
+	};
+};
+binarizationWanted=0;
+sourceName="free-for-all";
+addons[]=
+{
+	"A3_Ui_F"
+};
+class AddonsMetaData
+{
+	class List
+	{
+		items=1;
+		class Item0
+		{
+			className="A3_Ui_F";
+			name="Arma 3 - User Interface";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+	};
+};
+randomSeed=5870893;
+class ScenarioData
+{
+	author="[CKW] Scouter";
+};
+class Mission
+{
+	class Intel
+	{
+		timeOfChanges=1800.0002;
+		startWeather=0.30000001;
+		startWind=0.1;
+		startWaves=0.1;
+		forecastWeather=0.30000001;
+		forecastWind=0.1;
+		forecastWaves=0.1;
+		forecastLightnings=0.1;
+		year=2035;
+		month=6;
+		day=24;
+		hour=12;
+		minute=0;
+		startFogDecay=0.014;
+		forecastFogDecay=0.014;
+	};
+	class Entities
+	{
+		items=1;
+		class Item0
+		{
+			dataType="Marker";
+			position[]={20888,2.0063477,14624};
+			name="site";
+			markerType="ELLIPSE";
+			type="";
+			a=200;
+			b=200;
+			id=0;
+			atlOffset=-0.66899657;
+		};
+	};
+};

@@ -1,8 +1,0 @@
-onLoadMission = "Gun Drop Deathmatch";
-respawn = 3;
-respawnDelay = 3;
-disabledAI = 1;
-author = "Scouter";
-corpseLimit = 6;
-wreckManagerMode = 1;
-wreckLimit = 5;

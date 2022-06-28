@@ -1,10 +1,9 @@
 #include "cfgRespawnInventory.hpp"
 
-author="Scouter";
-briefingName = "Zeus 12+1 Compound Defense";
-OnLoadName = "Zeus Escape";
-
+onLoadName = "Zeus Escape: Malden";
+author = "Scouter";
 onLoadMission = "NATO is unable to mount the rescue of your team. You and your team must fight your way through the island to find a helicopter or boat. Once some means of escape is found, your team must get to the aircraft carrier off of the northeast coast. Checkpoints can be captured which allow for more respawn locations for your team.";
+
 
 disabledAI = 1;
 saving = 0;

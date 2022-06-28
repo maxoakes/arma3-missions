@@ -1,3 +1,7 @@
+{
+	[west,_x] call BIS_fnc_addRespawnInventory;
+} forEach ["US1", "US2", "US3", "US4", "US5", "US6", "US7", "US8", "US9", "US10", "US11"];
+
 //if a player is damaged or killed, the zeus gets points
 {
 	_x addMPEventHandler ["MPKilled", {gm addCuratorPoints KILL_REWARD;}];
@@ -28,19 +32,31 @@ private _campMarkers = [];
 	gm addCuratorEditingArea [_id, getMarkerPos _x, _size];
 } forEach _campMarkers;
 
-//spawn a thread to check for win condition: everyone gets outside of the island
+//spawn a thread to check for win condition: everyone gets to the carrier
 [] spawn
 {
-	waitUntil {
-		sleep 30;
-		//count number of west players that are on the island
+	//wait for checking for everyone until someone is near the carrier
+	waitUntil
+	{
+		{(_x distance2D getMarkerPos "carrier" < 1000) and (side _x == west)} count allUnits > 0
+	};
+	//once someone is on the carrier, start checking to see if everyone is on there
+	waitUntil
+	{
+		sleep 2;
+		//count number of west players that are on the carrier
 		private _westOnCarrier = {
-			(_x distance2D getMarkerPos "carrier" < 150) and (side group _x == west)
-		} count allPlayers;
-		private _westTotal = west countSide allPlayers;
+			(_x distance2D getMarkerPos "carrier" < 200) and 
+			(side group _x == west) and
+			(speed vehicle _x < 10) and
+			(alive _x) and
+			(isPlayer _x)
+		} count allUnits;
+		private _westTotal = count allPlayers;
+		[format ["cond %1 == %2", _westOnCarrier, _westTotal]] remoteExec ["systemChat"];
 		_westOnCarrier == _westTotal; //wait until this is true
 	};
 	["Everyone as escaped the island. Good job."] remoteExec ["systemChat"];
-	sleep 30000;
+	sleep 5;
 	"EveryoneWon" call BIS_fnc_endMissionServer;
 };

@@ -1,5 +1,12 @@
 private _startTime = diag_tickTime;
 
+//weather settings
+setDate [2018, 3, 30, ("Time" call BIS_fnc_getParamValue), 0];
+0 setOvercast ("Clouds" call BIS_fnc_getParamValue)/100;
+0 setFog ("Fog" call BIS_fnc_getParamValue)/100;
+0 setRain ("Rain" call BIS_fnc_getParamValue)/100;
+forceWeatherChange;
+
 //global variables
 SECTOR_CONTROL_UNITS_PER_WAVE = "SectorWaveUnitCount" call BIS_fnc_getParamValue;
 SECTOR_CONTROL_RADIUS = "SectorSize" call BIS_fnc_getParamValue;
@@ -15,16 +22,6 @@ private _vehicleObjectTextColor = "#bababa";
 
 if (isServer) then
 {
-	//weather settings
-	//global effects to be broadcast to players
-	[2018, 3, 30, ("Time" call BIS_fnc_getParamValue), 0] remoteExec ["setDate", 0, true];
-	[0, ("Clouds" call BIS_fnc_getParamValue)/100] remoteExec ["setOvercast", 0, true];
-
-	//global effects that are automatically broadcast to players
-	0 setFog ("Fog" call BIS_fnc_getParamValue)/100;
-	0 setRain ("Rain" call BIS_fnc_getParamValue)/100;
-	forceWeatherChange;
-
 	//create the physical border of the spawn area
 	[
 		SPAWN_POS, //center of border circle

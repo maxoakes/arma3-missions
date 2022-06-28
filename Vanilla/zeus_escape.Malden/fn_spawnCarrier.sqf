@@ -3,7 +3,7 @@ params ["_carrierMarker"];
 //spawn carrier
 if (isServer) then {
 	// Spawn Carrier on Server
-	_carrier = createVehicle ["Land_Carrier_01_base_F", getMarkerPos "marker_0", [], 0, "None"];
+	private _carrier = createVehicle ["Land_Carrier_01_base_F", getMarkerPos "marker_0", [], 0, "None"];
 	_carrier setPosWorld getMarkerPos _carrierMarker;
 	_carrier setDir 270;
 	[_carrier] call BIS_fnc_Carrier01PosUpdate;

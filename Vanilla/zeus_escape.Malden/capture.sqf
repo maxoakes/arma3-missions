@@ -1,8 +1,8 @@
 params ["_module", "_newOwner", "_oldOwner"];
 
-_loc = ((nearestLocations [getPos _module, ["NameCity","NameCityCapital","NameLocal","NameVillage"], 1000]) select 0);
-_thisEditAreaID = parseNumber mapGridPosition getPos _module;
-_markerName = format ["respawn_west_%1", mapGridPosition getPos _module];
+private _loc = ((nearestLocations [getPos _module, ["NameCity","NameCityCapital","NameLocal","NameVillage"], 1000]) select 0);
+private _thisEditAreaID = parseNumber mapGridPosition getPos _module;
+private _markerName = format ["respawn_west_%1", mapGridPosition getPos _module];
 
 if (_newOwner == west) then
 {

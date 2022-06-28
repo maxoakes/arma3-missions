@@ -1,36 +1,43 @@
-player enableStamina false;
-player setUnitTrait ["engineer",true];
-player setUnitTrait ["Medic",true];
+params ["_newUnit", "_oldUnit", "_respawn", "_respawnDelay"];
 
-if (backpack player isEqualTo "") then {player addBackpack "B_Carryall_cbr";};
-removeAllItems player;
-removeAllAssignedItems player;
-{player removeMagazine _x} forEach magazines player;
+_newUnit enableStamina false;
+_newUnit setUnitTrait ["engineer", true];
+_newUnit setUnitTrait ["Medic", true];
 
-private _primaryMag = getArray (configFile >> "CfgWeapons" >> primaryWeapon player >> "magazines");
-private _handgunMag = getArray (configFile >> "CfgWeapons" >> handgunWeapon player >> "magazines");
-
-player addPrimaryWeaponItem (_primaryMag select 0);
-for "_i" from 1 to 4 do {
-	player addMagazine (_primaryMag select 0);
-	sleep 0.01;
-};
-for "_j" from 1 to 3 do {
-	player addMagazine (_handgunMag select 0);
-	sleep 0.01;
+if (backpack _newUnit isEqualTo "") then
+{
+	_newUnit addBackpack "B_Carryall_cbr";
 };
 
-player addMagazine "MiniGrenade";
-player addMagazine "MiniGrenade";
-player addMagazine "SmokeShell";
+removeAllItems _newUnit;
+removeAllAssignedItems _newUnit;
 
-player addItem "ItemGPS";
-player assignItem "ItemGPS";
-player addItem "ItemCompass";
-player assignItem "ItemCompass";
-player addItem "ItemWatch";
-player assignItem "ItemWatch";
-player addItem "ItemRadio";
-player assignItem "ItemRadio";
-player addItem "FirstAidKit";
-player addItem "FirstAidKit";
+{
+	_newUnit removeMagazine _x
+} forEach magazines _newUnit;
+
+private _primaryMag = getArray (configFile >> "CfgWeapons" >> primaryWeapon _newUnit >> "magazines");
+private _handgunMag = getArray (configFile >> "CfgWeapons" >> handgunWeapon _newUnit >> "magazines");
+
+_newUnit addPrimaryWeaponItem (_primaryMag select 0);
+for "_i" from 1 to 4 do
+{
+	_newUnit addMagazine (_primaryMag select 0);
+	sleep 0.01;
+};
+for "_j" from 1 to 3 do
+{
+	_newUnit addMagazine (_handgunMag select 0);
+	sleep 0.01;
+};
+
+_newUnit addMagazine "MiniGrenade";
+_newUnit addMagazine "MiniGrenade";
+_newUnit addMagazine "SmokeShell";
+
+_newUnit addItem "ItemGPS";
+_newUnit assignItem "ItemGPS";
+_newUnit addItem "ItemRadio";
+_newUnit assignItem "ItemRadio";
+_newUnit addItem "FirstAidKit";
+_newUnit addItem "FirstAidKit";

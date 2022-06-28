@@ -1,8 +1,11 @@
 #include "cfgRespawnInventory.hpp"
 #include "cfgRoles.hpp"
 
-disabledAI = 1;
+onLoadName = "VR Arena";
+author = "Scouter";
+onLoadMission = "Lose a respawn ticket when a team member dies, and gain one when an enemy is killed. First team to reach 0 tickets with everyone dead loses.";
 
+disabledAI = 1;
 respawn = BASE;
 respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory", "Tickets"};
 respawnDelay = 1;

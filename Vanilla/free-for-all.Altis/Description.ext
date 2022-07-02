@@ -1,25 +1,27 @@
+#include "cfgRespawnInventory.hpp"
+#include "cfgRoles.hpp"
+
+onLoadName = "Free-for-All: Stratis";
+onLoadMission = "A free-for-all deathmatch for 2-16 players. Parameters allow for many different locations and settings.";
+author = "Scouter";
+
 respawn = BASE;
-respawndelay = 5;
+respawnTemplates[] = {"MenuPosition", "MenuInventory"};
+respawnDelay = 3;
 respawnOnStart = 1;
-briefingName = "Deathmatch v1.0.0";
-onLoadName="Scouter's Deathmatch";
-onLoadMission = "A battlefield of different locations and sizes. Free-for-all deathmatch. Can be easily available in any map for Arma 3 or its addons.";
-author="Scouter";
+
 saving = 0;
-onLoadIntroTime = 1;
-onLoadMissionTime = 1;
 disabledAI = 1;
-enableDebugConsole = 1;
 
 corpseManagerMode = 1;
-corpseLimit = 4;
-corpseRemovalMinTime = 30;
-corpseRemovalMaxTime = 60;
+corpseLimit = 16;
+corpseRemovalMinTime = 600;
+corpseRemovalMaxTime = 1200;
 
 wreckManagerMode = 1;
-wreckLimit = 1;
-wreckRemovalMinTime = 30;
-wreckRemovalMaxTime = 180;
+wreckLimit = 4;
+wreckRemovalMinTime = 10;
+wreckRemovalMaxTime = 30;
 
 class Header
 {
@@ -33,50 +35,60 @@ class Params
 	class LocationCenter
 	{
 		title = "Location";
-		values[] = {-1,0,1,2,3,4,5,6,7,8,9};
-		texts[] = {"Random","Urban Arena 1 (Largest)","Urban Arena 2","Urban Arena 3","Urban Arena 4","Urban Arena 5 (Smallest)","Rural Arena 1 (Largest)","Rural Arena 2","Rural Arena 3","Rural Arena 4","Rural Arena 5 (Smallest)"};
-		default = -1;
+		values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		texts[] = {"Limni (0.12 sq km)", "Northwestern Altis (19.63 sq km)", 
+			"Makrynisi (0.78 sq km)", "Cape Strigla (0.5 sq km)", "Bomos (0.78 sq km)", 
+			"Southwestern Farms (0.5 sq km)", "Southern Solar Farm (0.03 sq km)", 
+			"Zaros (0.5 sq km)", "Terminal (0.07 sq km)", "Kastro (0.28 sq km)"};
+		default = 0;
 	};
 	class Time
 	{
 		title = "Time of day";
-		values[] = {0,6,12,18};
-		texts[] = {"Midnight","Dawn","High Noon","Dusk"};
+		values[] = {0, 6, 12, 18};
+		texts[] = {"Midnight", "Dawn", "High Noon", "Dusk"};
 		default = 12;
 	};
 	class Fog
 	{
 		title = "Fog Level";
-		values[] = {0,10,25,50,75,90,100};
-		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
 	class Clouds
 	{
 		title = "Overcast Amount";
-		values[] = {0,10,25,50,75,90,100};
-		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
 	class Rain
 	{
 		title = "Rain Amount";
-		values[] = {0,10,25,50,75,90,100};
-		texts[] = {"0%","10%","25%","50%","75%","90%","100%"};
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
-	};
-	class Size
-	{
-		title = "Battleground Area Radius";
-		values[] = {50,100,150,200,250,500,750,1000,1200,1500};
-		texts[] = {"50m","100m","150m","200m","250m","500m","750m","1.0km","1.2km","1.5km"};
-		default = 150;
 	};
 	class Vehicles
 	{
-		title = "Number of Vehicles at one time";
-		values[] = {1,2,3,4,6,8,10,12,14,16,18,20,25};
-		texts[] = {"1","2","3","4","6","8","10","12","14","16 (Recommended for very large play area)","18","20","25"};
-		default = 6;
+		title = "Vehicles per square kilometer -> ceil(area in sq km) * this";
+		values[] = {0, 0.25, 0.5, 1, 2, 3, 4, 5, 8, 10, 20};
+		texts[] = {"None", "0.25", "0.5", "1", "2", "3", "4", "5", "8", "10", "20"};
+		default = 3;
+	};
+	class CrateTimeBetween
+	{
+		title = "Time Between New Crates";
+		values[] = {30, 60, 120, 180, 300, 600};
+		texts[] = {"30 sec", "1 min", "2 min", "3 min", "5 min", "10 min"};
+		default = 60;
+	};
+	class CrateTimeAlive
+	{
+		title = "Time Crates are Alive";
+		values[] = {30, 60, 120, 180, 300, 600};
+		texts[] = {"30 sec", "1 min", "2 min", "3 min", "5 min", "10 min"};
+		default = 120;
 	};
 };

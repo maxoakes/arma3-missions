@@ -1,0 +1,57 @@
+#include "cfgRespawnInventory.hpp"
+
+//Most options set in mission editor
+author			= "Scouter";
+onLoadName		= "Manhunt: Chernarus";
+onLoadMission	= "Find and kill the specified target, confirm the kill, and leave the area.";
+
+respawn = BASE;
+respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory"};
+respawnDelay = 5;
+
+class Params
+{
+	//time and weather
+	class Time
+	{
+		title = "Start time of mission";
+		values[] = {0, 3, 6, 9, 12, 15, 18, 21};
+		texts[] = {"00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00"};
+		default = 6;
+	};
+	class TimeScale
+	{
+		title = "Time Scale";
+		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12};
+		texts[] = {"Realtime", "2x", "3x", "4x", "5x", "6x", "8x", "10x", "12x"};
+		default = 1;
+	};
+	class OvercastPercent
+	{
+		title = "Overcast Amount";
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
+		default = 25;
+	};
+	class FogPercent
+	{
+		title = "Fog Amount";
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
+		default = 10;
+	};
+	class RainPercent
+	{
+		title = "Rain Amount";
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
+		default = 10;
+	};
+	class Clutter
+	{
+		title = "Does the map contain clutter?";
+		values[] = {1, 0};
+		texts[] = {"Yes", "No"};
+		default = 0;
+	};
+};

@@ -82,44 +82,15 @@ if (isServer) then
 		worldSize
 	];
 
-	//build list of valid locations
-	private _minDistanceToSpawn = 2500;
-	private _minDistanceToHQ = 2000;
-	private _possibleMeetingLocations = [];
-	{
-		private _isCity = type _x in ["NameVillage", "NameCity"];
-		private _isNearbyLandmark = type _x in ["NameLocal"] and 
-			count (nearestLocations [locationPosition _x, ["Name", "NameCityCapital", "NameVillage", "NameCity"], 1000]) > 0;
-		private _isCloseToSpawn = (locationPosition _x distance2D getMarkerPos "respawn_west") < _minDistanceToSpawn;
-		private _isCloseToHQ = (locationPosition _x distance2D getMarkerPos _hqMarker) < _minDistanceToHQ;
-
-		if ((_isCity or _isNearbyLandmark) and !_isCloseToSpawn and !_isCloseToHQ) then
-		{
-			_possibleMeetingLocations pushBack _x;
-		};
-	} forEach _allMajorLocations;
-
-	//pick a valid location, pick one of those buildings as a meeting area
-	private _defaultMeetingPos = getMarkerPos "meeting";
-	private _selectedLocation = selectRandom _possibleMeetingLocations;
-	private _nearestBuildings = nearestTerrainObjects [
-		locationPosition _selectedLocation, 
-		["Chapel", "Fuelstation", "House", "Fortress", "Fountain", "Hospital", "Busstop", "Transmitter"], 
-		((size _selectedLocation select 0) max (size _selectedLocation select 1)) max 1000];
-
-	//find a position to place the meeting and place it
-	private _meetingPosition = _defaultMeetingPos;
-	if (count _nearestBuildings > 0) then
-	{
-		_meetingPosition = [getPos selectRandom _nearestBuildings, 2, 50, 6, 0, 0.2, 0, [], [_defaultMeetingPos, _defaultMeetingPos]] call BIS_fnc_findSafePos;
-	};
-	private _warlordUnits = [_meetingPosition, 3] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
-
-	//"meeting" setMarkerText format ["Scheduled meeting area at %1", text nearestLocationWithDubbing _meetingPosition];
+	//pick a meeting position
+	private _possibleMeetingMarkers = ["meet_"] call BIS_fnc_getMarkers;
+	private _meetingPosition = getMarkerPos (selectRandom _possibleMeetingMarkers);
 	"meeting" setMarkerPos _meetingPosition;
 
+	private _warlordUnit = [_meetingPosition, 3] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
+
 	//create tasks for players on a different thread
-	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnits select 0, exfiltration, end] spawn
+	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn
 	{
 		params ["_tent", "_intel", "_posMeeting", "_warlord", "_boat", "_end"];
 

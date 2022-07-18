@@ -9,10 +9,40 @@ forceWeatherChange;
 //global variables
 REVEAL_WARLORD_MEETING = false;
 CONFIRMED_KILL = false;
+private _patrol = 0;
+private _defense = 1;
+
+//easily configurable variables
+private _conveyVehiclePool = ["O_MRAP_02_hmg_F", "O_LSV_02_armed_F", "O_LSV_02_AT_F", "O_G_Offroad_01_armed_F"];
+private _conveyVehiclePoolCUP = ["CUP_O_UAZ_Open_RU", "CUP_O_UAZ_MG_CSAT", "CUP_O_UAZ_AGS30_CSAT", 
+	"CUP_O_Hilux_M2_OPF_G_F", "CUP_O_Hilux_AGS30_OPF_G_F", "CUP_O_Hilux_unarmed_OPF_G_F"];
+private _meetingUnitPool = ["O_G_Soldier_F", "O_G_Soldier_lite_F", "O_G_Soldier_SL_F", "O_G_Soldier_TL_F", "O_G_Soldier_AR_F", "O_G_medic_F"];
+private _meetingUnitPoolCUP = ["CUP_O_INS_Officer", "CUP_O_INS_Story_Bardak", "CUP_O_INS_Story_Lopotev", "CUP_O_INS_Commander"];
+private _facePool = ["RussianHead_2", "RussianHead_3", "RussianHead_4", "RussianHead_5", "LivonianHead_10"];
+private _patrolUnitPool = ["CUP_O_INS_Soldier_AA", "CUP_O_INS_Soldier_Ammo", "CUP_O_INS_Soldier_AT", "CUP_O_INS_Soldier_AR", 
+	"CUP_O_INS_Soldier_Engineer", "CUP_O_INS_Soldier_MG", "CUP_O_INS_Soldier", "CUP_O_INS_Soldier_AK74", "CUP_O_INS_Soldier_LAT", 
+	"CUP_O_INS_Sniper", "CUP_O_INS_Villager3", "CUP_O_INS_Woodlander3", "CUP_O_INS_Worker2"];
 
 if (isServer) then
 {
 	private _startTime = diag_tickTime;
+
+	//build non-literal variables
+	private _primaryWeaponPool = [];
+	{
+		//check if usable weapon
+		if (getnumber (configFile >> "cfgWeapons" >> _x >> "scope") > 1) then
+		{
+			private _itemType = _x call bis_fnc_itemType;
+			//check if the weapon is an AK-style weapon per the classname
+			if (((_itemType select 0) == "Weapon") && ("arifle_AK" in _x)) then
+			{
+				_primaryWeaponPool pushBackUnique _x;
+			};
+		};
+	} foreach ((configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses);
+
+	//set up markers
 	private _hqMarker = "confirmed";
 	_hqMarker setMarkerAlpha 0; //initially hide HQ marker as it is not properly set
 	"meeting" setMarkerAlpha 0;
@@ -57,7 +87,7 @@ if (isServer) then
 	//populate the map with random graves and wrecks
 	if (("Clutter" call BIS_fnc_getParamValue) == 1) then
 	{
-		[_mapCenter] call compile preprocessFile "functions\fn_generateMapClutter.sqf";
+		[] call compile preprocessFile "functions\fn_generateMapClutter.sqf";
 	};
 
 	//once an HQ location is found, mark it on the map and delete any mass graves near it
@@ -75,145 +105,45 @@ if (isServer) then
 	private _tent = _missionObjects select 0;
 	private _intel = _missionObjects select 1;
 
-	//find all location types that would be fine for a warlord meeting area
-	private _allMajorLocations = nearestLocations [
-		getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), 
-		["Name", "NameVillage", "NameCity", "NameLocal", "Hill"], 
-		worldSize
-	];
-
 	//pick a meeting position
 	private _possibleMeetingMarkers = ["meet_"] call BIS_fnc_getMarkers;
 	private _meetingPosition = getMarkerPos (selectRandom _possibleMeetingMarkers);
 	"meeting" setMarkerPos _meetingPosition;
 
-	private _warlordUnit = [_meetingPosition, 3] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
+	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool, _facePool] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
+	private _convoy = [_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call compile preprocessFile "functions\fn_spawnParkedConvoy.sqf";
 
 	//create tasks for players on a different thread
-	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn
+	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn compile preprocessFile "functions\fn_taskManager.sqf";
+
+	//spawn enemy unit ground patrols
+	[_meetingPosition, 500, 6, _patrolUnitPool, [0.4, 0.7], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
+	[getPos _tent, 200, 6, _patrolUnitPool, [0.3, 0.5], _patrol]  call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
+	[getPos _tent, 50, 6, _patrolUnitPool, [0.3, 0.5], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
+
+	//define all cities to spawn patrols in
+	private _allTowns = nearestLocations [
+		getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), 
+		["Name", "NameVillage", "NameCity", "NameCityCapital"], 
+		worldSize];
+
 	{
-		params ["_tent", "_intel", "_posMeeting", "_warlord", "_boat", "_end"];
-
-		[
-			west, //side
-			"taskKill", //id 
-			[ //desc
-				"It is likely that the warload is in his HQ tent. Eliminate him and confirm your kill.", 
-				"Identify and Eliminate the Warlord", 
-				"HQ Tent"
-			], 
-			_tent, //dest
-			true, //state
-			-1, //priority
-			true, //show notification
-			"kill", //type
-			true //visible in 3d
-		] call BIS_fnc_taskCreate;
-
-		//wait until a unit is at the tent to continue
-		waitUntil { ({_x distance2D _tent < 8} count units west) > 0 or REVEAL_WARLORD_MEETING or (CONFIRMED_KILL and !(alive _warlord)); };
-
-		//hide task objective until the warlord is found
-		[
-			"taskKill",
-			[
-				"The warlord is not in his tent.",
-				"Kill the Warlord",
-				"Unknown"
-			]
-		] call BIS_fnc_taskSetDescription;
-		["taskKill", objNull] call BIS_fnc_taskSetDestination;
-
-		//create secondary objective to track down warlord's location
-		[
-			west, //side
-			"taskIntel", //id 
-			[ //desc
-				"The warload is not at their tent. Find intel that can help ascertain his whereabouts.", 
-				"Find the warlord's location", 
-				"Computer"
-			], 
-			_intel, //dest
-			true, //state
-			-1, //priority
-			true, //show notification
-			"interact", //type
-			true //visible in 3d
-		] call BIS_fnc_taskCreate;
-
-		//assign an action to the intel object to make visible the warlord meeting location
-		private _intelAction = ["Read Messages", { REVEAL_WARLORD_MEETING = true; }, nil, 3, true, true, "", "true", 2];
-		[_intel, _intelAction] remoteExec ["addAction", 0, true];
-
-		//wait until someone finds the warlord's meeting location
-		waitUntil { REVEAL_WARLORD_MEETING or (CONFIRMED_KILL and !(alive _warlord)); };
-
-		//complete the secondary objective, update the primary one
-		["taskIntel", "SUCCEEDED"] call BIS_fnc_taskSetState;
-		["taskKill", _posMeeting] call BIS_fnc_taskSetDestination;
-		"meeting" setMarkerAlpha 1;
-
-		//wait until the kill is confirmed
-		waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
-		["taskKill", "SUCCEEDED"] call BIS_fnc_taskSetState;
-		_boat lock false;
-
-		//create next objective to leave the map
-		[
-			west, //side
-			"taskBoat", //id 
-			[ //desc
-				"The warlord has been confirmed dead. Get to the extraction vehicle.", 
-				"Get to the Extraction Vehicle", 
-				"Boat"
-			], 
-			_boat, //dest
-			true, //state
-			-1, //priority
-			true, //show notification
-			"getin", //type
-			true //visible in 3d
-		] call BIS_fnc_taskCreate;
-
-		//wait until everyone is in the boat
-		waitUntil {
-			sleep 0.5;
-			private _everyoneInVehicle = true;
-			{
-				if (vehicle _x != exfiltration) then
-				{
-					_everyoneInVehicle = false;
-				};
-			} forEach call BIS_fnc_listPlayers;
-			_everyoneInVehicle;
-		};
-
-		["taskBoat","SUCCEEDED"] call BIS_fnc_taskSetState;
-		//update the destination when everyone is in the boat
-		[
-			west, //side
-			"taskExfiltrate", //id 
-			[ //desc
-				"Use the extraction vehicle to get to the ship off of the coast.", 
-				"Leave the Area", 
-				"Ship"
-			], 
-			_end, //dest
-			true, //state
-			-1, //priority
-			true, //show notification
-			"takeoff", //type
-			true //visible in 3d
-		] call BIS_fnc_taskCreate;
-
-		//wait until everyone is at the ship
-		waitUntil {
-			sleep 0.5;
-			{alive _x} count allPlayers == {alive _x && _x distance2D _end < 200} count allPlayers;
-		};
-
-		["taskExfiltrate", "SUCCEEDED"] call BIS_fnc_taskSetState;
-		"EveryoneWon" call BIS_fnc_endMissionServer;
+		private _size = ((size _x select 0) max (size _x select 1))*2;
+		private _townBorder = [
+			format ["t%1", _forEachIndex], //var name
+			locationPosition _x, //position
+			text _x, //display name
+			[_size, _size], //size
+			"ColorRed", //color string
+			"ELLIPSE", //type
+			"DiagGrid" //style
+		] call compile preprocessFile "functions\fn_createMarker.sqf";
+	} forEach _allTowns;
+	[_allTowns, _patrolUnitPool] spawn compile preprocessFile "functions\fn_footPatrolManager.sqf";
+	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, 30] spawn compile preprocessFile "functions\fn_vehiclePatrolManager.sqf";
+	for "_i" from 1 to 2 do
+	{
+		[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP] spawn compile preprocessFile "functions\fn_spawnRepeatingSingleVehiclePatrol.sqf";
 	};
 	
 	_stopTime = diag_tickTime;

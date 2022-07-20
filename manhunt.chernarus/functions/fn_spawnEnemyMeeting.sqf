@@ -10,13 +10,15 @@
 		2: String - classname of the object that is in the center
 		3: Array of Strings - classnames of unit types that can be created
 		4: Array of Strings - classnames of what weapons the units can be using
+		5: Number - between 0.0 and 1.0, the maximum skill of a unit
 
 	Returns:
 		Object - the intented 'leader' of the 'meeting'
 */
-params ["_posCenter", "_numAttendees", "_centerObjectClassname", "_possibleBaseUnitClassnames", "_possibleWeaponClassnames"];
+params ["_posCenter", "_numAttendees", "_centerObjectClassname", "_possibleBaseUnitClassnames", "_possibleWeaponClassnames", "_skill"];
 
 private _startTime = diag_tickTime;
+missionNamespace setVariable ["CONFIRMED_KILL", false, true];
 
 //create center object
 private _centerObj = createVehicle [_centerObjectClassname, _posCenter, [], 0, "CAN_COLLIDE"];
@@ -42,6 +44,7 @@ for "_i" from 1 to _numAttendees do
 
 	private _unit = _group createUnit [selectRandom _possibleBaseUnitClassnames, _pos, [], 0, "CAN_COLLIDE"];
 	_group setGroupId [format ["Faction Leader %1", _i]];
+	_unit setSkill random [_skill - 0.4 max 0.5, _skill, _skill];
 
 	//set the unit inventory
 	removeAllWeapons _unit;
@@ -72,7 +75,7 @@ for "_i" from 1 to _numAttendees do
 		[_unit, "WhiteHead_24"] remoteExec ["setFace", 0, _unit];
 		[_unit, "STAND", "RANDOM"] call BIS_fnc_ambientAnimCombat;
 		_unit setName "Dmitri Kozlov";
-		[_unit, [format [localize "STR_ACTION_CONFIRM", name _unit], {CONFIRMED_KILL = true}, nil, 3, true, true, "", "true", 3, false, "", ""]] remoteExec ["addAction", 0, true];
+		[_unit, [format [localize "STR_ACTION_CONFIRM", name _unit], {missionNamespace setVariable ["CONFIRMED_KILL", true, true];}, nil, 3, true, true, "", "true", 3, false, "", ""]] remoteExec ["addAction", 0, true];
 	};
 	
 	_unit setDir (_unit getDir _centerObj);

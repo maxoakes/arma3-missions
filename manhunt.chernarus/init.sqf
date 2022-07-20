@@ -7,7 +7,7 @@ setTimeMultiplier ("TimeScale" call BIS_fnc_getParamValue);
 forceWeatherChange;
 
 //global variables
-MAX_REGION_VEHICLE_PATROLS = "RegionVehiclePatrols" call BIS_fnc_getParamValue;
+AI_SKILL_MAX = ("MaxEnemySkill" call BIS_fnc_getParamValue)/10;
 REVEAL_WARLORD_MEETING = false;
 CONFIRMED_KILL = false;
 private _patrol = 0;
@@ -74,6 +74,15 @@ if (isServer) then
 	exfiltration allowDamage false;
 	exfiltration lock true;
 
+	//extract vehicle does not run out of fuel
+	exfiltration addEventHandler ["Fuel", {
+		params ["_vehicle", "_hasFuel"];
+		if (fuel _vehicle< 1.0) then
+		{
+			_vehicle setFuel 1.0;
+		};
+	}];
+
 	//update marker for the boat since it is important to the mission
 	[_exfilMarker, exfiltration] spawn
 	{
@@ -109,7 +118,7 @@ if (isServer) then
 	"meeting" setMarkerPos _meetingPosition;
 
 	//create meeting
-	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool] call SCO_fnc_spawnEnemyMeeting;
+	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool, AI_SKILL_MAX] call SCO_fnc_spawnEnemyMeeting;
 	
 	//create parked cars near meeting location
 	private _convoy = [_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
@@ -118,8 +127,8 @@ if (isServer) then
 	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn SCO_fnc_taskManager;
 
 	//spawn enemy unit ground patrols
-	[_meetingPosition, 500, 6, _patrolUnitPool, [0.2, 0.6], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
-	[getPos _tent, 50, 6, _patrolUnitPool, [0.3, 0.5], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
+	[_meetingPosition, 500, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), AI_SKILL_MAX], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
+	[getPos _tent, 50, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), 1.0 min (AI_SKILL_MAX + 0.1)], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
 
 	//define all cities to spawn patrols in
 	private _allTowns = nearestLocations [
@@ -141,8 +150,9 @@ if (isServer) then
 	} forEach _allTowns;
 
 	//vehicle and unit patrol managers
+	private _numRegionVehicles = "RegionVehiclePatrols" call BIS_fnc_getParamValue;
 	[_allTowns, _patrolUnitPool, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_footPatrolManager;
-	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, 30] spawn SCO_fnc_vehiclePatrolManager;
+	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles] spawn SCO_fnc_vehiclePatrolManager;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
 	if (_numNearbyVehicles > 0) then

@@ -6,6 +6,7 @@ onLoadName = "Manhunt: Chernarus";
 onLoadMission = "Find and kill the specified target, confirm the kill, and leave the area.";
 onLoadIntro = "Your team's mission is to find and kill the specified target, confirm the kill, and leave the area. The exact whereabouts of the target are not known, so it will take some searching to find them.";
 
+disabledAI = 1;
 aiKills = 1;
 enableDebugConsole = 1;
 joinUnassigned = 1;
@@ -113,6 +114,13 @@ class Params
 		title = "Enable Player Stamina";
 		values[] = {1, 0};
 		texts[] = {"Yes", "No"};
-		default = 1;
+		default = 0;
+	};
+	class MaxEnemySkill
+	{
+		title = "Maximum Enemy Skill";
+		values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+		texts[] = {"Pretty Bad", "Bad", "Okay", "Average", "Good", "Really Good", "Too Good", "Literally Jason Bourne"};
+		default = 5;
 	};
 };

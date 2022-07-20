@@ -17,7 +17,7 @@
 		Void
 */
 params ["_tent", "_intel", "_posMeeting", "_warlord", "_boat", "_end"];
-
+missionNamespace setVariable ["REVEAL_WARLORD_MEETING", false, true];
 //create task to kill warlord
 [
 	west, //side
@@ -70,7 +70,7 @@ waitUntil { ({_x distance2D _tent < 8} count units west) > 0 or REVEAL_WARLORD_M
 ] call BIS_fnc_taskCreate;
 
 //assign an action to the intel object to make visible the warlord meeting location
-private _intelAction = [localize "STR_ACTION_INTEL", { REVEAL_WARLORD_MEETING = true; }, nil, 3, true, true, "", "true", 2];
+private _intelAction = [localize "STR_ACTION_INTEL", { missionNamespace setVariable ["REVEAL_WARLORD_MEETING", true, true]; }, nil, 3, true, true, "", "true", 2];
 [_intel, _intelAction] remoteExec ["addAction", 0, true];
 
 //wait until someone finds the warlord's meeting location

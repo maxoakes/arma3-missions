@@ -1,5 +1,15 @@
-//create the HQ tent at a given position
-//returns the tent object and intel laptop in an array;
+/*
+	Author: Scouter
+
+	Description:
+		given a position, spawn a tent filled with furniture
+
+	Parameter(s):
+		0: Position
+
+	Returns:
+		Array of Objects in format [Tent object, Laptop object]
+*/
 params ["_pos"];
 
 private _startTime = diag_tickTime;
@@ -7,6 +17,7 @@ private _startTime = diag_tickTime;
 //object classnames, relative position and rotation for HQ tent
 //generated from a different script
 private _hqPlacementArray = [
+	["Land_MedicalTent_01_floor_light_F",[0,0,0],0],
 	["Land_CampingChair_V2_white_F",[-1.44043,-0.301097,-1.37448],97.2297],
 	["Land_Laptop_Intel_01_F",[-2.30078,-0.0440507,-0.37651],119.858],
 	["Land_CampingChair_V2_F",[-1.91797,-1.43323,-1.37449],139.457],
@@ -36,9 +47,6 @@ private _hqPlacementArray = [
 
 //create shell of HQ
 private _baseDir = getDir (nearestBuilding _pos) + 90; //align it with a nearby building
-private _tentFloor = createVehicle ["Land_MedicalTent_01_floor_light_F", _pos, [], 0, "CAN_COLLIDE"];
-_tentFloor allowDamage false;
-_tentFloor setDir _baseDir;
 private _tent = createVehicle ["Land_MedicalTent_01_CSAT_brownhex_generic_open_F", _pos, [], 0, "CAN_COLLIDE"];
 _tent allowDamage false;
 _tent setDir _baseDir;

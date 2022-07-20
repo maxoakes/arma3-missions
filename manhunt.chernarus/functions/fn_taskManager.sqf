@@ -1,12 +1,31 @@
+/*
+	Author: Scouter
+
+	Description:
+		Manage the tasks of the mission. Should be spawned rather than called. 
+		Must be run concurrently.
+		
+	Parameter(s):
+		0: Object - the tent that is the initial destination for players
+		1: Object - the object that has the intel that says where the meeting is taking place
+		2: Position - where the meeting actually is
+		3: Object - the leader that is the target of the players
+		4: Object - the boat the players will escape the region on
+		5: Object - the final destination for the players to end the mission
+
+	Returns:
+		Void
+*/
 params ["_tent", "_intel", "_posMeeting", "_warlord", "_boat", "_end"];
 
+//create task to kill warlord
 [
 	west, //side
 	"taskKill", //id 
 	[ //desc
-		"It is likely that the warload is in his HQ tent. Eliminate him and confirm your kill.", 
-		"Identify and Eliminate the Warlord", 
-		"HQ Tent"
+		"$STR_TASK_TENT_DESC", 
+		"$STR_TASK_TENT_TITLE", 
+		"$STR_TASK_TENT_LOC"
 	], 
 	_tent, //dest
 	true, //state
@@ -23,21 +42,24 @@ waitUntil { ({_x distance2D _tent < 8} count units west) > 0 or REVEAL_WARLORD_M
 [
 	"taskKill",
 	[
-		"The warlord is not in his tent.",
-		"Kill the Warlord",
-		"Unknown"
+		"$STR_TASK_TENT_UPDATE_DESC",
+		"$STR_TASK_TENT_UPDATE_TITLE",
+		"$STR_TASK_TENT_UPDATE_LOC"
 	]
 ] call BIS_fnc_taskSetDescription;
 ["taskKill", objNull] call BIS_fnc_taskSetDestination;
+
+//add diary entry for all players
+[player, ["Diary", [localize "STR_DIARY_TENT_TITLE", localize "STR_DIARY_TENT_TEXT"], taskNull, "", false]] remoteExec ["createDiaryRecord", 0, true];
 
 //create secondary objective to track down warlord's location
 [
 	west, //side
 	"taskIntel", //id 
 	[ //desc
-		"The warload is not at their tent. Find intel that can help ascertain his whereabouts.", 
-		"Find the warlord's location", 
-		"Computer"
+		"$STR_TASK_INTEL_DESC",
+		"$STR_TASK_INTEL_TITLE",
+		"$STR_TASK_INTEL_LOC"
 	], 
 	_intel, //dest
 	true, //state
@@ -48,7 +70,7 @@ waitUntil { ({_x distance2D _tent < 8} count units west) > 0 or REVEAL_WARLORD_M
 ] call BIS_fnc_taskCreate;
 
 //assign an action to the intel object to make visible the warlord meeting location
-private _intelAction = ["Read Messages", { REVEAL_WARLORD_MEETING = true; }, nil, 3, true, true, "", "true", 2];
+private _intelAction = [localize "STR_ACTION_INTEL", { REVEAL_WARLORD_MEETING = true; }, nil, 3, true, true, "", "true", 2];
 [_intel, _intelAction] remoteExec ["addAction", 0, true];
 
 //wait until someone finds the warlord's meeting location
@@ -58,6 +80,7 @@ waitUntil { REVEAL_WARLORD_MEETING or (CONFIRMED_KILL and !(alive _warlord)); };
 ["taskIntel", "SUCCEEDED"] call BIS_fnc_taskSetState;
 ["taskKill", _posMeeting] call BIS_fnc_taskSetDestination;
 "meeting" setMarkerAlpha 1;
+[player, ["Diary", [localize "STR_DIARY_MEETING_TITLE", localize "STR_DIARY_MEETING_TEXT"], taskNull, "", false]] remoteExec ["createDiaryRecord", 0, true];
 
 //wait until the kill is confirmed
 waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
@@ -69,9 +92,9 @@ _boat lock false;
 	west, //side
 	"taskBoat", //id 
 	[ //desc
-		"The warlord has been confirmed dead. Get to the extraction vehicle.", 
-		"Get to the Extraction Vehicle", 
-		"Boat"
+		"$STR_TASK_EXTRACT_DESC", 
+		"$STR_TASK_EXTRACT_TITLE", 
+		"$STR_TASK_EXTRACT_LOC"
 	], 
 	_boat, //dest
 	true, //state
@@ -80,6 +103,9 @@ _boat lock false;
 	"getin", //type
 	true //visible in 3d
 ] call BIS_fnc_taskCreate;
+
+//add diary entry for all players
+[player, ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]] remoteExec ["createDiaryRecord", 0, true];
 
 //wait until everyone is in the boat
 waitUntil {
@@ -100,9 +126,9 @@ waitUntil {
 	west, //side
 	"taskExfiltrate", //id 
 	[ //desc
-		"Use the extraction vehicle to get to the ship off of the coast.", 
-		"Leave the Area", 
-		"Ship"
+		"$STR_TASK_EXTRACT_UPDATE_DESC", 
+		"$STR_TASK_EXTRACT_UPDATE_TITLE", 
+		"$STR_TASK_EXTRACT_UPDATE_LOC"
 	], 
 	_end, //dest
 	true, //state

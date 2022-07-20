@@ -1,3 +1,20 @@
+/*
+	Author: Scouter
+
+	Description:
+		Spawn a group of units that randomly walk around some area
+		
+	Parameter(s):
+		0: Position - original location units should patrol
+		1: Number - maximum range each waypoint can be from the next
+		2: Number - number of units in the group
+		3: Array of Strings - possible classnames that the units can be
+		4: Array of Numbers - two numbers (between 0.0 and 1.0) that are the range of skill of each unit
+		5: Number - 0 or 1, indicates if it is a patrol or defensive group
+
+	Returns:
+		Void
+*/
 params ["_posCenter", "_radius", "_numUnits", "_possibleUnitClassnames", "_skillRange", "_mode"];
 
 private _groupUnitClassnames = [];

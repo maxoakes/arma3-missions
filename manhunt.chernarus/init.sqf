@@ -7,6 +7,7 @@ setTimeMultiplier ("TimeScale" call BIS_fnc_getParamValue);
 forceWeatherChange;
 
 //global variables
+MAX_REGION_VEHICLE_PATROLS = "RegionVehiclePatrols" call BIS_fnc_getParamValue;
 REVEAL_WARLORD_MEETING = false;
 CONFIRMED_KILL = false;
 private _patrol = 0;
@@ -18,7 +19,6 @@ private _conveyVehiclePoolCUP = ["CUP_O_UAZ_Open_RU", "CUP_O_UAZ_MG_CSAT", "CUP_
 	"CUP_O_Hilux_M2_OPF_G_F", "CUP_O_Hilux_AGS30_OPF_G_F", "CUP_O_Hilux_unarmed_OPF_G_F"];
 private _meetingUnitPool = ["O_G_Soldier_F", "O_G_Soldier_lite_F", "O_G_Soldier_SL_F", "O_G_Soldier_TL_F", "O_G_Soldier_AR_F", "O_G_medic_F"];
 private _meetingUnitPoolCUP = ["CUP_O_INS_Officer", "CUP_O_INS_Story_Bardak", "CUP_O_INS_Story_Lopotev", "CUP_O_INS_Commander"];
-private _facePool = ["RussianHead_2", "RussianHead_3", "RussianHead_4", "RussianHead_5", "LivonianHead_10"];
 private _patrolUnitPool = ["CUP_O_INS_Soldier_AA", "CUP_O_INS_Soldier_Ammo", "CUP_O_INS_Soldier_AT", "CUP_O_INS_Soldier_AR", 
 	"CUP_O_INS_Soldier_Engineer", "CUP_O_INS_Soldier_MG", "CUP_O_INS_Soldier", "CUP_O_INS_Soldier_AK74", "CUP_O_INS_Soldier_LAT", 
 	"CUP_O_INS_Sniper", "CUP_O_INS_Villager3", "CUP_O_INS_Woodlander3", "CUP_O_INS_Worker2"];
@@ -58,14 +58,14 @@ if (isServer) then
 	clearWeaponCargoGlobal arsenal;
 	clearMagazineCargoGlobal arsenal;
 	["AmmoboxInit", [arsenal, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
-	[arsenal, ["Heal Yourself", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
-	[arsenal, ["Add Ammo for this Weapon", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
+	[arsenal, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
+	[arsenal, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
 
 	//setup exfil boat
 	private _exfilMarker = [
 		"exfil", //var name
 		getPos exfiltration, //position
-		"Exfiltration Boat", //display name
+		localize "STR_MARKER_BOAT", //display name
 		[1, 1], //size
 		"ColorBLUFOR", //color string
 		"ICON", //type
@@ -85,10 +85,9 @@ if (isServer) then
 	};
 
 	//populate the map with random graves and wrecks
-	if (("Clutter" call BIS_fnc_getParamValue) == 1) then
-	{
-		[] call compile preprocessFile "functions\fn_generateMapClutter.sqf";
-	};
+	private _doSpawnWrecks = [("ClutterWreck" call BIS_fnc_getParamValue)] call compile preprocessFile "functions\fn_parseBoolean.sqf";
+	private _doSpawnGraves = [("ClutterGraves" call BIS_fnc_getParamValue)] call compile preprocessFile "functions\fn_parseBoolean.sqf";
+	[_doSpawnWrecks, _doSpawnGraves] call compile preprocessFile "functions\fn_generateMapClutter.sqf";
 
 	//once an HQ location is found, mark it on the map and delete any mass graves near it
 	private _possibleHQMarkers = ["hq_"] call BIS_fnc_getMarkers;
@@ -102,23 +101,24 @@ if (isServer) then
 
 	//create the tent and get the tent object and intel within it
 	private _missionObjects = [_posHQ] call compile preprocessFile "functions\fn_createHQTent.sqf";
-	private _tent = _missionObjects select 0;
-	private _intel = _missionObjects select 1;
+	_missionObjects params ["_tent", "_intel"];
 
 	//pick a meeting position
 	private _possibleMeetingMarkers = ["meet_"] call BIS_fnc_getMarkers;
 	private _meetingPosition = getMarkerPos (selectRandom _possibleMeetingMarkers);
 	"meeting" setMarkerPos _meetingPosition;
 
-	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool, _facePool] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
+	//create meeting
+	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
+	
+	//create parked cars near meeting location
 	private _convoy = [_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call compile preprocessFile "functions\fn_spawnParkedConvoy.sqf";
 
 	//create tasks for players on a different thread
 	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn compile preprocessFile "functions\fn_taskManager.sqf";
 
 	//spawn enemy unit ground patrols
-	[_meetingPosition, 500, 6, _patrolUnitPool, [0.4, 0.7], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
-	[getPos _tent, 200, 6, _patrolUnitPool, [0.3, 0.5], _patrol]  call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
+	[_meetingPosition, 500, 6, _patrolUnitPool, [0.2, 0.6], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
 	[getPos _tent, 50, 6, _patrolUnitPool, [0.3, 0.5], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
 
 	//define all cities to spawn patrols in
@@ -139,11 +139,18 @@ if (isServer) then
 			"DiagGrid" //style
 		] call compile preprocessFile "functions\fn_createMarker.sqf";
 	} forEach _allTowns;
-	[_allTowns, _patrolUnitPool] spawn compile preprocessFile "functions\fn_footPatrolManager.sqf";
+
+	//vehicle and unit patrol managers
+	[_allTowns, _patrolUnitPool, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn compile preprocessFile "functions\fn_footPatrolManager.sqf";
 	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, 30] spawn compile preprocessFile "functions\fn_vehiclePatrolManager.sqf";
-	for "_i" from 1 to 2 do
+
+	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
+	if (_numNearbyVehicles > 0) then
 	{
-		[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP] spawn compile preprocessFile "functions\fn_spawnRepeatingSingleVehiclePatrol.sqf";
+		for "_i" from 1 to _numNearbyVehicles do
+		{
+			[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP] spawn compile preprocessFile "functions\fn_spawnRepeatingSingleVehiclePatrol.sqf";
+		};
 	};
 	
 	_stopTime = diag_tickTime;

@@ -22,8 +22,8 @@ class Params
 	class TimeScale
 	{
 		title = "Time Scale";
-		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12};
-		texts[] = {"Realtime", "2x", "3x", "4x", "5x", "6x", "8x", "10x", "12x"};
+		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 20, 60};
+		texts[] = {"Realtime", "2x", "3x", "4x", "5x", "6x", "8x", "10x", "12x", "20x", "60x"};
 		default = 1;
 	};
 	class OvercastPercent
@@ -47,11 +47,39 @@ class Params
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 10;
 	};
-	class Clutter
+	class ClutterWreck
 	{
-		title = "Does the map contain clutter?";
+		title = "Does the map contain road wreck clutter?";
 		values[] = {1, 0};
 		texts[] = {"Yes", "No"};
 		default = 0;
+	};
+	class ClutterGraves
+	{
+		title = "Does the map contain mass grave clutter?";
+		values[] = {1, 0};
+		texts[] = {"Yes", "No"};
+		default = 1;
+	};
+	class NearbyVehiclePatrol
+	{
+		title = "Number of Concurrent Nearby vehicle Patrols";
+		values[] = {0, 1, 2, 3, 4};
+		texts[] = {"None", "1", "2", "3", "4"};
+		default = 2;
+	};
+	class RegionVehiclePatrols
+	{
+		title = "Number of Vehicle Patrols Around the Map";
+		values[] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60};
+		texts[] = {"None", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"};
+		default = 30;
+	};
+	class CityFootPatrolMultiplier
+	{
+		title = "Foot Patrol Multiplier in Towns";
+		values[] = {1, 2, 4, 6};
+		texts[] = {"Half", "Normal", "2x", "3x"};
+		default = 2;
 	};
 };

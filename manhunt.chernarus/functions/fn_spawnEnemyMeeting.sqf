@@ -1,20 +1,34 @@
-//takes in position where the meeting will take place and number of units other than the leader attending
-//returns an array of the units that are spawned from this function
-params ["_posCenter", "_numAttendees", "_centerObjectClassname", "_possibleBaseUnitClassnames", "_possibleWeaponClassnames", "_possibleFaces"];
+/*
+	Author: Scouter
+
+	Description:
+		Spawn units around some position with the intent that one of them is a target for players
+
+	Parameter(s):
+		0: Position - center of where to place units
+		1: Number - number of units spawned. Should be more than 0
+		2: String - classname of the object that is in the center
+		3: Array of Strings - classnames of unit types that can be created
+		4: Array of Strings - classnames of what weapons the units can be using
+
+	Returns:
+		Object - the intented 'leader' of the 'meeting'
+*/
+params ["_posCenter", "_numAttendees", "_centerObjectClassname", "_possibleBaseUnitClassnames", "_possibleWeaponClassnames"];
 
 private _startTime = diag_tickTime;
 
 //create center object
-private _table = createVehicle [_centerObjectClassname, _posCenter, [], 0, "CAN_COLLIDE"];
-_table setDir random 360;
+private _centerObj = createVehicle [_centerObjectClassname, _posCenter, [], 0, "CAN_COLLIDE"];
+_centerObj setDir random 360;
 
-private _numUnits = _numAttendees;
 private _distFromCenter = 2;
-private _step = 360 / _numUnits;
+private _step = 360 / _numAttendees;
 private _angle = 0;
 private _units = [];
 
-for "_i" from 1 to _numUnits do
+//spawn and initialize each meeting member
+for "_i" from 1 to _numAttendees do
 {
 	//set up group
 	private _group = createGroup east;
@@ -58,13 +72,10 @@ for "_i" from 1 to _numUnits do
 		[_unit, "WhiteHead_24"] remoteExec ["setFace", 0, _unit];
 		[_unit, "STAND", "RANDOM"] call BIS_fnc_ambientAnimCombat;
 		_unit setName "Dmitri Kozlov";
-		[_unit, [format ["Confirm Identity of %1", name _unit],	{CONFIRMED_KILL = true}, nil, 3, true, true, "", "true", 3, false, "", ""]] remoteExec ["addAction", 0, true];
-	}
-	else
-	{
-		[_unit, selectRandom _facePool] remoteExec ["setFace", 0, _unit];
+		[_unit, [format [localize "STR_ACTION_CONFIRM", name _unit], {CONFIRMED_KILL = true}, nil, 3, true, true, "", "true", 3, false, "", ""]] remoteExec ["addAction", 0, true];
 	};
-	_unit setDir (_unit getDir _table);
+	
+	_unit setDir (_unit getDir _centerObj);
 	_angle = _angle + _step;
 	_units pushBack _unit;
 };

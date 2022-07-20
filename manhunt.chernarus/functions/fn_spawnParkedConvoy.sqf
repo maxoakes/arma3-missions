@@ -1,3 +1,17 @@
+/*
+	Author: Scouter
+
+	Description:
+		Spawn vehicles on parking spots on the side of a road that is closest to some position
+		
+	Parameter(s):
+		0: Position - position of the that the nearest roads should be chosen from
+		1: Number - maximum number of vehicles to spawn. Should be more than 0
+		2: Array of Strings - classnames of vehicle types that can be created
+
+	Returns:
+		Array of Objects - vehicles that end up being spawned
+*/
 params ["_pos", "_numVehicles", "_possibleVehicleClassnames"];
 
 private _startTime = diag_tickTime;
@@ -36,6 +50,7 @@ private _roadPositions = [];
 	};
 } forEach _nearestRoads;
 
+//create a list of positions on the shoulder of each road position
 private _parkingPositionDirections = [];
 {
 	//get the road width and direction
@@ -49,24 +64,27 @@ private _parkingPositionDirections = [];
 	private _posRight = _x getPos [_distFromCenter, _dir + 90];
 	private _posLeft = _x getPos [_distFromCenter, _dir + 270];
 
+	//add to the list
 	_parkingPositionDirections pushBackUnique [_posRight, _dir];
 	_parkingPositionDirections pushBackUnique [_posLeft, _dir + 180];
 } forEach _roadPositions;
 
 //sort the markers by distance to original position
 private _sortedDistances = [_parkingPositionDirections, [_pos], { _input0 distance2D (_x select 0) }, "ASCEND"] call BIS_fnc_sortBy;
-systemChat format ["%1 possible road positions", count _sortedDistances];
-private _convoy = [];
 
+//spawn up to the desired amount of vehicles onto the closest road parking positions closest to the desired position
+private _convoy = [];
 for "_i" from 0 to (count _sortedDistances)-1 do
 {
 	_sortedDistances select _i params ["_thisPos", "_thisDir"];
+
+	//stop if we reach the desrired number of vehicles
 	if (count _convoy >= _numVehicles) then
 	{
-		systemChat format ["Convoy limit reached: actual:%1 >= setlimit:%2 on i:%3", count _convoy, _numVehicles, _i];
 		break;
 	};
 
+	//spawn a vehicle in the nearest open parking spot
 	private _selectedVehicle = selectRandom _possibleVehicleClassnames;
 	private _blacklistedObjectTypes = ["LandVehicle", "Building", "Thing", "Static"];
 	if (count (nearestObjects [_thisPos, _blacklistedObjectTypes, sizeOf _selectedVehicle]) == 0) then
@@ -82,6 +100,8 @@ for "_i" from 0 to (count _sortedDistances)-1 do
 };
 
 private _stopTime = diag_tickTime;
-(format ["%1 sec to generate convoy.",	_stopTime - _startTime]) remoteExec ["systemChat", 0];
+(format ["%1 sec to generate convoy with %2 possible road positions. %3 of %4 vehicles spawned", 
+	_stopTime - _startTime, count _sortedDistances, count _convoy, _numVehicles]) remoteExec ["systemChat", 0];
 
+//return
 _convoy;

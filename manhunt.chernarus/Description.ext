@@ -1,13 +1,39 @@
 #include "cfgRespawnInventory.hpp"
+#include "cfgFunctions.hpp"
 
-//Most options set in mission editor
-author			= "Scouter";
-onLoadName		= "Manhunt: Chernarus";
-onLoadMission	= "Find and kill the specified target, confirm the kill, and leave the area.";
+author = "Scouter";
+onLoadName = "Manhunt: Chernarus";
+onLoadMission = "Find and kill the specified target, confirm the kill, and leave the area.";
+onLoadIntro = "Your team's mission is to find and kill the specified target, confirm the kill, and leave the area. The exact whereabouts of the target are not known, so it will take some searching to find them.";
+
+aiKills = 1;
+enableDebugConsole = 1;
+joinUnassigned = 1;
+saving = 0;
+allowFunctionsLog = 1;
 
 respawn = BASE;
 respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory"};
 respawnDelay = 5;
+
+reviveMode = 1;
+reviveUnconsciousStateMode = 1;
+reviveRequiredTrait = 0;
+reviveRequiredItems = 2;
+reviveRequiredItemsFakConsumed = 1;
+reviveDelay = 10;
+
+corpseManagerMode = 0;
+wreckManagerMode = 0;
+
+taskManagement_markers3D = 1;
+
+class Header
+{
+	gameType = Coop;
+	minPlayers = 1;
+	maxPlayers = 12;
+};
 
 class Params
 {
@@ -81,5 +107,12 @@ class Params
 		values[] = {1, 2, 4, 6};
 		texts[] = {"Half", "Normal", "2x", "3x"};
 		default = 2;
+	};
+	class PlayerStamina
+	{
+		title = "Enable Player Stamina";
+		values[] = {1, 0};
+		texts[] = {"Yes", "No"};
+		default = 1;
 	};
 };

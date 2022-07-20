@@ -31,7 +31,7 @@ while {true} do
 		if (({_x distance2D locationPosition _loc < _size*3} count units west) > 0 and _timesSpawned < ceil (_size/400) * _multiplier) then
 		{
 			//if spawning is allowed, spawn a group
-			[locationPosition _loc, _size, floor random [3, 6, 8], _patrolUnitPool, [0.2, 0.4], 0] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
+			[locationPosition _loc, _size, floor random [3, 6, 8], _patrolUnitPool, [0.2, 0.4], 0] call SCO_fnc_spawnGroundPatrolGroup;
 			_x set [2, (_x select 2) + 1];
 			systemChat format ["Spawned patrol in %1", text _loc];
 		};

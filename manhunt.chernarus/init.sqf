@@ -70,7 +70,7 @@ if (isServer) then
 		"ColorBLUFOR", //color string
 		"ICON", //type
 		"mil_pickup" //style
-	] call compile preprocessFile "functions\fn_createMarker.sqf";
+	] call SCO_fnc_createMarker;
 	exfiltration allowDamage false;
 	exfiltration lock true;
 
@@ -85,9 +85,9 @@ if (isServer) then
 	};
 
 	//populate the map with random graves and wrecks
-	private _doSpawnWrecks = [("ClutterWreck" call BIS_fnc_getParamValue)] call compile preprocessFile "functions\fn_parseBoolean.sqf";
-	private _doSpawnGraves = [("ClutterGraves" call BIS_fnc_getParamValue)] call compile preprocessFile "functions\fn_parseBoolean.sqf";
-	[_doSpawnWrecks, _doSpawnGraves] call compile preprocessFile "functions\fn_generateMapClutter.sqf";
+	private _doSpawnWrecks = [("ClutterWreck" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
+	private _doSpawnGraves = [("ClutterGraves" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
+	[_doSpawnWrecks, _doSpawnGraves] call SCO_fnc_generateMapClutter;
 
 	//once an HQ location is found, mark it on the map and delete any mass graves near it
 	private _possibleHQMarkers = ["hq_"] call BIS_fnc_getMarkers;
@@ -100,7 +100,7 @@ if (isServer) then
 	} forEach _nearbyClutter;
 
 	//create the tent and get the tent object and intel within it
-	private _missionObjects = [_posHQ] call compile preprocessFile "functions\fn_createHQTent.sqf";
+	private _missionObjects = [_posHQ] call SCO_fnc_createHQTent;
 	_missionObjects params ["_tent", "_intel"];
 
 	//pick a meeting position
@@ -109,17 +109,17 @@ if (isServer) then
 	"meeting" setMarkerPos _meetingPosition;
 
 	//create meeting
-	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool] call compile preprocessFile "functions\fn_spawnEnemyMeeting.sqf";
+	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool] call SCO_fnc_spawnEnemyMeeting;
 	
 	//create parked cars near meeting location
-	private _convoy = [_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call compile preprocessFile "functions\fn_spawnParkedConvoy.sqf";
+	private _convoy = [_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
 
 	//create tasks for players on a different thread
-	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn compile preprocessFile "functions\fn_taskManager.sqf";
+	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn SCO_fnc_taskManager;
 
 	//spawn enemy unit ground patrols
-	[_meetingPosition, 500, 6, _patrolUnitPool, [0.2, 0.6], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
-	[getPos _tent, 50, 6, _patrolUnitPool, [0.3, 0.5], _patrol] call compile preprocessFile "functions\fn_spawnGroundPatrolGroup.sqf";
+	[_meetingPosition, 500, 6, _patrolUnitPool, [0.2, 0.6], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
+	[getPos _tent, 50, 6, _patrolUnitPool, [0.3, 0.5], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
 
 	//define all cities to spawn patrols in
 	private _allTowns = nearestLocations [
@@ -137,19 +137,19 @@ if (isServer) then
 			"ColorRed", //color string
 			"ELLIPSE", //type
 			"DiagGrid" //style
-		] call compile preprocessFile "functions\fn_createMarker.sqf";
+		] call SCO_fnc_createMarker;
 	} forEach _allTowns;
 
 	//vehicle and unit patrol managers
-	[_allTowns, _patrolUnitPool, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn compile preprocessFile "functions\fn_footPatrolManager.sqf";
-	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, 30] spawn compile preprocessFile "functions\fn_vehiclePatrolManager.sqf";
+	[_allTowns, _patrolUnitPool, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_footPatrolManager;
+	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, 30] spawn SCO_fnc_vehiclePatrolManager;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
 	if (_numNearbyVehicles > 0) then
 	{
 		for "_i" from 1 to _numNearbyVehicles do
 		{
-			[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP] spawn compile preprocessFile "functions\fn_spawnRepeatingSingleVehiclePatrol.sqf";
+			[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP] spawn SCO_fnc_spawnRepeatingSingleVehiclePatrol;
 		};
 	};
 	

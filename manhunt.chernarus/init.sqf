@@ -77,7 +77,7 @@ if (isServer) then
 	//extract vehicle does not run out of fuel
 	exfiltration addEventHandler ["Fuel", {
 		params ["_vehicle", "_hasFuel"];
-		if (fuel _vehicle< 1.0) then
+		if (fuel _vehicle < 1.0) then
 		{
 			_vehicle setFuel 1.0;
 		};
@@ -110,7 +110,13 @@ if (isServer) then
 
 	//create the tent and get the tent object and intel within it
 	private _missionObjects = [_posHQ] call SCO_fnc_createHQTent;
-	_missionObjects params ["_tent", "_intel"];
+	_missionObjects params ["_tent", "_intel", "_crate"];
+	["AmmoboxInit", [_crate, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
+	[_crate, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
+	[_crate, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
+
+	//create parked cars near HQ
+	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
 
 	//pick a meeting position
 	private _possibleMeetingMarkers = ["meet_"] call BIS_fnc_getMarkers;
@@ -121,7 +127,7 @@ if (isServer) then
 	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool, AI_SKILL_MAX] call SCO_fnc_spawnEnemyMeeting;
 	
 	//create parked cars near meeting location
-	private _convoy = [_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
+	[_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
 
 	//create tasks for players on a different thread
 	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn SCO_fnc_taskManager;
@@ -138,7 +144,7 @@ if (isServer) then
 
 	{
 		private _size = ((size _x select 0) max (size _x select 1))*2;
-		private _townBorder = [
+		[
 			format ["t%1", _forEachIndex], //var name
 			locationPosition _x, //position
 			text _x, //display name

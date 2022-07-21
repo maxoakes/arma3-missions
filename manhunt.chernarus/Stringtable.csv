@@ -29,6 +29,9 @@ STR_TASK_EXTRACT_UPDATE_LOC, "Ship"
 STR_DIARY_INITIAL_TITLE, Target: Dmitri Kozlov
 STR_DIARY_INITIAL_TEXT, "<img image='images\warlord.jpg' width='200' height='200'/><br></br><br></br>Dmitri Kozlov<br></br><br></br>Responsible for the recent genocide in the Chernarus region. Believed to have nearly 4000 soldiers under his command. Currently, he is still operating within Chernarus. We believe he is in his command tent.<br></br><br></br>Your mission is to track down Kozlov and eliminate him. Your team will also need to confirm his identity before or after he is killed.<br></br><br></br>There are likely several patrols in the region, both on foot and in vehicles. It will be best to avoid open and urban areas."
 
+STR_DIARY_ENEMIES_TITLE, Enemy Forces
+STR_DIARY_ENEMIES_TEXT, There are likely patrols in all cities. Satellite reconnaissance has shown dozens of patrols both on foot and in vehicles. Sticking to roads will be dangerous as you are likely to encounter armed vehicle patrols.
+
 STR_DIARY_TENT_TITLE, Headquarters
 STR_DIARY_TENT_TEXT, Kozlov was not in his HQ tent. We need to find out where he is currently. There are a few computers in the tent. We should be able to find out where is from here.
 

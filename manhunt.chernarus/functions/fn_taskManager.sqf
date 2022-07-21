@@ -50,7 +50,7 @@ waitUntil { ({_x distance2D _tent < 8} count units west) > 0 or REVEAL_WARLORD_M
 ["taskKill", objNull] call BIS_fnc_taskSetDestination;
 
 //add diary entry for all players
-[player, ["Diary", [localize "STR_DIARY_TENT_TITLE", localize "STR_DIARY_TENT_TEXT"], taskNull, "", false]] remoteExec ["createDiaryRecord", 0, true];
+{player createDiaryRecord ["Diary", [localize "STR_DIARY_TENT_TITLE", localize "STR_DIARY_TENT_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
 
 //create secondary objective to track down warlord's location
 [
@@ -76,12 +76,23 @@ private _intelAction = [localize "STR_ACTION_INTEL", { missionNamespace setVaria
 //wait until someone finds the warlord's meeting location
 waitUntil { REVEAL_WARLORD_MEETING or (CONFIRMED_KILL and !(alive _warlord)); };
 
+//make a respawn checkpoint and remove original
+[
+	"respawn_west_tent", //var name
+	_tent getPos [7, getDir _tent], //position
+	"HQ Tent", //display name
+	[1, 1], //size
+	"ColorBLUFOR", //color string
+	"ICON", //type
+	"Empty" //style
+] call SCO_fnc_createMarker;
+deleteMarker "respawn_west";
+
 //complete the secondary objective, update the primary one
 ["taskIntel", "SUCCEEDED"] call BIS_fnc_taskSetState;
 ["taskKill", _posMeeting] call BIS_fnc_taskSetDestination;
 "meeting" setMarkerAlpha 1;
-[player, ["Diary", [localize "STR_DIARY_MEETING_TITLE", localize "STR_DIARY_MEETING_TEXT"], taskNull, "", false]] remoteExec ["createDiaryRecord", 0, true];
-
+{player createDiaryRecord ["Diary", [localize "STR_DIARY_MEETING_TITLE", localize "STR_DIARY_MEETING_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
 //wait until the kill is confirmed
 waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
 ["taskKill", "SUCCEEDED"] call BIS_fnc_taskSetState;
@@ -105,7 +116,7 @@ _boat lock false;
 ] call BIS_fnc_taskCreate;
 
 //add diary entry for all players
-[player, ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]] remoteExec ["createDiaryRecord", 0, true];
+{player createDiaryRecord ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
 
 //wait until everyone is in the boat
 waitUntil {

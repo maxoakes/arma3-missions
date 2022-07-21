@@ -8,7 +8,19 @@
 		0: Position
 
 	Returns:
-		Array of Objects in format [Tent object, Laptop object]
+		Array of Objects in format [Tent object, Laptop object, crate object]
+
+	array obtained using in-game console with the following script:
+
+	private _objects = [];
+	private _originObject = cursorObject;
+	{
+		private _classname = typeOf _x;
+		private _posRel = _originObject worldToModel getPos _x; 
+		private _dir = getDir _x;
+		_objects pushBack [_classname, _posRel, _dir];
+	} forEach nearestObjects [_originObject, [], 20];
+	_objects;
 */
 params ["_pos"];
 
@@ -28,14 +40,12 @@ private _hqPlacementArray = [
 	["Land_MultiScreenComputer_01_black_F",[3.05078,2.18107,-0.37384],88.6554],
 	["Land_PortableLight_02_double_yellow_F",[-3.22266,1.95623,-1.37373],311.475],
 	["Land_PortableDesk_01_black_F",[3.07813,2.16546,-1.37155],271.236],
-	["Box_NATO_WpsLaunch_F",[-2.34766,-2.94598,-1.37454],8.98419],
 	["Land_Computer_01_black_F",[3.00195,2.97065,-0.37186],41.0214],
-	["Box_NATO_AmmoOrd_F",[-1.43652,-4.09686,-1.37455],79.4509],
 	["Land_Sun_chair_green_F",[3.02832,-3.18494,-1.35389],359.978],
 	["Box_NATO_Support_F",[1.94141,-4.07574,-1.37453],344.716],
 	["Land_Camping_Light_F",[2.04785,-4.14002,-0.38705],0.0134262],
 	["Land_PortableCabinet_01_closed_black_F",[-1.95215,4.12042,-1.37061],174.886],
-	["B_supplyCrate_F",[-2.64453,-3.89035,-1.3745],0.000992434],
+	["O_supplyCrate_F",[-2.24453,-3.49035,-1.3745],40],
 	["Land_PortableCabinet_01_4drawers_black_F",[-3.36328,3.34279,-1.36412],326.209],
 	["Land_PortableCabinet_01_bookcase_black_F",[-2.80664,3.8257,-1.37099],333.618],
 	["Land_PortableCabinet_01_medical_F",[2.81641,3.91601,-1.36751],53.3696],
@@ -51,6 +61,7 @@ private _tent = createVehicle ["Land_MedicalTent_01_CSAT_brownhex_generic_open_F
 _tent allowDamage false;
 _tent setDir _baseDir;
 private _intel = objNull;
+private _crate = objNull;
 
 //fill tent with stuff
 {
@@ -61,10 +72,14 @@ private _intel = objNull;
 	{
 		_intel = _obj;
 	};
+	if (typeOf _obj == "O_supplyCrate_F") then
+	{
+		_crate = _obj;
+	}
 } forEach _hqPlacementArray;
 
 private _stopTime = diag_tickTime;
 (format ["%1 sec to create the HQ tent", _stopTime - _startTime]) remoteExec ["systemChat", 0];
 
 //return
-[_tent, _intel];
+[_tent, _intel, _crate];

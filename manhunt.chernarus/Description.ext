@@ -6,7 +6,6 @@ onLoadName = "Manhunt: Chernarus";
 onLoadMission = "Find and kill the specified target, confirm the kill, and leave the area.";
 onLoadIntro = "Your team's mission is to find and kill the specified target, confirm the kill, and leave the area. The exact whereabouts of the target are not known, so it will take some searching to find them.";
 
-disabledAI = 1;
 aiKills = 1;
 enableDebugConsole = 1;
 joinUnassigned = 1;
@@ -44,7 +43,7 @@ class Params
 		title = "Start time of mission";
 		values[] = {0, 3, 6, 9, 12, 15, 18, 21};
 		texts[] = {"00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00"};
-		default = 6;
+		default = 15;
 	};
 	class TimeScale
 	{
@@ -100,7 +99,7 @@ class Params
 		title = "Number of Vehicle Patrols Around the Map";
 		values[] = {0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60};
 		texts[] = {"None", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60"};
-		default = 30;
+		default = 40;
 	};
 	class CityFootPatrolMultiplier
 	{
@@ -120,7 +119,7 @@ class Params
 	{
 		title = "Maximum Enemy Skill";
 		values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10};
-		texts[] = {"Pretty Bad", "Bad", "Okay", "Average", "Good", "Really Good", "Too Good", "Literally Jason Bourne"};
+		texts[] = {"Pretty Bad", "Bad", "Okay", "Average", "Good", "Really Good", "Too Good", "Near-Godly", "Literally Jason Bourne"};
 		default = 5;
 	};
 };

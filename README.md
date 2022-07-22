@@ -30,6 +30,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
 * Manhunt: Chernarus
     * Created July 5, 2022
     * Last updated July 20, 2022
+    * Admittedly, Chernarus is a big map, so this mission is a lot of walking and driving
     * A new type of mission. Goal is for players to locate, kill and confirm a target. After the kill is confirmed, all players must leave the map via their exfiltration vehicle.
     * Requires A3 CBA, CUP Weapons, CUP Units, CUP Vehicles, CUP Terrains - Core, CUP Terrains - Maps and CUP Terrains - CWA
     * For recreating this mission in other maps, the following objects are needed in the mission editor:
@@ -42,3 +43,33 @@ I have decided to go through all of the viable missions and revamp them. Many we
         * One or more markers with variable name starting with "meet_". All markers should be in at least a somewhat flat area of about 3m radius
         * One static ship offshore a few kilometers with a variable name of "end"
     * This is the first mission to utilize CfgFunctions. Will expand to the other missions when this one is successful
+* Functions:
+    * See function headers for description, parameters and return value(s)
+    * createMarker
+        * Manhunt Chernarus
+    * createMissionBuilding
+        * Manhunt Chernarus
+    * footPatrolManager
+        * Called via 'spawn'
+        * Manhunt Chernarus
+    * getMarkersWithPrefix
+        * Manhunt Chernarus
+    * generateMapClutter
+        * Manhunt Chernarus
+    * parseBoolean
+        * Manhunt Chernarus
+    * refillWeapon
+        * Manhunt Chernarus
+    * spawnEnemyMeeting
+        * Manhunt Chernarus
+    * spawnGroundPatrolGroup
+        * Manhunt Chernarus
+    * spawnParkedVehicles
+        * Manhunt Chernarus
+    * spawnRepeatingSingleVehiclePatrol
+        * Manhunt Chernarus
+    * taskManager
+        * Manhunt Chernarus
+    * vehiclePatrolManager
+        * Called via 'spawn'
+        * Manhunt Chernarus

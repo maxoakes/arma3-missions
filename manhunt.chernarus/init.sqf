@@ -99,7 +99,7 @@ if (isServer) then
 	[_doSpawnWrecks, _doSpawnGraves] call SCO_fnc_generateMapClutter;
 
 	//once an HQ location is found, mark it on the map and delete any mass graves near it
-	private _possibleHQMarkers = ["hq_"] call BIS_fnc_getMarkers;
+	private _possibleHQMarkers = ["hq_"] call SCO_fnc_getMarkersWithPrefix;
 	private _posHQ = getMarkerPos (selectRandom _possibleHQMarkers);
 	_hqMarker setMarkerPos _posHQ;
 	_hqMarker setMarkerAlpha 1; //show HQ marker now that it is finally set
@@ -108,18 +108,48 @@ if (isServer) then
 		deleteVehicle _x;
 	} forEach _nearbyClutter;
 
+	//object classnames, relative position and rotation for HQ tent
+	//generated from a different script
+	private _placementArray = [
+		["Land_MedicalTent_01_CSAT_brownhex_generic_open_F",[0,0,0],0],
+		["Land_MedicalTent_01_floor_light_F",[0,0,0],0],
+		["Land_CampingChair_V2_white_F",[-1.44043,-0.301097,-1.37448],97.2297],
+		["Land_Laptop_Intel_01_F",[-2.30078,-0.0440507,-0.37651],119.858],
+		["Land_CampingChair_V2_F",[-1.91797,-1.43323,-1.37449],139.457],
+		["Land_CampingTable_white_F",[-2.4668,-0.43909,-1.37708],112.439],
+		["Land_CampingChair_V2_F",[2.23926,1.24913,-1.37426],261.168],
+		["Newspaper_01_F",[-2.64258,-1.00747,-0.37653],359.993],
+		["Land_SatellitePhone_F",[3.06641,1.33533,-0.37612],87.1279],
+		["Land_MultiScreenComputer_01_black_F",[3.05078,2.18107,-0.37384],88.6554],
+		["Land_PortableLight_02_double_yellow_F",[-3.22266,1.95623,-1.37373],311.475],
+		["Land_PortableDesk_01_black_F",[3.07813,2.16546,-1.37155],271.236],
+		["Land_Computer_01_black_F",[3.00195,2.97065,-0.37186],41.0214],
+		["Land_Sun_chair_green_F",[3.02832,-3.18494,-1.35389],359.978],
+		["Box_NATO_Support_F",[1.94141,-4.07574,-1.37453],344.716],
+		["Land_Camping_Light_F",[2.04785,-4.14002,-0.38705],0.0134262],
+		["Land_PortableCabinet_01_closed_black_F",[-1.95215,4.12042,-1.37061],174.886],
+		["O_supplyCrate_F",[-2.24453,-3.49035,-1.3745],40],
+		["Land_PortableCabinet_01_4drawers_black_F",[-3.36328,3.34279,-1.36412],326.209],
+		["Land_PortableCabinet_01_bookcase_black_F",[-2.80664,3.8257,-1.37099],333.618],
+		["Land_PortableCabinet_01_medical_F",[2.81641,3.91601,-1.36751],53.3696],
+		["Box_NATO_AmmoVeh_F",[1.93945,5.84517,-1.33292],359.839],
+		["Box_FIA_Support_F",[-2.05762,6.40834,-1.36661],0.360727],
+		["SatelliteAntenna_01_Olive_F",[-3.89551,6.19535,-1.37167],344.466],
+		["O_CargoNet_01_ammo_F",[3.49805,7.11149,-1.35801],91.1991]
+	];
+
 	//create the tent and get the tent object and intel within it
-	private _missionObjects = [_posHQ] call SCO_fnc_createHQTent;
+	private _missionObjects = [_posHQ, _placementArray, 0, 3, 17] call SCO_fnc_createMissionBuilding;
 	_missionObjects params ["_tent", "_intel", "_crate"];
 	["AmmoboxInit", [_crate, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
 	[_crate, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 	[_crate, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
 
 	//create parked cars near HQ
-	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
+	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
 
 	//pick a meeting position
-	private _possibleMeetingMarkers = ["meet_"] call BIS_fnc_getMarkers;
+	private _possibleMeetingMarkers = ["meet_"] call SCO_fnc_getMarkersWithPrefix;
 	private _meetingPosition = getMarkerPos (selectRandom _possibleMeetingMarkers);
 	"meeting" setMarkerPos _meetingPosition;
 
@@ -127,7 +157,7 @@ if (isServer) then
 	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool, AI_SKILL_MAX] call SCO_fnc_spawnEnemyMeeting;
 	
 	//create parked cars near meeting location
-	[_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP)] call SCO_fnc_spawnParkedConvoy;
+	[_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
 
 	//create tasks for players on a different thread
 	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn SCO_fnc_taskManager;

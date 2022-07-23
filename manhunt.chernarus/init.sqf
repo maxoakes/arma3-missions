@@ -10,6 +10,7 @@ forceWeatherChange;
 AI_SKILL_MAX = ("MaxEnemySkill" call BIS_fnc_getParamValue)/10;
 REVEAL_WARLORD_MEETING = false;
 CONFIRMED_KILL = false;
+private _extractVeh = extract;
 private _patrol = 0;
 private _defense = 1;
 
@@ -61,21 +62,20 @@ if (isServer) then
 	[arsenal, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 	[arsenal, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
 
-	//setup exfil boat
-	private _exfilMarker = [
-		"exfil", //var name
-		getPos exfiltration, //position
-		localize "STR_MARKER_BOAT", //display name
+	private _extractMarker = [
+		"extract", //var name
+		getPos _extractVeh, //position
+		localize "STR_MARKER_EXTRACT", //display name
 		[1, 1], //size
 		"ColorBLUFOR", //color string
 		"ICON", //type
 		"mil_pickup" //style
 	] call SCO_fnc_createMarker;
-	exfiltration allowDamage false;
-	exfiltration lock true;
+	_extractVeh allowDamage false;
+	_extractVeh lock true;
 
 	//extract vehicle does not run out of fuel
-	exfiltration addEventHandler ["Fuel", {
+	_extractVeh addEventHandler ["Fuel", {
 		params ["_vehicle", "_hasFuel"];
 		if (fuel _vehicle < 1.0) then
 		{
@@ -84,7 +84,7 @@ if (isServer) then
 	}];
 
 	//update marker for the boat since it is important to the mission
-	[_exfilMarker, exfiltration] spawn
+	[_extractMarker, _extractVeh] spawn
 	{
 		while {true} do
 		{
@@ -160,7 +160,7 @@ if (isServer) then
 	[_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
 
 	//create tasks for players on a different thread
-	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, exfiltration, end] spawn SCO_fnc_taskManager;
+	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, _extractVeh] spawn SCO_fnc_taskManager;
 
 	//spawn enemy unit ground patrols
 	[_meetingPosition, 500, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), AI_SKILL_MAX], _patrol] call SCO_fnc_spawnGroundPatrolGroup;

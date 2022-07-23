@@ -3,7 +3,7 @@ STR_ACTION_HEAL, Heal Yourself
 STR_ACTION_AMMO, Add Ammo for this Weapon 
 STR_ACTION_INTEL, Read Messages
 STR_ACTION_CONFIRM, Confirm Identity of %1
-STR_MARKER_BOAT, Exfiltration Boat
+STR_MARKER_EXTRACT, Extraction
 
 STR_HINT_AMMO_RESULT, Filled inventory with %1.
 STR_TASK_TENT_DESC, It is likely that the warload is in his HQ tent. Eliminate him and confirm your kill.
@@ -18,13 +18,9 @@ STR_TASK_INTEL_DESC, The warload is not at his tent. Find intel that can help as
 STR_TASK_INTEL_TITLE, Find the warlord's location
 STR_TASK_INTEL_DESC, Computer
 
-STR_TASK_EXTRACT_DESC, The warlord has been confirmed dead. Get to the extraction vehicle.
+STR_TASK_EXTRACT_DESC, The warlord has been confirmed dead. Get everyone into the extraction vehicle.
 STR_TASK_EXTRACT_TITLE, Get to the Extraction Vehicle
-STR_TASK_EXTRACT_DESC, Boat
-
-STR_TASK_EXTRACT_UPDATE_DESC, "Use the extraction vehicle to get to the ship off of the coast."
-STR_TASK_EXTRACT_UPDATE_TITLE, "Leave the Area"
-STR_TASK_EXTRACT_UPDATE_LOC, "Ship"
+STR_TASK_EXTRACT_DESC, Vehicle
 
 STR_DIARY_INITIAL_TITLE, Target: Dmitri Kozlov
 STR_DIARY_INITIAL_TEXT, "<img image='images\warlord.jpg' width='200' height='200'/><br></br><br></br>Dmitri Kozlov<br></br><br></br>Responsible for the recent genocide in the Chernarus region. Believed to have nearly 4000 soldiers under his command. Currently, he is still operating within Chernarus. We believe he is in his command tent.<br></br><br></br>Your mission is to track down Kozlov and eliminate him. Your team will also need to confirm his identity before or after he is killed.<br></br><br></br>There are likely several patrols in the region, both on foot and in vehicles. It will be best to avoid open and urban areas."
@@ -39,4 +35,7 @@ STR_DIARY_MEETING_TITLE, Meeting
 STR_DIARY_MEETING_TEXT, We have found Kozlov's location. We will need to travel to his actual location to continue the mission. There will likely be a lot of resistance.
 
 STR_DIARY_EXTRACT_TITLE, Extract
-STR_DIARY_EXTRACT_TEXT, Kozlov has been elimited. It is time to leave the region. We will need to get back to our extraction vehicle and reach the submarine offshore.
+STR_DIARY_EXTRACT_TEXT, Kozlov has been elimited. It is time to leave the region. We will need to get back to our extraction vehicle.
+
+STR_DIARY_ENTRY_TITLE, Entry
+STR_DIARY_ENTRY_TEXT, We arrived on a helicopter that is marked in a hidden location. When we are done with the mission, we will need to come back to it to leave the area.

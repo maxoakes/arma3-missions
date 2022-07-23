@@ -31,17 +31,16 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * Created July 5, 2022
     * Last updated July 20, 2022
     * Admittedly, Chernarus is a big map, so this mission is a lot of walking and driving
-    * A new type of mission. Goal is for players to locate, kill and confirm a target. After the kill is confirmed, all players must leave the map via their exfiltration vehicle.
+    * A new type of mission. Goal is for players to locate, kill and confirm a target. After the kill is confirmed, all players must leave the map via their extraction vehicle.
     * Requires A3 CBA, CUP Weapons, CUP Units, CUP Vehicles, CUP Terrains - Core, CUP Terrains - Maps and CUP Terrains - CWA
     * For recreating this mission in other maps, the following objects are needed in the mission editor:
-        * Some number of west (blufor) units. This implimentation has 12.
+        * Some number of west (blufor) units. This implimentation has 8.
         * One "respawn_west" marker
         * Ammobox with variable name "arsenal"
-        * Boat that can carry at least the maximum number of players with variable name "exfiltration"
+        * A vehicle that can carry at least the maximum number of players with variable name "extract"
         * A marker to indicate an HQ location with variable name "confirmed"
         * One or more invisible (empty) markers with a variable name starting with "hq_", all on flat surfaces that are at least 5 meters away from any object
         * One or more markers with variable name starting with "meet_". All markers should be in at least a somewhat flat area of about 3m radius
-        * One static ship offshore a few kilometers with a variable name of "end"
     * This is the first mission to utilize CfgFunctions. Will expand to the other missions when this one is successful
 * Functions:
     * See function headers for description, parameters and return value(s)

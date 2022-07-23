@@ -10,13 +10,12 @@
 		1: Object - the object that has the intel that says where the meeting is taking place
 		2: Position - where the meeting actually is
 		3: Object - the leader that is the target of the players
-		4: Object - the boat the players will escape the region on
-		5: Object - the final destination for the players to end the mission
+		4: Object - the vehicle that the players all need to get into to end the mission
 
 	Returns:
 		Void
 */
-params ["_tent", "_intel", "_posMeeting", "_warlord", "_boat", "_end"];
+params ["_tent", "_intel", "_posMeeting", "_warlord", "_extract"];
 missionNamespace setVariable ["REVEAL_WARLORD_MEETING", false, true];
 //create task to kill warlord
 [
@@ -96,18 +95,29 @@ deleteMarker "respawn_west";
 //wait until the kill is confirmed
 waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
 ["taskKill", "SUCCEEDED"] call BIS_fnc_taskSetState;
-_boat lock false;
+_extract lock false;
+
+//make a respawn checkpoint at the meeting site
+[
+	"respawn_west_meeting", //var name
+	_tent getPos [7, getDir _tent], //position
+	"HQ Tent", //display name
+	[1, 1], //size
+	"ColorBLUFOR", //color string
+	"ICON", //type
+	"Empty" //style
+] call SCO_fnc_createMarker;
 
 //create next objective to leave the map
 [
 	west, //side
-	"taskBoat", //id 
+	"tastExtract", //id 
 	[ //desc
 		"$STR_TASK_EXTRACT_DESC", 
 		"$STR_TASK_EXTRACT_TITLE", 
 		"$STR_TASK_EXTRACT_LOC"
 	], 
-	_boat, //dest
+	_extract, //dest
 	true, //state
 	-1, //priority
 	true, //show notification
@@ -118,12 +128,12 @@ _boat lock false;
 //add diary entry for all players
 {player createDiaryRecord ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
 
-//wait until everyone is in the boat
+//wait until everyone is in the vehicle
 waitUntil {
 	sleep 0.5;
 	private _everyoneInVehicle = true;
 	{
-		if (vehicle _x != exfiltration) then
+		if (vehicle _x != _extract) then
 		{
 			_everyoneInVehicle = false;
 		};
@@ -131,29 +141,5 @@ waitUntil {
 	_everyoneInVehicle;
 };
 
-["taskBoat","SUCCEEDED"] call BIS_fnc_taskSetState;
-//update the destination when everyone is in the boat
-[
-	west, //side
-	"taskExfiltrate", //id 
-	[ //desc
-		"$STR_TASK_EXTRACT_UPDATE_DESC", 
-		"$STR_TASK_EXTRACT_UPDATE_TITLE", 
-		"$STR_TASK_EXTRACT_UPDATE_LOC"
-	], 
-	_end, //dest
-	true, //state
-	-1, //priority
-	true, //show notification
-	"takeoff", //type
-	true //visible in 3d
-] call BIS_fnc_taskCreate;
-
-//wait until everyone is at the ship
-waitUntil {
-	sleep 0.5;
-	{alive _x} count allPlayers == {alive _x && _x distance2D _end < 200} count allPlayers;
-};
-
-["taskExfiltrate", "SUCCEEDED"] call BIS_fnc_taskSetState;
+["tastExtract","SUCCEEDED"] call BIS_fnc_taskSetState;
 "EveryoneWon" call BIS_fnc_endMissionServer;

@@ -7,24 +7,27 @@
 	Parameter(s):
 		0: Position - center of where to place units
 		1: Number - number of units spawned. Should be more than 0
-		2: String - classname of the object that is in the center
+		2: Number - distance from the center that the units are spawned
 		3: Array of Strings - classnames of unit types that can be created
-		4: Array of Strings - classnames of what weapons the units can be using
-		5: Number - between 0.0 and 1.0, the maximum skill of a unit
-
+		4: Number - between 0.0 and 1.0, the maximum skill of a unit
+		5: String - classname of the object that is in the center
+		6: Array of Strings - classnames of what weapons the units can be using
+	
 	Returns:
 		Object - the intented 'leader' of the 'meeting'
 */
-params ["_posCenter", "_numAttendees", "_centerObjectClassname", "_possibleBaseUnitClassnames", "_possibleWeaponClassnames", "_skill"];
+params ["_posCenter", "_numAttendees", "_radius", "_possibleBaseUnitClassnames", ["_skill", 0.5], ["_centerObjectClassname", ""]];
 
 private _startTime = diag_tickTime;
 missionNamespace setVariable ["CONFIRMED_KILL", false, true];
 
 //create center object
-private _centerObj = createVehicle [_centerObjectClassname, _posCenter, [], 0, "CAN_COLLIDE"];
-_centerObj setDir random 360;
+if (_centerObjectClassname != "") then
+{
+	private _centerObj = createVehicle [_centerObjectClassname, _posCenter, [], 0, "CAN_COLLIDE"];
+	_centerObj setDir random 360;
+};
 
-private _distFromCenter = 2;
 private _step = 360 / _numAttendees;
 private _angle = 0;
 private _units = [];
@@ -38,36 +41,13 @@ for "_i" from 1 to _numAttendees do
 	_group setBehaviour "COMBAT";
 
 	private _pos = [
-		(_posCenter select 0) + (sin(_angle)* _distFromCenter),
-		(_posCenter select 1) + (cos(_angle)* _distFromCenter)
+		(_posCenter select 0) + (sin(_angle)* _radius),
+		(_posCenter select 1) + (cos(_angle)* _radius)
 	];
 
 	private _unit = _group createUnit [selectRandom _possibleBaseUnitClassnames, _pos, [], 0, "CAN_COLLIDE"];
-	_group setGroupId [format ["Faction Leader %1", _i]];
+	_group setGroupIdGlobal [format ["Faction Leader %1", _i]];
 	_unit setSkill random [_skill - 0.4 max 0.5, _skill, _skill];
-
-	//set the unit inventory
-	removeAllWeapons _unit;
-	removeAllItems _unit;
-	removeAllAssignedItems _unit;
-	removeGoggles _unit;
-
-	_unit addItemToVest "MiniGrenade";
-	for "_i" from 1 to 3 do {_unit addItemToVest "30Rnd_762x39_AK12_Mag_F";};
-	for "_i" from 1 to 3 do {_unit addItemToVest "6Rnd_45ACP_Cylinder";};
-	
-	_unit linkItem "ItemWatch";
-	_unit linkItem "ItemRadio";
-	_unit linkItem "ItemGPS";
-
-	private _selectedWeapon = selectRandom _primaryWeaponPool;
-	_unit addWeapon _selectedWeapon;
-	private _magazines = getArray (configFile >> "CfgWeapons" >> _selectedWeapon >> "magazines");
-	for "_i" from 1 to 3 do {
-		_unit addMagazine (_magazines select 0);
-	};
-	_unit addWeapon "hgun_Pistol_heavy_02_F";
-	_unit addHandgunItem "6Rnd_45ACP_Cylinder";
 
 	//set the identify of the unit if it is the leader
 	if (_i == 1) then
@@ -78,7 +58,7 @@ for "_i" from 1 to _numAttendees do
 		[_unit, [format [localize "STR_ACTION_CONFIRM", name _unit], {missionNamespace setVariable ["CONFIRMED_KILL", true, true];}, nil, 3, true, true, "", "true", 3, false, "", ""]] remoteExec ["addAction", 0, true];
 	};
 	
-	_unit setDir (_unit getDir _centerObj);
+	_unit setDir ([_unit, _posCenter] call BIS_fnc_dirTo);
 	_angle = _angle + _step;
 	_units pushBack _unit;
 };

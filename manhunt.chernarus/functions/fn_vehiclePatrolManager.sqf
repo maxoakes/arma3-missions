@@ -14,7 +14,7 @@ for "_i" from 1 to _maxVehicles do
 	_spawnedGroups pushBack _result;
 	_result params ["_vehicle", "_crew", "_group"];
 	_vehicle setVehiclePosition [_spawnPos, [], 0, "NONE"];
-	_group setGroupId [format ["Region Vehicle Patrol %1", {side _x == east} count allGroups]];
+	_group setGroupIdGlobal [format ["Region Vehicle Patrol %1", {side _x == east} count allGroups]];
 
 	//make it so the vehicles do not run out of fuel when driving
 	_vehicle addEventHandler ["Fuel", {

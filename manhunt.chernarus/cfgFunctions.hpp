@@ -6,15 +6,17 @@ class CfgFunctions
 		class functions
 		{
 			file = "functions";
+			class addToUnitInventory {};
 			class createMissionBuilding {};
 			class createMarker {};
 			class footPatrolManager {};
 			class generateMapClutter {};
-			class getMarkersWithPrefix {};
+			class getItemClassnames {};
+			class getMarkers {};
 			class parseBoolean {};
 			class refillWeapon {};
-			class spawnEnemyMeeting {};
-			class spawnGroundPatrolGroup {};
+			class spawnRadialUnits {};
+			class spawnFootPatrolGroup {};
 			class spawnParkedVehicles {};
 			class spawnRepeatingSingleVehiclePatrol {};
 			class taskManager {};

@@ -23,25 +23,20 @@ private _meetingUnitPoolCUP = ["CUP_O_INS_Officer", "CUP_O_INS_Story_Bardak", "C
 private _patrolUnitPool = ["CUP_O_INS_Soldier_AA", "CUP_O_INS_Soldier_Ammo", "CUP_O_INS_Soldier_AT", "CUP_O_INS_Soldier_AR", 
 	"CUP_O_INS_Soldier_Engineer", "CUP_O_INS_Soldier_MG", "CUP_O_INS_Soldier", "CUP_O_INS_Soldier_AK74", "CUP_O_INS_Soldier_LAT", 
 	"CUP_O_INS_Sniper", "CUP_O_INS_Villager3", "CUP_O_INS_Woodlander3", "CUP_O_INS_Worker2"];
+private _wreckClassnames = ["Land_Wreck_Skodovka_F", "Land_Wreck_Truck_F", "Land_Wreck_Car2_F", "Land_Wreck_HMMWV_F", 
+	"Land_Wreck_Car_F", "Land_Wreck_Car3_F", "Land_Wreck_Van_F", "Land_Wreck_Offroad_F", "Land_Wreck_Offroad2_F",
+	"Land_Wreck_UAZ_F", "Land_Wreck_Ural_F", "Land_V3S_Wreck_F", "Land_Wreck_T72_hull_F", "Land_Wreck_T72_turret_F"];
+private _wreckClassnamesCUP = ["BMP2Wreck", "LADAWreck", "JeepWreck1", "JeepWreck2", "JeepWreck3", "hiluxWreck", 
+	"datsun01Wreck", "datsun02Wreck", "SKODAWreck", "UAZWreck"];
+private _liveVehiclesCUP = ["CUP_C_Datsun", "CUP_C_Datsun_4seat", "CUP_C_Golf4_black", "CUP_C_Golf4_blue",
+	"CUP_C_Golf4_white", "CUP_C_Golf4_yellow", "C_Offroad_02_unarmed_F", "CUP_C_Octavia_CIV", "C_Tractor_01_F", 
+	"CUP_C_Skoda_CR_CIV", "CUP_C_Skoda_Blue_CIV", "CUP_C_Skoda_Green_CIV", "CUP_C_Skoda_Red_CIV", "CUP_C_Skoda_White_CIV", 
+	"CUP_C_Lada_CIV", "CUP_C_Lada_Red_CIV", "CUP_C_Ural_Open_Civ_03", "CUP_C_Ural_Civ_03"];
+private _graveClassnames = ["Mass_Grave"];
 
 if (isServer) then
 {
 	private _startTime = diag_tickTime;
-
-	//build non-literal variables
-	private _primaryWeaponPool = [];
-	{
-		//check if usable weapon
-		if (getnumber (configFile >> "cfgWeapons" >> _x >> "scope") > 1) then
-		{
-			private _itemType = _x call bis_fnc_itemType;
-			//check if the weapon is an AK-style weapon per the classname
-			if (((_itemType select 0) == "Weapon") && ("arifle_AK" in _x)) then
-			{
-				_primaryWeaponPool pushBackUnique _x;
-			};
-		};
-	} foreach ((configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses);
 
 	//set up markers
 	private _hqMarker = "confirmed";
@@ -96,14 +91,14 @@ if (isServer) then
 	//populate the map with random graves and wrecks
 	private _doSpawnWrecks = [("ClutterWreck" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	private _doSpawnGraves = [("ClutterGraves" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
-	[_doSpawnWrecks, _doSpawnGraves] call SCO_fnc_generateMapClutter;
+	[_doSpawnWrecks, (_wreckClassnames + _wreckClassnamesCUP), _doSpawnGraves, _graveClassnames] call SCO_fnc_generateMapClutter;
 
 	//once an HQ location is found, mark it on the map and delete any mass graves near it
-	private _possibleHQMarkers = ["hq_"] call SCO_fnc_getMarkersWithPrefix;
+	private _possibleHQMarkers = ["hq_"] call SCO_fnc_getMarkers;
 	private _posHQ = getMarkerPos (selectRandom _possibleHQMarkers);
 	_hqMarker setMarkerPos _posHQ;
 	_hqMarker setMarkerAlpha 1; //show HQ marker now that it is finally set
-	private _nearbyClutter = nearestObjects [_posHQ, ["Mass_Grave"], 100, true];
+	private _nearbyClutter = nearestObjects [_posHQ, _graveClassnames, 100, true];
 	{
 		deleteVehicle _x;
 	} forEach _nearbyClutter;
@@ -139,32 +134,36 @@ if (isServer) then
 	];
 
 	//create the tent and get the tent object and intel within it
-	private _missionObjects = [_posHQ, _placementArray, 0, 3, 17] call SCO_fnc_createMissionBuilding;
-	_missionObjects params ["_tent", "_intel", "_crate"];
+	private _hqDir = getDir (nearestBuilding _posHQ) + 90; //align it with a nearby building
+	private _missionObjects = [_posHQ, _placementArray, _hqDir, 0] call SCO_fnc_createMissionBuilding;
+	private _tent = _missionObjects select 0;
+	private _intel = _missionObjects select 3;
+	private _crate = _missionObjects select 17;
+
 	["AmmoboxInit", [_crate, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
 	[_crate, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 	[_crate, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
 
 	//create parked cars near HQ
-	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
+	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5, 1000, random [0.3, 0.5, 0.8]] call SCO_fnc_spawnParkedVehicles;
 
 	//pick a meeting position
-	private _possibleMeetingMarkers = ["meet_"] call SCO_fnc_getMarkersWithPrefix;
+	private _possibleMeetingMarkers = ["meet_"] call SCO_fnc_getMarkers;
 	private _meetingPosition = getMarkerPos (selectRandom _possibleMeetingMarkers);
 	"meeting" setMarkerPos _meetingPosition;
 
 	//create meeting
-	private _warlordUnit = [_meetingPosition, 4, "Land_Campfire_F", (_meetingUnitPool + _meetingUnitPoolCUP), _primaryWeaponPool, AI_SKILL_MAX] call SCO_fnc_spawnEnemyMeeting;
+	private _warlordUnit = [_meetingPosition, 4, 2, (_meetingUnitPool + _meetingUnitPoolCUP), AI_SKILL_MAX, ""] call SCO_fnc_spawnRadialUnits;
 	
 	//create parked cars near meeting location
-	[_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
+	[_meetingPosition, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5, 1000, random [0.3, 0.5, 0.8]] call SCO_fnc_spawnParkedVehicles;
 
 	//create tasks for players on a different thread
 	private _taskManager = [_tent, _intel, _meetingPosition, _warlordUnit, _extractVeh] spawn SCO_fnc_taskManager;
 
 	//spawn enemy unit ground patrols
-	[_meetingPosition, 500, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), AI_SKILL_MAX], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
-	[getPos _tent, 50, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), 1.0 min (AI_SKILL_MAX + 0.1)], _patrol] call SCO_fnc_spawnGroundPatrolGroup;
+	[_meetingPosition, east, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), AI_SKILL_MAX], _patrol, 500] call SCO_fnc_spawnFootPatrolGroup;
+	[getPos _tent, east, 6, _patrolUnitPool, [(AI_SKILL_MAX / 2), 1.0 min (AI_SKILL_MAX + 0.1)], _patrol, 50] call SCO_fnc_spawnFootPatrolGroup;
 
 	//define all cities to spawn patrols in
 	private _allTowns = nearestLocations [
@@ -187,7 +186,7 @@ if (isServer) then
 
 	//vehicle and unit patrol managers
 	private _numRegionVehicles = "RegionVehiclePatrols" call BIS_fnc_getParamValue;
-	[_allTowns, _patrolUnitPool, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_footPatrolManager;
+	[west, _allTowns, east, _patrolUnitPool, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_footPatrolManager;
 	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles] spawn SCO_fnc_vehiclePatrolManager;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;

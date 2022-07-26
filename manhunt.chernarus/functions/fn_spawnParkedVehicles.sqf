@@ -9,16 +9,18 @@
 		1: Number - maximum number of vehicles to spawn. Should be more than 0
 		2: Array of Strings - classnames of vehicle types that can be created
 		3: Number - maximum angle that the vehicle can be misaligned. (0=perfectly parked, 180=randomly rotated)
+		4: Number - maximum search radius for roads
+		5: Number - fuel level of parked cars
 
 	Returns:
 		Array of Objects - vehicles that end up being spawned
 */
-params ["_pos", "_numVehicles", "_possibleVehicleClassnames", "_alignment"];
+params ["_pos", "_numVehicles", "_possibleVehicleClassnames", ["_alignment", 0], ["_searchRadius", 1000], ["_fuel", 0.6]];
 
 private _startTime = diag_tickTime;
 
 //find the nearest road to place the convoy
-private _nearestRoad = [_pos, 1000] call BIS_fnc_nearestRoad;
+private _nearestRoad = [_pos, _searchRadius] call BIS_fnc_nearestRoad;
 private _nearestRoads = [_nearestRoad];
 
 //accumulate connected roads. Get at most a specific amount of road segments
@@ -95,7 +97,7 @@ for "_i" from 0 to (count _sortedDistances)-1 do
 		_vehicle setDir (_thisDir + random [0-_alignment, 0, _alignment]);
 		
 		_vehicle setVectorUp surfaceNormal getPos _vehicle;
-		_vehicle setFuel random [0.3, 0.5, 1];
+		_vehicle setFuel _fuel;
 		_convoy pushBack _vehicle;
 	};
 };

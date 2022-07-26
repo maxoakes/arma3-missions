@@ -44,6 +44,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * This is the first mission to utilize CfgFunctions. Will expand to the other missions when this one is successful
 * Functions:
     * See function headers for description, parameters and return value(s)
+    * addToUnitInventory
     * createMarker
         * Manhunt Chernarus
     * createMissionBuilding
@@ -51,17 +52,18 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * footPatrolManager
         * Called via 'spawn'
         * Manhunt Chernarus
-    * getMarkersWithPrefix
+    * getMarkers
         * Manhunt Chernarus
     * generateMapClutter
         * Manhunt Chernarus
+    * getItemClassnames
     * parseBoolean
         * Manhunt Chernarus
     * refillWeapon
         * Manhunt Chernarus
-    * spawnEnemyMeeting
+    * spawnRadialUnits
         * Manhunt Chernarus
-    * spawnGroundPatrolGroup
+    * spawnFootPatrolGroup
         * Manhunt Chernarus
     * spawnParkedVehicles
         * Manhunt Chernarus

@@ -41,7 +41,7 @@ while {true} do
 	private _result = [_spawnPos, 180, selectRandom _patrolVehiclePool, east] call BIS_fnc_spawnVehicle;
 	_result params ["_vehicle", "_crew", "_group"];
 	_vehicle setVehiclePosition [_spawnPos, [], 0, "NONE"];
-	_group setGroupId [format ["Repeating Patrol %1", ({side _x == east} count allGroups)]];
+	_group setGroupIdGlobal [format ["Repeating Patrol %1", ({side _x == east} count allGroups)]];
 	systemChat "Spawning nearby vehicle patrol.";
 	
 	//check if the vehicle is stuck. It can happen if they need to turn around at the player-near-point

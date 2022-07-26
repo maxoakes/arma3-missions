@@ -2,17 +2,16 @@
 	Author: Scouter
 
 	Description:
-		given a position, spawn a building filled with stuff
+		Given a position, spawn a building filled with stuff. 
 
 	Parameter(s):
-		0: Position
-		1: Array - See note
-		2: index of the reference object/building
-		3: index of the intel that the player uses
-		4: index of the main crate
+		0: Position - (required) center position to spawn tent. can be 2D or 3D
+		1: Array - (required) See note
+		2: Number - (optional) angle to place building
+		3: Number - (optional) index of the primary reference object/building
 
 	Returns:
-		Array of Objects in format [Building object, intel object, crate object]
+		Array of references to the spawned objects in order that they were given.
 
 	NOTE: Array obtained using in-game console with the following script.
 	Once the array of obtained, the entry that contains the tent should be 
@@ -29,15 +28,13 @@
 		_objects;
 
 */
-params ["_pos", "_placementArray", "_idxBuilding", "_idxIntel", "_idxCrate"];
+params ["_pos", "_placementArray", ["_angle", 0], ["_idxBuilding", 0]];
 
 //create reference object
-private _baseDir = getDir (nearestBuilding _pos) + 90; //align it with a nearby building
 private _building = createVehicle [(_placementArray select _idxBuilding) select 0, _pos, [], 0, "CAN_COLLIDE"];
 _building allowDamage false;
-_building setDir _baseDir;
-private _intel = objNull;
-private _crate = objNull;
+_building setDir _angle;
+private _spawned = [];
 
 //fill building with stuff
 for "_i" from 0 to count _placementArray-1 do
@@ -45,21 +42,15 @@ for "_i" from 0 to count _placementArray-1 do
 	(_placementArray select _i) params ["_className", "_relPos", "_dir"];
 	if (_i == _idxBuilding) then
 	{
+		_spawned pushBack _building;
 		continue;
 	};
 	private _obj = createVehicle [_className, _building modelToWorld _relPos, [], 0, "CAN_COLLIDE"];
-	_obj setDir (_dir + _baseDir);
+	_obj setDir (_dir + _angle);
 	_obj allowDamage false;
 
-	if (_i == _idxIntel) then
-	{
-		_intel = _obj;
-	};
-	if (_i == _idxCrate) then
-	{
-		_crate = _obj;
-	};
-} forEach _placementArray;
+	_spawned pushBack _obj;
+};
 
 //return
-[_building, _intel, _crate];
+_spawned;

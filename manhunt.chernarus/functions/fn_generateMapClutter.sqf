@@ -7,28 +7,20 @@
 	Parameter(s):
 		0: Boolean - perform spawning of road wrecks
 		1: Boolean - perform spawning of graves in open spaces
+		2: Array of Strings - types of objects to clutter roads with
+		3: Array of Strings - types of objects to clutter fields near roads with
 
 	Returns:
 		Void
 */
-params ["_doSpawnWrecks", "_doSpawnGraves"];
+params ["_doSpawnWrecks", "_roadClutter", "_doSpawnGraves", "_flieldClutter"];
 "Currently generating map clutter and mission objects. Please wait..." remoteExec ["systemChat", 0];
 
 private _startTime = diag_tickTime;
 private _mapCenter = [1000, 1000, 0];
 private _allClutterLocations = nearestLocations [
 	getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), 
-	["NameVillage", "NameCity", "NameCityCapital"], 
-	worldSize];
-private _wreckClassnames = ["Land_Wreck_Skodovka_F", "Land_Wreck_Truck_F", "Land_Wreck_Car2_F", "Land_Wreck_HMMWV_F", 
-	"Land_Wreck_Car_F", "Land_Wreck_Car3_F", "Land_Wreck_Van_F", "Land_Wreck_Offroad_F", "Land_Wreck_Offroad2_F",
-	"Land_Wreck_UAZ_F", "Land_Wreck_Ural_F", "Land_V3S_Wreck_F", "Land_Wreck_T72_hull_F", "Land_Wreck_T72_turret_F"];
-private _wreckClassnamesCUP = ["BMP2Wreck", "LADAWreck", "JeepWreck1", "JeepWreck2", "JeepWreck3", "hiluxWreck", 
-	"datsun01Wreck", "datsun02Wreck", "SKODAWreck", "UAZWreck"];
-private _liveVehiclesCUP = ["CUP_C_Datsun", "CUP_C_Datsun_4seat", "CUP_C_Golf4_black", "CUP_C_Golf4_blue",
-	"CUP_C_Golf4_white", "CUP_C_Golf4_yellow", "C_Offroad_02_unarmed_F", "CUP_C_Octavia_CIV", "C_Tractor_01_F", 
-	"CUP_C_Skoda_CR_CIV", "CUP_C_Skoda_Blue_CIV", "CUP_C_Skoda_Green_CIV", "CUP_C_Skoda_Red_CIV", "CUP_C_Skoda_White_CIV", 
-	"CUP_C_Lada_CIV", "CUP_C_Lada_Red_CIV", "CUP_C_Ural_Open_Civ_03", "CUP_C_Ural_Civ_03"];
+	["NameVillage", "NameCity", "NameCityCapital"], worldSize];
 
 private _graves = [];
 private _wrecks = [];
@@ -48,7 +40,7 @@ private _wrecks = [];
 				continue;
 			};
 			//if the position is good, place the grave
-			private _grave = createVehicle ["Mass_Grave", _posGrave, [], 0, "CAN_COLLIDE"];
+			private _grave = createVehicle [selectRandom _flieldClutter, _posGrave, [], 0, "CAN_COLLIDE"];
 			_grave setDir random 360;
 			_grave setVectorUp surfaceNormal getPos _grave;
 			_graves pushBack _grave;
@@ -61,7 +53,7 @@ private _wrecks = [];
 		private _roads = (locationPosition _x) nearRoads 1000;
 		if (count _roads == 0) then
 		{
-			systemChat format ["No roads near %1", _locName]
+			//systemChat format ["No roads near %1", _locName];
 		}
 		else
 		{
@@ -77,7 +69,7 @@ private _wrecks = [];
 				};
 				//if it is valid, continue with placement
 				//small chance to have the wreck be a working vehicle
-				private _wreckClassname = selectRandom (_wreckClassnames + _wreckClassnamesCUP);
+				private _wreckClassname = selectRandom _roadClutter;
 				if (random 1 > 0.95) then
 				{
 					_wreckClassname = selectRandom _liveVehiclesCUP;

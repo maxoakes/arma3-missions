@@ -7,8 +7,8 @@
 	Parameter(s):
 		0: Position - (required) center position to spawn tent. can be 2D or 3D
 		1: Array - (required) See note
-		2: Number - (optional) angle to place building
-		3: Number - (optional) index of the primary reference object/building
+		2: Number - (required)index of the primary reference object/building
+		3: Number - (optional) angle to place building
 
 	Returns:
 		Array of references to the spawned objects in order that they were given.
@@ -26,9 +26,8 @@
 			_objects pushBack [_classname, _posRel, _dir];
 		} forEach nearestObjects [_originObject, [], 20];
 		_objects;
-
 */
-params ["_pos", "_placementArray", ["_angle", 0], ["_idxBuilding", 0]];
+params ["_pos", "_placementArray", ["_idxBuilding", 0], ["_angle", 0]];
 
 //create reference object
 private _building = createVehicle [(_placementArray select _idxBuilding) select 0, _pos, [], 0, "CAN_COLLIDE"];

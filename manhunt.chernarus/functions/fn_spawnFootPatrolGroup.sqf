@@ -16,7 +16,7 @@
 	Returns:
 		Group of the units that was spawned
 */
-params ["_posCenter", "_groupSide", "_numUnits", "_possibleUnitClassnames", ["_skillRange", [0.0, 1.0]], ["_mode", 0], ["_radius", 100]];
+params ["_posCenter", "_side", "_numUnits", "_possibleUnitClassnames", ["_skillRange", [0.3, 0.5]], ["_mode", 0], ["_radius", 100]];
 
 private _groupUnitClassnames = [];
 for "_i" from 0 to _numUnits - 1 do
@@ -25,10 +25,10 @@ for "_i" from 0 to _numUnits - 1 do
 };
 
 private _spawnPosition = [_posCenter, 8, (50 min _radius), 8, 0, 1.0, 0, [], [_posCenter, _posCenter]] call BIS_fnc_findSafePos;
-private _squad = [_spawnPosition, _groupSide, _groupUnitClassnames, [], [], _skillRange] call BIS_fnc_spawnGroup;
+private _squad = [_spawnPosition, _side, _groupUnitClassnames, [], [], _skillRange] call BIS_fnc_spawnGroup;
 _squad allowFleeing 0;
 
-private _numGroups = {side _x == _groupSide} count allGroups;
+private _numGroups = {side _x == _side} count allGroups;
 
 if (_mode == 0) then
 {

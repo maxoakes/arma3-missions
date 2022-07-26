@@ -7,13 +7,13 @@
 		Must be run concurrently with mission
 		
 	Parameter(s):
-		0: Array of Locations - All locations that should have patrols
-		1: Array of Strings - classnames of possible vehicles
+		0: Array of Locations - (required) All locations that should have patrols
+		1: Array of Strings - (required) classnames of possible vehicles
 
 	Returns:
 		Void
 */
-params ["_locations", "_patrolVehiclePool"];
+params ["_locations", "_patrolVehiclePool", "_enemySide", "_playerSide"];
 private _waypointSize = 100;
 systemChat "Starting nearby vehicle patrol manager.";
 
@@ -24,7 +24,7 @@ while {true} do
 	private _midpointTarget = getMarkerPos "respawn_west";
 	if (count playableUnits > 0) then
 	{
-		_midpointTarget = getPos selectRandom (units west arrayIntersect playableUnits);
+		_midpointTarget = getPos selectRandom (units _playerSide arrayIntersect playableUnits);
 	};
 
 	//get a lot of towns that are far away from the player
@@ -35,13 +35,14 @@ while {true} do
 	//Mathmatically, this should be the town that is as far to the other side of the circle as possible
 	private _startLocation = selectRandom _locationPool;
 	private _endLocation = ([_locationPool, [locationPosition _startLocation], { _input0 distance2D (locationPosition _x) }, "DESCEND"] call BIS_fnc_sortBy) select 0;
+	private _locSize = ((size _startLocation select 0) max (size _startLocation select 1))*2;
 
 	//pick a safe spawn position to place vehicle
-	private _spawnPos = [locationPosition _startLocation, 0, 500, 7, 0, 0.7, 0, [], [locationPosition _startLocation, locationPosition _startLocation]] call BIS_fnc_findSafePos;
+	private _spawnPos = [locationPosition _startLocation, 0, _locSize, 8, 0, 0.7, 0, [], [locationPosition _startLocation, locationPosition _startLocation]] call BIS_fnc_findSafePos;
 	private _result = [_spawnPos, 180, selectRandom _patrolVehiclePool, east] call BIS_fnc_spawnVehicle;
 	_result params ["_vehicle", "_crew", "_group"];
 	_vehicle setVehiclePosition [_spawnPos, [], 0, "NONE"];
-	_group setGroupIdGlobal [format ["Repeating Patrol %1", ({side _x == east} count allGroups)]];
+	_group setGroupIdGlobal [format ["Repeating Patrol %1", ({side _x == _enemySide} count allGroups)]];
 	systemChat "Spawning nearby vehicle patrol.";
 	
 	//check if the vehicle is stuck. It can happen if they need to turn around at the player-near-point
@@ -67,7 +68,12 @@ while {true} do
 	};
 
 	//create waypoints near player and at end of route
-	private _goToPlayerWP = _group addWaypoint [[_midpointTarget, 1000] call BIS_fnc_nearestRoad, 0];
+	private _target = [_midpointTarget, 2000] call BIS_fnc_nearestRoad;
+	if (_target == objNull) then
+	{
+		_target = selectRandom (units _playerSide arrayIntersect playableUnits);
+	};
+	private _goToPlayerWP = _group addWaypoint [_target, 0];
 	_goToPlayerWP setWaypointCompletionRadius _waypointSize;
 	_goToPlayerWP setWaypointBehaviour "CARELESS";
 	_goToPlayerWP setWaypointType "MOVE";

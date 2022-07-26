@@ -7,20 +7,20 @@ class CfgFunctions
 		{
 			file = "functions";
 			class addToUnitInventory {};
-			class createMissionBuilding {};
 			class createMarker {};
-			class footPatrolManager {};
+			class createMissionBuilding {};
 			class generateMapClutter {};
 			class getItemClassnames {};
 			class getMarkers {};
+			class manageFootPatrols {};
+			class manageVehiclePatrols {};
+			class manageTasks {};
 			class parseBoolean {};
 			class refillWeapon {};
-			class spawnRadialUnits {};
 			class spawnFootPatrolGroup {};
 			class spawnParkedVehicles {};
+			class spawnRadialUnits {};
 			class spawnRepeatingSingleVehiclePatrol {};
-			class taskManager {};
-			class vehiclePatrolManager {};
 		};
 	};
 };

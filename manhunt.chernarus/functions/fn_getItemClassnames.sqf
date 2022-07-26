@@ -25,7 +25,6 @@ private _items = [];
 		private _itemType = _x call bis_fnc_itemType;
 		_itemType params ["_c", "_t"];
 
-		//check if the weapon is an AK-style weapon per the classname
 		if ((_unusedCategories or _c in _categories) && 
 			(_unusedTypes or _t in _types) && 
 			(_unusedSubstring or _substring in _x)) then

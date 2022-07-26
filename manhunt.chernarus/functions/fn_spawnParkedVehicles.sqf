@@ -11,11 +11,12 @@
 		3: Number - maximum angle that the vehicle can be misaligned. (0=perfectly parked, 180=randomly rotated)
 		4: Number - maximum search radius for roads
 		5: Number - fuel level of parked cars
+		6: Number - +/- value of the fuel of the vehicles
 
 	Returns:
 		Array of Objects - vehicles that end up being spawned
 */
-params ["_pos", "_numVehicles", "_possibleVehicleClassnames", ["_alignment", 0], ["_searchRadius", 1000], ["_fuel", 0.6]];
+params ["_pos", "_numVehicles", "_possibleVehicleClassnames", ["_alignment", 0], ["_fuel", 0.8], ["_fuelRandomization", 0.2], ["_searchRadius", 1000]];
 
 private _startTime = diag_tickTime;
 
@@ -97,7 +98,7 @@ for "_i" from 0 to (count _sortedDistances)-1 do
 		_vehicle setDir (_thisDir + random [0-_alignment, 0, _alignment]);
 		
 		_vehicle setVectorUp surfaceNormal getPos _vehicle;
-		_vehicle setFuel _fuel;
+		_vehicle setFuel random [(0 max _fuel - _fuelRandomization), _fuel, (1.0 min _fuel + _fuelRandomization)];
 		_convoy pushBack _vehicle;
 	};
 };

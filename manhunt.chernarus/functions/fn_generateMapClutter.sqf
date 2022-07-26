@@ -5,19 +5,21 @@
 		Fill the map with clutter. Clutter can be car wrecks and/or graves
 
 	Parameter(s):
-		0: Boolean - perform spawning of road wrecks
-		1: Boolean - perform spawning of graves in open spaces
-		2: Array of Strings - types of objects to clutter roads with
-		3: Array of Strings - types of objects to clutter fields near roads with
+		0: Boolean - (required) perform spawning of road wrecks
+		2: Array of Strings - (required) types of objects to clutter roads with
+		1: Boolean - (required) perform spawning of graves in open spaces
+		3: Array of Strings - (required) types of objects to clutter fields near roads with
 
 	Returns:
 		Void
 */
-params ["_doSpawnWrecks", "_roadClutter", "_doSpawnGraves", "_flieldClutter"];
+params ["_doSpawnWrecks", "_roadClutter", "_doSpawnGraves", "_fieldClutter"];
 "Currently generating map clutter and mission objects. Please wait..." remoteExec ["systemChat", 0];
 
 private _startTime = diag_tickTime;
 private _mapCenter = [1000, 1000, 0];
+
+//get all locations to place clutter
 private _allClutterLocations = nearestLocations [
 	getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), 
 	["NameVillage", "NameCity", "NameCityCapital"], worldSize];
@@ -40,7 +42,7 @@ private _wrecks = [];
 				continue;
 			};
 			//if the position is good, place the grave
-			private _grave = createVehicle [selectRandom _flieldClutter, _posGrave, [], 0, "CAN_COLLIDE"];
+			private _grave = createVehicle [selectRandom _fieldClutter, _posGrave, [], 0, "CAN_COLLIDE"];
 			_grave setDir random 360;
 			_grave setVectorUp surfaceNormal getPos _grave;
 			_graves pushBack _grave;

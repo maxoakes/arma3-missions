@@ -14,7 +14,6 @@
 	Returns:
 		Void
 */
-
 params ["_target", "_caller", "_actionId", "_numMags"];
 private _magazines = getArray (configFile >> "CfgWeapons" >> currentWeapon _caller >> "magazines");
 private _regularMag = _magazines select 0;

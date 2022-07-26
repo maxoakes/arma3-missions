@@ -15,8 +15,7 @@
 	Returns:
 		Void
 */
-
-params ["_playerSide", "_locations", "_enemySide", ["_patrolUnitPool", []], ["_multiplier", 1]];
+params ["_playerSide", "_locations", "_enemySide", ["_patrolUnitPool", []], ["_skill", 0.5], ["_unitsPerSquad", 4], ["_numSquadsPerSize", 1]];
 
 private _footPatrolTracker = [];
 {
@@ -28,12 +27,14 @@ while {true} do
 	sleep 1;
 	{
 		_x params ["_loc", "_size", "_timesSpawned"];
-		//check if a west unit is close to a town
+		//check if a player unit is nearby a town
 		//also check if the spawn limit for that town has been reached. (based on its size)
-		if (({_x distance2D locationPosition _loc < _size*3} count units _playerSide) > 0 and _timesSpawned < ceil (_size/400) * _multiplier) then
+		if (({_x distance2D locationPosition _loc < _size*3} count units _playerSide) > 0 and _timesSpawned < ceil (_size/400) * _numSquadsPerSize) then
 		{
 			//if spawning is allowed, spawn a group
-			[locationPosition _loc, _enemySide, floor random [3, 6, 8], _patrolUnitPool, [0.2, 0.4], 0, _size] call SCO_fnc_spawnFootPatrolGroup;
+			private _skillRange = [(0 max (_skill - 0.2)), _skill];
+			private _numUnits = random [(0 max _unitsPerSquad - 3), _unitsPerSquad, (_unitsPerSquad + 3)];
+			[locationPosition _loc, _enemySide, _numUnits, _patrolUnitPool, _skillRange, 0, _size] call SCO_fnc_spawnFootPatrolGroup;
 			_x set [2, (_x select 2) + 1];
 			//systemChat format ["Spawned patrol in %1", text _loc];
 		};

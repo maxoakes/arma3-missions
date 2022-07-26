@@ -21,6 +21,7 @@
 */
 params ["_unit", ["_primary", ""], ["_secondary", ""], ["_otherItems", []], ["_linkedItems", []], ["_uniform", ""], ["_vest", ""], ["_backpack", ""], ["_headgear", ""], ["_goggles", ""]];
 
+//change clothes if specified
 removeAllItems _unit;
 if (_uniform != "") then
 {
@@ -47,6 +48,7 @@ if (_goggles != "") then
 	_unit addGoggles _goggles;
 };
 
+//change weapons if specified
 private _primaryMags = [];
 private _secondaryMags = [];
 if (_primary != "") then
@@ -71,6 +73,7 @@ if (_secondary != "") then
 	_unit addHandgunItem _m;
 };
 
+//add items if specified
 removeAllAssignedItems _unit;
 removeAllItems _unit;
 {

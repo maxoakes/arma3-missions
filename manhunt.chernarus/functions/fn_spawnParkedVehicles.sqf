@@ -18,8 +18,6 @@
 */
 params ["_pos", "_numVehicles", "_possibleVehicleClassnames", ["_alignment", 0], ["_fuel", 0.8], ["_fuelRandomization", 0.2], ["_searchRadius", 1000]];
 
-private _startTime = diag_tickTime;
-
 //find the nearest road to place the convoy
 private _nearestRoad = [_pos, _searchRadius] call BIS_fnc_nearestRoad;
 private _nearestRoads = [_nearestRoad];
@@ -102,10 +100,6 @@ for "_i" from 0 to (count _sortedDistances)-1 do
 		_convoy pushBack _vehicle;
 	};
 };
-
-private _stopTime = diag_tickTime;
-(format ["%1 sec to generate convoy with %2 possible road positions. %3 of %4 vehicles spawned", 
-	_stopTime - _startTime, count _sortedDistances, count _convoy, _numVehicles]) remoteExec ["systemChat", 0];
 
 //return
 _convoy;

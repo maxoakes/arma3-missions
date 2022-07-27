@@ -34,14 +34,16 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * A new type of mission. Goal is for players to locate, kill and confirm a target. After the kill is confirmed, all players must leave the map via their extraction vehicle.
     * Requires A3 CBA, CUP Weapons, CUP Units, CUP Vehicles, CUP Terrains - Core, CUP Terrains - Maps and CUP Terrains - CWA
     * For recreating this mission in other maps, the following objects are needed in the mission editor:
-        * Some number of west (blufor) units. This implimentation has 8.
+        * Some number of west (blufor) units. This implimentation has 8. Can be placed anywhere
         * One "respawn_west" marker
-        * Ammobox with variable name "arsenal"
-        * A vehicle that can carry at least the maximum number of players with variable name "extract"
-        * A marker to indicate an HQ location with variable name "confirmed"
-        * One or more invisible (empty) markers with a variable name starting with "hq_", all on flat surfaces that are at least 5 meters away from any object
-        * One or more markers with variable name starting with "meet_". All markers should be in at least a somewhat flat area of about 3m radius
-    * This is the first mission to utilize CfgFunctions. Will expand to the other missions when this one is successful
+        * One ammobox with variable name "arsenal"
+        * One small light source like a camping lantern with variable name "lamp"
+        * One vehicle that can carry at least the maximum number of players with variable name "extract"
+        * One marker to indicate an HQ location with variable name "confirmed"
+        * One marker to indicate a meeting location with the variable name "meeting"
+        * Any number of markers with variable names starting with "objective_tent_" or "objective_meet_". Tent markers must be in a perfectly flat area that can fit a tent. The meeting markers need only be somehwhat flat with an open area of about 5 meter radius.
+        * Any number of markers with a variable name starting with "start_". Must be big enough to have the extraction vehicle.
+            * Note: All start markers must be added to description.ext
 * Functions:
     * See function headers for description, parameters and return value(s)
     * addToUnitInventory

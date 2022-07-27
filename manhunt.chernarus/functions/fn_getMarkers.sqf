@@ -24,7 +24,7 @@ if (isNil "_center" or isNil "_radius") then
 
 private _markers = [];
 {
-	private _inRange = _center distance2D getMarkerPos _x < _radius;
+	private _inRange = (_center distance2D getMarkerPos _x) < _radius;
 	if (_x find _prefix == 0 and _inRange) then
 	{
 		_markers pushBack _x;

@@ -16,7 +16,6 @@
 params ["_doSpawnWrecks", "_roadClutter", "_doSpawnGraves", "_fieldClutter"];
 "Currently generating map clutter and mission objects. Please wait..." remoteExec ["systemChat", 0];
 
-private _startTime = diag_tickTime;
 private _mapCenter = [1000, 1000, 0];
 
 //get all locations to place clutter
@@ -84,7 +83,3 @@ private _wrecks = [];
 		};
 	};
 } forEach _allClutterLocations;
-
-private _stopTime = diag_tickTime;
-(format ["%1 sec to populate map with clutter. Wrecks: %2, Graves: %3", 
-	_stopTime - _startTime, count _wrecks, count _graves]) remoteExec ["systemChat", 0];

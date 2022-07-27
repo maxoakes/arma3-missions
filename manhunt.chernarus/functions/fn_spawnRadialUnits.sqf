@@ -18,8 +18,6 @@
 */
 params ["_posCenter", "_numAttendees", "_radius", "_possibleBaseUnitClassnames", ["_skill", 0.5], ["_centerObjectClassname", ""]];
 
-private _startTime = diag_tickTime;
-
 //create center object
 if (_centerObjectClassname != "") then
 {
@@ -52,9 +50,6 @@ for "_i" from 1 to _numAttendees do
 	_angle = _angle + _step;
 	_units pushBack _unit;
 };
-
-private _stopTime = diag_tickTime;
-(format ["%1 sec to generate warlord meeting.",	_stopTime - _startTime]) remoteExec ["systemChat", 0];
 
 //return
 _units select 0;

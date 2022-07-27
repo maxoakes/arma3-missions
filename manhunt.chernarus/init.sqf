@@ -67,7 +67,7 @@ if (isServer) then
 	//Not originally invisible because they are a pain to move in the editor when they are like that
 	{
 		_x setMarkerAlpha 0;
-	} forEach (["objective_"] call SCO_fnc_getMarkers);
+	} forEach (["objective_"] call SCO_fnc_getMarkers) + (["start_"] call SCO_fnc_getMarkers);
 
 	//set up markers
 	private _markerHQ = "confirmed";
@@ -89,11 +89,14 @@ if (isServer) then
 		extract setVectorUp surfaceNormal getPos extract;
 		arsenal setPos (extract getRelPos [5, 250]);
 		arsenal setVectorUp surfaceNormal getPos arsenal;
-		lamp setPos (arsenal getRelPos [2, 270]);
+		lamp setPos (arsenal getRelPos [2, random 360]);
 		lamp setVectorUp surfaceNormal getPos lamp;
 		"respawn_west" setMarkerPos (extract getRelPos [10, 200]);
 	};
 	private _posSpawn = getMarkerPos "respawn_west";
+	{
+		_x setPos _posSpawn; 
+	} forEach units west;
 
 	arsenal allowDamage false;
 	clearItemCargoGlobal arsenal;
@@ -249,7 +252,7 @@ if (isServer) then
 	{
 		for "_i" from 1 to _numNearbyVehicles do
 		{
-			[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, east, west] spawn SCO_fnc_spawnRepeatingSingleVehiclePatrol;
+			[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, east, west] spawn SCO_fnc_manageTargetedVehiclePatrol;
 		};
 	};
 	//end setting up management threads

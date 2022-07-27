@@ -15,6 +15,7 @@ allowFunctionsLog = 1;
 respawn = BASE;
 respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory"};
 respawnDelay = 5;
+respawnOnStart = 1;
 
 reviveMode = 1;
 reviveUnconsciousStateMode = 1;
@@ -89,7 +90,7 @@ class Params
 	};
 	class NearbyVehiclePatrol
 	{
-		title = "Number of Concurrent Nearby vehicle Patrols";
+		title = "Number of Concurrent Nearby Vehicle Patrols";
 		values[] = {0, 1, 2, 3, 4};
 		texts[] = {"None", "1", "2", "3", "4"};
 		default = 2;
@@ -134,7 +135,7 @@ class Params
 		title = "Minimum Distance Objectives can be from Insertion Point";
 		values[] = {50, 100, 250, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000};
 		texts[] = {"50", "100", "250", "500m", "1.0km", "1.5km", "2.0km", "2.5km", "3.0km", "4.0km", "5.0km", "6.0km"};
-		default = 2500;
+		default = 1000;
 	};
 	class MinMeetingDistanceFromHQ
 	{
@@ -148,7 +149,7 @@ class Params
 		title = "Pick Randomly from N Nearest Objectives from Previous Objective";
 		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 100, 100000};
 		texts[] ={"1", "2", "3", "4", "5", "6", "8", "10", "12", "15", "20", "25", "30", "40", "50", "60", "75", "100", "All"};
-		default = 15;
+		default = 8;
 	};
 	class Debug
 	{

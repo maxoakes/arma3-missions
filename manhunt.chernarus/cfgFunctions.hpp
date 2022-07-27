@@ -20,7 +20,7 @@ class CfgFunctions
 			class spawnFootPatrolGroup {};
 			class spawnParkedVehicles {};
 			class spawnRadialUnits {};
-			class spawnRepeatingSingleVehiclePatrol {};
+			class manageTargetedVehiclePatrol {};
 		};
 	};
 };

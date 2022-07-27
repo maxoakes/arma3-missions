@@ -94,7 +94,7 @@ if (isServer) then
 	[_doSpawnWrecks, (_wreckClassnames + _wreckClassnamesCUP), _doSpawnGraves, _graveClassnames] call SCO_fnc_generateMapClutter;
 
 	//once an HQ location is found, mark it on the map and delete any mass graves near it
-	private _possibleHQMarkers = ["hq_"] call SCO_fnc_getMarkers;
+	private _possibleHQMarkers = ["objective_tent_"] call SCO_fnc_getMarkers;
 	private _posHQ = getMarkerPos (selectRandom _possibleHQMarkers);
 	_hqMarker setMarkerPos _posHQ;
 	_hqMarker setMarkerAlpha 1; //show HQ marker now that it is finally set
@@ -147,7 +147,7 @@ if (isServer) then
 	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
 
 	//pick a meeting position
-	private _possibleMeetingMarkers = ["meet_"] call SCO_fnc_getMarkers;
+	private _possibleMeetingMarkers = ["objective_"] call SCO_fnc_getMarkers;
 	private _meetingPosition = getMarkerPos (selectRandom _possibleMeetingMarkers);
 	"meeting" setMarkerPos _meetingPosition;
 	{

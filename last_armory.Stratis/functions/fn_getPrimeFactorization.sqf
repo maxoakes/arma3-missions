@@ -1,6 +1,17 @@
+/*
+	Author: Scouter
+
+	Description:
+		Get the prime factorization of a number. Basically an interview question.
+
+	Parameter(s):
+		0: Number - (required) 
+	Returns:
+		Array of Numbers
+*/
+
 params ["_input"];
 
-private _startTime = diag_tickTime;
 private _reduced = _input;
 private _i = 2;
 private _factors = [];
@@ -19,6 +30,5 @@ while {_i <= ceil (_input/2)} do
 	};
 };
 
-private _stopTime = diag_tickTime;
-(format ["Prime factorization of %1 took %2 sec to complete, returning %3.", _input, _stopTime - _startTime, _factors]) remoteExec ["systemChat", 0];
+//return
 _factors;

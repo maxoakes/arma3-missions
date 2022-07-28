@@ -33,7 +33,7 @@ _markerCenter setMarkerType "mil_flag";
 _markerCenter setMarkerColor "ColorBlue";
 
 //teleport the player
-player setPos [(_pos select 0),(_pos select 1)-2];
+player setPos [(_pos select 0), (_pos select 1)-2];
 
 //create the actions on the battleground manager to spawn enemy waves
 private _baseAction = [

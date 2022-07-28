@@ -23,14 +23,7 @@ private _vehicleObjectTextColor = "#bababa";
 if (isServer) then
 {
 	//create the physical border of the spawn area
-	[
-		SPAWN_POS, //center of border circle
-		SPAWN_RADIUS * 1.1, //radius
-		["Land_HBarrier_1_F"], //what can be the border be made of
-		1.65, //distance between objects
-		90, //relative rotation of the objects
-		true //are exits needed?
-	] call compile preprocessFile "functions\fn_createBorder.sqf";
+	[SPAWN_POS, SPAWN_RADIUS * 1.1, ["Land_HBarrier_1_F"], 1.65, 90, 0, true] call SCO_fnc_createBorder;
 
 	//create safezone
 	private _safeZoneTrigger = createTrigger ["EmptyDetector", SPAWN_POS, true];
@@ -66,7 +59,7 @@ if (isServer) then
 
 	//an emulation of a dictionary object. 'key' is the type of vehicle (Car, Ship, Plane, etc)
 	//value is an array of vehicle classnames of that type
-	private _vehicleDictionary = ["cfgVehicles", "Vehicle"] call compile preprocessFile "functions\fn_getAllCfgSubClasses.sqf";
+	private _vehicleDictionary = [["Vehicle"]] call SCO_fnc_getObjectClassnames;
 
 	//iterate over the sudo-objects and assign objects and behaviors to each of them
 	private _numObjects = count _objectSet;
@@ -110,15 +103,12 @@ if (isServer) then
 					_thisAction set [0, format ["%1", text(_x)]];
 					_thisAction set [1, "functions\fn_generateBattlegroundAndTeleport.sqf"];
 					_thisAction set [2, _x];
-					//_obj addAction _thisAction;
 					[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 				} foreach (_towns - _blackListed);
 			};
 			case 1: //sector control spawner
 			{
 				{
-					//_obj addAction [format ["Create Sector Control with %1 waves", _x], "functions\fn_generateRandomSectorControl.sqf", _x];
-					//[_obj, [format ["Create Sector Control with %1 waves", _x], "functions\fn_generateRandomSectorControl.sqf", _x]] remoteExec ["addAction", 0, true]; //add action to all players
 					//add the action for all players, including JIP. The action will have the server generate a random sector control point
 					[
 						_obj, 
@@ -135,21 +125,18 @@ if (isServer) then
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Helicopters"]];
-				//_obj addAction _thisAction;
 				[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 			};
 			case 3: //plane spawner
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Planes and Jets"]];
-				//_obj addAction _thisAction;
 				[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 			};
 			case 4: //boat spawner
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Water Vehicles"]];
-				//_obj addAction _thisAction;
 				[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 			};
 			case 5: //lighting
@@ -160,28 +147,23 @@ if (isServer) then
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Land Vehicles"]];
-				//_obj addAction _thisAction;
 				[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 			};
 			case 7: //apc spawn
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "APCs"]];
-				//_obj addAction _thisAction;
 				[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 			};
 			case 8: //tank spawn
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Tanks"]];
-				//_obj addAction _thisAction;
 				[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
 			};
 			case 9: //arsenal manager
 			{
 				["AmmoboxInit", [_obj, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
-				// _obj addAction ["Heal Yourself", "(_this select 1) setDamage 0;"];
-				// _obj addAction ["Add Ammo for this Weapon", "functions\fn_refillWeapon.sqf", 4];
 				[_obj, ["Heal Yourself", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true]; //add action to all players
 				[_obj, ["Add Ammo for this Weapon", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true]; //add action to all players
 			};
@@ -196,7 +178,6 @@ if (isServer) then
 					_spawnAction set [0, format ["<t color='%1'>%2</t>", _vehicleNameColor, getText(configFile >> "cfgVehicles" >> _x >> "displayName")]];
 					_spawnAction set [1, "functions\fn_spawnEmptyVehicleAndMoveInto.sqf"];
 					_spawnAction set [2, [_x, "respawn_west"]];
-					//_obj addAction _spawnAction;
 					[_obj, _spawnAction] remoteExec ["addAction", 0, true]; //add action to all players
 				} forEach (_x select 1);
 			};

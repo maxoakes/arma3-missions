@@ -51,6 +51,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
         * Free-for-all Altis
     * createMarker
         * Manhunt Chernarus
+        * Free-for-all Altis
     * createMissionBuilding
         * Manhunt Chernarus
     * footPatrolManager
@@ -61,6 +62,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * generateMapClutter
         * Manhunt Chernarus
     * getItemClassnames
+        * Free-for-all Altis
     * getRandomWeapon
         * Arena VR
     * getRoundsForWeapon

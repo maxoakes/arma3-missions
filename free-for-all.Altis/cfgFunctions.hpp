@@ -8,7 +8,7 @@ class CfgFunctions
 			file = "functions";
 			class createBorder {};
 			class createMarker {};
-			class getItemOfType {};
+			class getItemClassnames {};
 			class getRandomWeapon {};
 			class getRoundsForWeapon {};
 			class isDayTime {};

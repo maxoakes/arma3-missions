@@ -1,5 +1,6 @@
 #include "cfgRespawnInventory.hpp"
 #include "cfgRoles.hpp"
+#include "cfgFunctions.hpp"
 
 onLoadName = "VR Arena";
 author = "Scouter";
@@ -35,7 +36,7 @@ class Params
 	class Type
 	{
 		title = "Arena Type";
-		values[] = {0, 1};
+		values[] = {1, 0};
 		texts[] = {"VR (Laser Tag Experience)", "Shoot House (Paintball Experience)"};
 		default = 1;
 	};
@@ -52,8 +53,8 @@ class Params
 	class Ramps
 	{
 		title = "Ramps at Spawns";
-		values[] = {0, 1};
-		texts[] = {"No", "Yes"};
+		values[] = {1, 0};
+		texts[] = {"Yes", "No"};
 		default = 0;
 	};
 

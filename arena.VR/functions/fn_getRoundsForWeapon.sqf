@@ -1,6 +1,18 @@
-//get a list of the possible mags for the input weapon. If it is night, find all of the tracer mags
-//returns array of strings that contain magazine classnames
-params ["_weaponClassname", "_isTracer"];
+/*
+	Author: Scouter
+
+	Description:
+		Gives the player a random weapon with random attachments.
+		Built to be called via addAction.
+
+	Parameter(s):
+		0: String - (required) classname of weapon
+		1: Boolean - (optional) whether or not to return tracer mags
+
+	Returns:
+		Array of Strings
+*/
+params ["_weaponClassname", ["_isTracer", false]];
 private _availableMags = getArray (configfile >> "CfgWeapons" >> _weaponClassname >> "magazines");
 private _returnMags = [];
 

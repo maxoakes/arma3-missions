@@ -1,21 +1,13 @@
-private _startTime = diag_tickTime;
-
 //parse parameters of mission
 setDate [2022, 6, 16, ("Time" call BIS_fnc_getParamValue), 0];
 private _startingTickets = ("Tickets" call BIS_fnc_getParamValue);
 [west, _startingTickets] call BIS_fnc_respawnTickets;
 [east, _startingTickets] call BIS_fnc_respawnTickets;
 
-SCO_DENSITY = ("Density" call BIS_fnc_getParamValue);
-SCO_USE_RAMPS = ("Ramps" call BIS_fnc_getParamValue);
-SCO_IS_VR = true; //if true, the map will consist of VR blocks, else will be shoot house panels
-if (("Type" call BIS_fnc_getParamValue) == 1) then
-{
-	SCO_IS_VR = false;
-};
-
 if (isServer) then
 {
+	private _startTime = diag_tickTime;
+
 	//add the possible loadouts to the respawn menu
 	{
 		[west,_x] call BIS_fnc_addRespawnInventory;
@@ -27,8 +19,9 @@ if (isServer) then
 		"SMG1","SMG2","SMG3","SMG4","SMG5"];
 
 	//remove ramps if the parameters call for it
+	private _useRamps = [("Ramps" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	{
-		if (SCO_USE_RAMPS == 0) then 
+		if (_useRamps) then 
 		{
 			private _angle = getDir _x;
 			private _pos = getPos _x;
@@ -62,9 +55,10 @@ if (isServer) then
 	} forEach allMapMarkers;
 
 	//choose the set of objects to populate arena
+	private _isVR = [("Type" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	private _arenaObjectSelection = [];
 	private _placementRadius = 0;
-	if (SCO_IS_VR) then 
+	if (_isVR) then 
 	{
 		_arenaObjectSelection = _vrObjects;
 		_placementRadius = 1;
@@ -75,9 +69,10 @@ if (isServer) then
 	};
 
 	//populate the arena by placing objects at node markers on the map
+	private _mapDensity = ("Density" call BIS_fnc_getParamValue);
 	private _possibleAngles = [0, 90, 180, 270];
 	{
-		if ((random 100) >= SCO_DENSITY) then { continue };
+		if ((random 100) >= _mapDensity) then { continue };
 		private _chosenObject = selectRandom _arenaObjectSelection;
 		private _pos = getMarkerPos _x;
 		private _obj = createVehicle [_chosenObject, _pos, [], _placementRadius, "CAN_COLLIDE"];
@@ -87,7 +82,8 @@ if (isServer) then
 	//enable weapon and ammo options at base
 	{
 		[_x, ["Add Ammo for weapon in hand", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction"];
-		[_x, ["Get a random primary weapon", "functions\fn_getRandomWeapon.sqf"]] remoteExec ["addAction"];
+		[_x, ["Get a random primary weapon", "functions\fn_getRandomWeapon.sqf", 
+			["AssaultRifle", "MachineGun", "SniperRifle", "Shotgun", "Rifle", "SubmachineGun"]]] remoteExec ["addAction"];
 	} forEach [crate, crate1];
 
 	//spawn thread to listen for end condition
@@ -111,7 +107,7 @@ if (isServer) then
 		sleep 3;
 		"SideScore" call BIS_fnc_endMissionServer;
 	};
-};
 
-private _stopTime = diag_tickTime;
-(format ["init.sqf took %1 sec to complete. isDedicated:%2, isServer:%3", _stopTime - _startTime, isDedicated, isServer]) remoteExec ["systemChat", 0];
+	private _stopTime = diag_tickTime;
+	(format ["init.sqf took %1 sec to complete", _stopTime - _startTime]) remoteExec ["systemChat", 0];
+};

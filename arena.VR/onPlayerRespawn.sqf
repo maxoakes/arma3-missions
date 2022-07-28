@@ -11,9 +11,9 @@ else
 	_newUnit addUniform "U_O_Protagonist_VR";
 };
 
-private _isDayTime = call compile preprocessFile "functions\fn_isDayTime.sqf";
-private _primaryMags = [primaryWeapon _newUnit, !_isDayTime] call compile preprocessFile "functions\fn_getRoundsForWeapon.sqf";
-private _handgunMags = [handgunWeapon _newUnit, !_isDayTime] call compile preprocessFile "functions\fn_getRoundsForWeapon.sqf";
+private _isDayTime = [] call SCO_fnc_isDayTime;
+private _primaryMags = [primaryWeapon _newUnit, !_isDayTime] call SCO_fnc_getRoundsForWeapon;
+private _handgunMags = [handgunWeapon _newUnit, !_isDayTime] call SCO_fnc_getRoundsForWeapon;
 
 private _selectedPrimaryMag = selectRandom _primaryMags;
 _newUnit addPrimaryWeaponItem _selectedPrimaryMag;

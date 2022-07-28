@@ -1,5 +1,6 @@
 #include "cfgRespawnInventory.hpp"
 #include "cfgRoles.hpp"
+#include "cfgFunctions.hpp"
 
 onLoadName = "Free-for-All: Stratis";
 onLoadMission = "A free-for-all deathmatch for 2-16 players. Parameters allow for many different locations and settings.";
@@ -72,7 +73,7 @@ class Params
 	};
 	class Vehicles
 	{
-		title = "Vehicles per square kilometer -> ceil(area in sq km) * this";
+		title = "Vehicles per square kilometer (based on sq km ceiling)";
 		values[] = {0, 0.25, 0.5, 1, 2, 3, 4, 5, 8, 10, 20};
 		texts[] = {"None", "0.25", "0.5", "1", "2", "3", "4", "5", "8", "10", "20"};
 		default = 3;

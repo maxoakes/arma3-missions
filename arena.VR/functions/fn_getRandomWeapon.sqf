@@ -45,7 +45,7 @@ private _isDayTime = [] call SCO_fnc_isDayTime;
 //add primary weapon
 private _selectedPrimary = selectRandom _possiblePrimaries;
 _caller addWeapon _selectedPrimary;
-private _selectedPrimaryMag = selectRandom ([_selectedPrimary, !_isDayTime] call compile preprocessFile "functions\fn_getRoundsForWeapon.sqf");
+private _selectedPrimaryMag = selectRandom ([_selectedPrimary, !_isDayTime] call SCO_fnc_getRoundsForWeapon);
 _caller addPrimaryWeaponItem _selectedPrimaryMag;
 for "_i" from 1 to 4 do {
 	_caller addMagazine _selectedPrimaryMag;

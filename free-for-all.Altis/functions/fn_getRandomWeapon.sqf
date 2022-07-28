@@ -1,17 +1,26 @@
-//give the caller a random primary weapon. Also give a number of mags, and random attachments.
-//if it is night time, try to add a mounted flashlight and tracer rounds.
-//returns nothing
-params ["_target", "_caller"];
+/*
+	Author: Scouter
+
+	Description:
+		Gives the player a random weapon with random attachments.
+		Built to be called via addAction.
+
+	Parameter(s):
+		0: Object - The object that that the player is aiming at (unused)
+		1: Object - The player
+		2: Number - Action ID (unused)
+		3: Array of Strings - number of magazines to add the player inventory
+
+	Returns:
+		Void
+*/
+params ["_target", "_caller", "_id", "_possibleWeaponTypes"];
 
 private _allWeapons = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;
-private _possibleWeaponTypes = [
-	"AssaultRifle", "MachineGun",
-	"SniperRifle", "Shotgun",
-	"Rifle", "SubmachineGun"];
 
+//get all possible primary weapons via configs
 private _possiblePrimaries = [];
 {
-	//check if usable weapon
 	if (getnumber (configFile >> "cfgWeapons" >> _x >> "scope") > 1) then {
 		private _itemType = _x call bis_fnc_itemType;
 		if (((_itemType select 0) == "Weapon") && ((_itemType select 1) in _possibleWeaponTypes)) then
@@ -25,20 +34,18 @@ private _possiblePrimaries = [];
 	};
 } foreach _allWeapons;
 
-//delete primary weapon and its ammo
-private _possibleCurrentPrimaryMags = getArray (configFile >> "CfgWeapons" >> primaryWeapon _caller >> "magazines");
+//delete the current primary weapon and its ammo
 {
 	_caller removeMagazines _x;
-} forEach _possibleCurrentPrimaryMags;
-removeAllPrimaryWeaponItems _caller;
+} forEach getArray (configFile >> "CfgWeapons" >> primaryWeapon _caller >> "magazines");
 _caller removeWeapon primaryWeapon _caller;
 
-private _isDayTime = call compile preprocessFile "functions\fn_isDayTime.sqf";
+private _isDayTime = [] call SCO_fnc_isDayTime;
 
 //add primary weapon
 private _selectedPrimary = selectRandom _possiblePrimaries;
 _caller addWeapon _selectedPrimary;
-private _selectedPrimaryMag = selectRandom ([_selectedPrimary, !_isDayTime] call compile preprocessFile "functions\fn_getRoundsForWeapon.sqf");
+private _selectedPrimaryMag = selectRandom ([_selectedPrimary, !_isDayTime] call SCO_fnc_getRoundsForWeapon);
 _caller addPrimaryWeaponItem _selectedPrimaryMag;
 for "_i" from 1 to 4 do {
 	_caller addMagazine _selectedPrimaryMag;

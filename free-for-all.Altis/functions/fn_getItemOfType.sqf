@@ -1,5 +1,15 @@
-//take in a list of weapon categories and types
-//returns all of the weapons/items that fall within those categories and types
+/*
+	Author: Scouter
+
+	Description:
+		Get all items that are within a category and/or type as stated in configs
+
+	Parameter(s):
+		0: Array of Strings - (required) array of item config categories
+		1: Array of Strings - (required) array of item config types
+	Returns:
+		Array of Strings
+*/
 params ["_categories", "_types"];
 
 private _allItems = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;

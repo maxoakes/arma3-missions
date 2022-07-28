@@ -28,18 +28,10 @@ if (isServer) then
 	} foreach ["Light1", "Light2", "Light3", "Medium1", "Medium2", "Medium3"];
 
 	//create the physical border of the spawn area
-	[
-		_arenaCenterPos, //center of border circle
-		_arenaRadius, //radius
-		["Sign_Sphere100cm_F"], //what can be the border be made of
-		3, //distance between objects
-		0, //relative rotation of the objects
-		1 //vertical offset
-	] call compile preprocessFile "functions\fn_createBorder.sqf";
+	[_arenaCenterPos, _arenaRadius, ["Sign_Sphere100cm_F"], 3, 0, 1] call SCO_fnc_createBorder;
 
 	//create the random respawn markers
 	private _respawnMarkers = [];
-	//at most 10, at least 3. follows trend of the arena's radius
 	private _numRespawnMarkers = ((ceil (_arenaRadius/100)) min 10) max 3; 
 	for "_i" from 1 to _numRespawnMarkers do
 	{
@@ -58,10 +50,8 @@ if (isServer) then
 			[_respawnAreaRadius, _respawnAreaRadius], //size
 			"ColorGreen", //color string
 			"ELLIPSE", //type
-			"Border", //style
-			0, //direction
-			0 //alpha
-		] call compile preprocessFile "functions\fn_createMarker.sqf";
+			"Border" //style
+		] call SCO_fnc_createMarker;
 		_respawnMarkers pushBack _marker;
 	};
 
@@ -73,7 +63,7 @@ if (isServer) then
 			"MissileLauncher", "RocketLauncher", "AccessoryMuzzle", 
 			"AccessoryPointer", "AccessorySights", "AccessoryBipod",
 			"Headgear", "Vest", "Uniform", "Backpack", "NVGoggles"]
-	] call compile preprocessFile "functions\fn_getItemOfType.sqf";
+	] call SCO_fnc_getItemOfType;
 	private _possibleWeapons = [];
 	private _possibleAttachments = [];
 	private _possibleEquipment = [];
@@ -81,22 +71,23 @@ if (isServer) then
 
 	//unit used as a reference to check if a certain uniform is allowed
 	private _g = createGroup [independent, true];
-	private _refernceUnit = _g createUnit ["I_Survivor_F", _arenaCenterPos, [], 0, "NONE"];
-	_refernceUnit allowDamage false;
+	private _referenceUnit = _g createUnit ["I_Survivor_F", _arenaCenterPos, [], 0, "NONE"];
+	_referenceUnit allowDamage false;
 	{
-		if (_x call BIS_fnc_itemType select 0 == "Weapon") then 
+		private _itemType = _x call BIS_fnc_itemType;
+		if (_itemType select 0 == "Weapon") then 
 		{
 			_possibleWeapons pushBackUnique _x;
 		};
-		if (_x call BIS_fnc_itemType select 0 == "Item") then 
+		if (_itemType select 0 == "Item") then 
 		{
 			_possibleAttachments pushBackUnique _x;
 		};
-		if (_x call BIS_fnc_itemType select 0 == "Equipment") then 
+		if (_itemType select 0 == "Equipment") then 
 		{
-			if (_x call BIS_fnc_itemType select 1 == "Uniform") then
+			if (_itemType select 1 == "Uniform") then
 			{
-				if (_refernceUnit isUniformAllowed _x) then
+				if (_referenceUnit isUniformAllowed _x) then
 				{
 					_possibleEquipment pushBackUnique _x;
 				};
@@ -107,7 +98,7 @@ if (isServer) then
 			};
 		};
 	} forEach _arenaItems;
-	deleteVehicle _refernceUnit;
+	deleteVehicle _referenceUnit;
 
 	//get list of possible vehicles for the arena based on its size
 	//also get the types of crates for the care package thread
@@ -204,7 +195,7 @@ if (isServer) then
 					_newVehicle addBackpackCargoGlobal [_randomItem, 1];
 				};
 				//if it is night time, add NVGs
-				private _isDayTime = call compile preprocessFile "functions\fn_isDayTime.sqf";
+				private _isDayTime = [] call SCO_fnc_isDayTime;
 				if (!_isDayTime) then
 				{
 					_newVehicle addItemCargoGlobal ["NVGoggles_INDEP", 2];
@@ -228,9 +219,7 @@ if (isServer) then
 			//for the rest of the game, await respawn time
 			sleep _crateRespawnTime;
 			//when a crate is ready, find a location
-			private _safePos = [
-				_center, 0, _radius, 10, 0, 0.5, 0, [], [_center, _center]
-			] call BIS_fnc_findSafePos;
+			private _safePos = [_center, 0, _radius, 10, 0, 0.5, 0, [], [_center, _center]] call BIS_fnc_findSafePos;
 
 			//spawn introductory visuals and the crate
 			private _crate = createVehicle [selectRandom _crates, _safePos, [], 0, "CAN_COLLIDE"];
@@ -244,7 +233,7 @@ if (isServer) then
 				"ColorRed", //color string
 				"ICON", //type
 				"mil_destroy" //style
-			] call compile preprocessFile "functions\fn_createMarker.sqf";
+			] call SCO_fnc_createMarker;
 			"A care package as spawned!" remoteExec ["systemChat"];
 
 			//add things to the crate
@@ -253,7 +242,8 @@ if (isServer) then
 			clearWeaponCargoGlobal _crate;
 			clearMagazineCargoGlobal _crate;
 			[_crate, ["Add Ammo for weapon in hand", "functions\fn_refillWeapon.sqf", 2, 4, true, true, "", "true", 5]] remoteExec ["addAction"];
-			[_crate, ["Get a random primary weapon", "functions\fn_getRandomWeapon.sqf", nil, 1.5, true, true, "", "true", 5]] remoteExec ["addAction"];
+			[_crate, ["Get a random primary weapon", "functions\fn_getRandomWeapon.sqf", 
+				["AssaultRifle", "MachineGun", "SniperRifle", "Shotgun", "Rifle", "SubmachineGun"], 1.5, true, true, "", "true", 5]] remoteExec ["addAction"];
 
 			private _availableWeapons = [];
 			{

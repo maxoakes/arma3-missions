@@ -47,6 +47,8 @@ I have decided to go through all of the viable missions and revamp them. Many we
 * Functions:
     * See function headers for description, parameters and return value(s)
     * addToUnitInventory
+    * createBorder
+        * Free-for-all Altis
     * createMarker
         * Manhunt Chernarus
     * createMissionBuilding
@@ -59,9 +61,17 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * generateMapClutter
         * Manhunt Chernarus
     * getItemClassnames
+    * getRandomWeapon
+        * Arena VR
+    * getRoundsForWeapon
+        * Arena VR
+    * isDayTime
+        * Arena VR
     * parseBoolean
+        * Arena VR
         * Manhunt Chernarus
     * refillWeapon
+        * Arena VR
         * Manhunt Chernarus
     * spawnRadialUnits
         * Manhunt Chernarus

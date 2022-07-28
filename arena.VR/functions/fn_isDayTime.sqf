@@ -13,7 +13,6 @@
 */
 params [["_day", 6], ["_night", 18]];
 private _isDayTime = true;
-systemChat format ["day:%1, night:%2", _day, _night];
 if (dayTime < _day or dayTime > _night) then
 {
 	_isDayTime = false;

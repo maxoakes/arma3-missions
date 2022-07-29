@@ -81,8 +81,8 @@ if (isServer) then
 
 	//enable weapon and ammo options at base
 	{
-		[_x, ["Add Ammo for weapon in hand", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction"];
-		[_x, ["Get a random primary weapon", "functions\fn_getRandomWeapon.sqf", 
+		[_x, ["Add Ammo for weapon in hand", "functions\addAction\fn_refillWeapon.sqf", 4]] remoteExec ["addAction"];
+		[_x, ["Get a random primary weapon", "functions\addAction\fn_getRandomWeapon.sqf", 
 			["AssaultRifle", "MachineGun", "SniperRifle", "Shotgun", "Rifle", "SubmachineGun"]]] remoteExec ["addAction"];
 	} forEach [crate, crate1];
 

@@ -2,11 +2,6 @@ Arma 3 missions that I have created over the years.
 
 I have decided to go through all of the viable missions and revamp them. Many were created when I did not have an appreciation for quality programming styling and programming knowledge.
 
-* Zeus Escape: Malden
-    * Originally created 2018
-    * Last updated June 15, 2022
-    * Tested with multiplier: not yet
-    * Escape Malden via air or sea. Enemies are controlled by Zeus. Requires at at least one Zeus game manager to play.
 * Paintball: VR
     * Originally created 2014
     * Last updated June 17, 2022
@@ -44,47 +39,3 @@ I have decided to go through all of the viable missions and revamp them. Many we
         * Any number of markers with variable names starting with "objective_tent_" or "objective_meet_". Tent markers must be in a perfectly flat area that can fit a tent. The meeting markers need only be somehwhat flat with an open area of about 5 meter radius.
         * Any number of markers with a variable name starting with "start_". Must be big enough to have the extraction vehicle.
             * Note: All start markers must be added to description.ext
-* Functions:
-    * See function headers for description, parameters and return value(s)
-    * addToUnitInventory
-    * createBorder
-        * Free-for-all Altis
-    * createMarker
-        * Manhunt Chernarus
-        * Free-for-all Altis
-    * createMissionBuilding
-        * Manhunt Chernarus
-    * footPatrolManager
-        * Called via 'spawn'
-        * Manhunt Chernarus
-    * getMarkers
-        * Manhunt Chernarus
-    * generateMapClutter
-        * Manhunt Chernarus
-    * getItemClassnames
-        * Free-for-all Altis
-    * getRandomWeapon
-        * Arena VR
-    * getRoundsForWeapon
-        * Arena VR
-    * isDayTime
-        * Arena VR
-    * parseBoolean
-        * Arena VR
-        * Manhunt Chernarus
-    * refillWeapon
-        * Arena VR
-        * Manhunt Chernarus
-    * spawnRadialUnits
-        * Manhunt Chernarus
-    * spawnFootPatrolGroup
-        * Manhunt Chernarus
-    * spawnParkedVehicles
-        * Manhunt Chernarus
-    * spawnRepeatingSingleVehiclePatrol
-        * Manhunt Chernarus
-    * taskManager
-        * Manhunt Chernarus
-    * vehiclePatrolManager
-        * Called via 'spawn'
-        * Manhunt Chernarus

@@ -3,15 +3,20 @@ class CfgFunctions
 	class SCO
 	{
 		tag = "SCO";
-		class functions
+		class NormalFunctions
 		{
 			file = "functions";
 			class createBorder {};
 			class createMarker {};
 			class getItemClassnames {};
-			class getRandomWeapon {};
 			class getRoundsForWeapon {};
 			class isDayTime {};
+		};
+		class ActionFunctions
+		{
+			file = "functions\addAction";
+			class getRandomWeapon {};
+			class refillWeapon {};
 		};
 	};
 };

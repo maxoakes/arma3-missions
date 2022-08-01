@@ -63,7 +63,7 @@ if (isServer) then
 			"MissileLauncher", "RocketLauncher", "AccessoryMuzzle", 
 			"AccessoryPointer", "AccessorySights", "AccessoryBipod",
 			"Headgear", "Vest", "Uniform", "Backpack", "NVGoggles"]
-	] call SCO_fnc_getItemOfType;
+	] call SCO_fnc_getItemClassnames;
 	private _possibleWeapons = [];
 	private _possibleAttachments = [];
 	private _possibleEquipment = [];
@@ -241,8 +241,8 @@ if (isServer) then
 			clearItemCargoGlobal _crate;
 			clearWeaponCargoGlobal _crate;
 			clearMagazineCargoGlobal _crate;
-			[_crate, ["Add Ammo for weapon in hand", "functions\fn_refillWeapon.sqf", 2, 4, true, true, "", "true", 5]] remoteExec ["addAction"];
-			[_crate, ["Get a random primary weapon", "functions\fn_getRandomWeapon.sqf", 
+			[_crate, ["Add Ammo for weapon in hand", { _this call SCO_fnc_refillWeapon }, 2, 4, true, true, "", "true", 5]] remoteExec ["addAction"];
+			[_crate, ["Get a random primary weapon", { _this call SCO_fnc_getRandomWeapon }, 
 				["AssaultRifle", "MachineGun", "SniperRifle", "Shotgun", "Rifle", "SubmachineGun"], 1.5, true, true, "", "true", 5]] remoteExec ["addAction"];
 
 			private _availableWeapons = [];

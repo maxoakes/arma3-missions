@@ -36,5 +36,9 @@ class CfgFunctions
 			class getRandomWeapon {};
 			class refillWeapon {};
 		};
+		class CustomActions
+		{
+			file = "functions\custom";	
+		};
 	};
 };

@@ -2,8 +2,7 @@
 	Author: Scouter
 
 	Description:
-		Gives the player a random weapon with random attachments.
-		Built to be called via addAction.
+		Create a circle border around a position at ground level
 
 	Parameter(s):
 		0: Position - (required) Center of circle that the borders indicate
@@ -22,7 +21,12 @@ private _count = round ((2 * 3.14592653589793 * _radius) / _spacing);
 private _step = 360 / _count;
 private _angle = 0;
 
-private _factors = [_count] call SCO_fnc_getPrimeFactorization;
+private _factors = [];
+if (_makeExits) then
+{
+	_factors = [_count] call SCO_fnc_getPrimeFactorization;
+};
+
 private _largestFactor = 0;
 if (count _factors != 0) then
 {

@@ -60,7 +60,7 @@ private _targetOptions = [
 {
 	private _thisAction = _baseAction;
 	_thisAction set [0, format ["<t color='#ffffff'>Spawn %1</t>", _x select 0]];
-	_thisAction set [1, "functions\fn_spawnBattleGroundWave.sqf"];
+	_thisAction set [1, { _this call SCO_fnc_spawnBattleGroundWave }];
 	_thisAction set [2, _x];
 	_spawn addAction _thisAction;
 } forEach _targetOptions;

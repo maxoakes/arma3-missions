@@ -18,7 +18,7 @@ saving = 0;
 allowFunctionsLog = 1;
 
 respawn = BASE;
-respawnTemplates[] = {"Spectator", "Counter", "Wave", "Tickets"};
+respawnTemplates[] = {"Spectator", "Counter", "Wave", "Tickets", "EndMission"};
 respawnDelay = 3;
 respawnOnStart = 1;
 

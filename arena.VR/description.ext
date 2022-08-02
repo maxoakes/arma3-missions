@@ -8,7 +8,7 @@ onLoadMission = "Lose a respawn ticket when a team member dies, and gain one whe
 
 disabledAI = 1;
 respawn = BASE;
-respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory", "Tickets"};
+respawnTemplates[] = {"MenuPosition", "MenuInventory", "Tickets", "EndMission"};
 respawnDelay = 1;
 
 corpseManagerMode = 1;

@@ -22,7 +22,7 @@ respawnDelay = 2;
 respawnOnStart = 1; // true
 reviveMode = 2; // controlled by player attributes
 
-//corpsea amd wreck management
+//corpse and wreck management
 corpseManagerMode = 1; // all
 corpseLimit = 10;
 corpseRemovalMinTime = 60;

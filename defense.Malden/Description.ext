@@ -1,0 +1,127 @@
+#include "cfgFunctions.hpp"
+
+onLoadName = "Wave Defense";
+onLoadMission = "Defend an area from waves of enemies.";
+author = "Scouter";
+
+class Header
+{
+	gameType = Coop;
+	minPlayers = 1;
+	maxPlayers = 8;
+};
+
+aiKills = 1;
+enableDebugConsole = 1;
+joinUnassigned = 1;
+saving = 0;
+allowFunctionsLog = 1;
+
+respawn = BASE;
+respawnTemplates[] = {"Spectator", "Counter", "Wave", "Tickets"};
+respawnDelay = 3;
+respawnOnStart = 1;
+
+reviveMode = 1;
+reviveMedicSpeedMultiplier = 3;
+reviveUnconsciousStateMode = 1;
+reviveRequiredTrait = 0;
+reviveRequiredItems = 2;
+reviveRequiredItemsFakConsumed = 1;
+reviveDelay = 10;
+
+corpseManagerMode = 0;
+wreckManagerMode = 0;
+
+class Params
+{
+	//time and weather
+	class Time
+	{
+		title = "Start time of mission";
+		values[] = {0, 3, 6, 9, 12, 15, 18, 21};
+		texts[] = {"00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00"};
+		default = 15;
+	};
+	class TimeScale
+	{
+		title = "Time Scale";
+		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 20, 60};
+		texts[] = {"Realtime", "2x", "3x", "4x", "5x", "6x", "8x", "10x", "12x", "20x", "60x"};
+		default = 1;
+	};
+	class OvercastPercent
+	{
+		title = "Overcast Amount";
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
+		default = 25;
+	};
+	class FogPercent
+	{
+		title = "Fog Amount";
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
+		default = 10;
+	};
+	class RainPercent
+	{
+		title = "Rain Amount";
+		values[] = {0, 10, 25, 50, 75, 90, 100};
+		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
+		default = 10;
+	};
+	class PlayerStamina
+	{
+		title = "Enable Player Stamina";
+		values[] = {1, 0};
+		texts[] = {"Yes", "No"};
+		default = 0;
+	};
+	class MaxEnemySkill
+	{
+		title = "Maximum Enemy Skill";
+		values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10};
+		texts[] = {"Pretty Bad", "Bad", "Okay", "Average", "Good", "Really Good", "Too Good", "Near-Godly", "Literally Jason Bourne"};
+		default = 5;
+	};
+	class StartPosition
+	{
+		title = "Location of the Mission";
+		values[] = {-1, 0, 1, 2};
+		texts[] = {"Random", "Region 0", "Region 1", "Region 2"};
+		default = 0;
+	};
+	class WaveCount
+	{
+		title = "Number of Waves";
+		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 50, 75, 100};
+		default = 3;
+	};
+	class WaveUnitMultiplier
+	{
+		title = "Multiplier for the number of units. Standard is (N=waveCount*this)";
+		values[] = {50, 100, 125, 150, 175, 200, 250, 300, 400, 500, 600, 800, 1000};
+		texts[] = {"0.5x", "1.0x", "1.25x", "1.5x", "1.75x", "2.0x", "2.5x", "3.0x", "4.0x", "5.0x", "6.0x", "8.0x", "10.0x"};
+		default = 100;
+	};
+	class AreaSize
+	{
+		title = "Radius (in meters) of the Mission Area. Enemies spawn just outside this radius.";
+		values[] = {100, 150, 200, 250, 300, 400, 500, 600, 800, 1000};
+		default = 100;
+	};
+	class CaptureZoneSize
+	{
+		title = "Radius (in meters) of the Capture Area. This is the area the players need to defend.";
+		values[] = {5, 10, 15, 20, 25, 30, 40, 50};
+		default = 20;
+	};
+	class Debug
+	{
+		title = "Debug Mode";
+		values[] = {1, 0};
+		texts[] = {"On", "Off"};
+		default = 0;
+	};
+};

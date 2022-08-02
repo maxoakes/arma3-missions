@@ -13,7 +13,7 @@ saving = 0;
 allowFunctionsLog = 1;
 
 respawn = BASE;
-respawnTemplates[] = {"MenuSpectator", "MenuPosition", "MenuInventory"};
+respawnTemplates[] = {"MenuPosition", "MenuInventory"};
 respawnDelay = 5;
 respawnOnStart = 1;
 

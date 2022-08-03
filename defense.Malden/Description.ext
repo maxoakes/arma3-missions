@@ -18,7 +18,7 @@ saving = 0;
 allowFunctionsLog = 1;
 
 respawn = BASE;
-respawnTemplates[] = {"Spectator", "Counter", "Wave", "Tickets", "EndMission"};
+respawnTemplates[] = {"Spectator", "Counter", "Wave", "Tickets"};
 respawnDelay = 3;
 respawnOnStart = 1;
 
@@ -88,8 +88,8 @@ class Params
 	class StartPosition
 	{
 		title = "Location of the Mission";
-		values[] = {-1, 0, 1, 2};
-		texts[] = {"Random", "Region 0", "Region 1", "Region 2"};
+		values[] = {0, 1, 2};
+		texts[] = {"Region 0", "Region 1", "Region 2"};
 		default = 0;
 	};
 	class WaveCount
@@ -98,12 +98,18 @@ class Params
 		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 50, 75, 100};
 		default = 3;
 	};
-	class WaveUnitMultiplier
+	class WaveSquadMultiplier
 	{
-		title = "Multiplier for the number of units. Standard is (N=waveCount*this)";
+		title = "Multiplier for the number of squads. Standard is (N=squadSize*waveCount*this)";
 		values[] = {50, 100, 125, 150, 175, 200, 250, 300, 400, 500, 600, 800, 1000};
 		texts[] = {"0.5x", "1.0x", "1.25x", "1.5x", "1.75x", "2.0x", "2.5x", "3.0x", "4.0x", "5.0x", "6.0x", "8.0x", "10.0x"};
 		default = 100;
+	};
+	class SquadSize
+	{
+		title = "Number of units in an enemy squad";
+		values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+		default = 2;
 	};
 	class AreaSize
 	{

@@ -7,8 +7,11 @@ class CfgFunctions
 		{
 			file = "functions";
 			class createMarker {};
-			class getMarkers {};
+			class dirToString {};
+			class getRoundsForWeapon {};
+			class isDayTime {};
 			class parseBoolean {};
+			class spawnHitSquad {};
 		};
 		class SpawnFunctions
 		{
@@ -17,10 +20,12 @@ class CfgFunctions
 		class ActionFunctions
 		{
 			file = "functions\addAction";
+			class getRandomWeapon {};
+			class refillWeapon {};
 		};
 		class CustomActions
 		{
-			file = "functions\custom";	
+			file = "functions\custom";
 		};
 	};
 };

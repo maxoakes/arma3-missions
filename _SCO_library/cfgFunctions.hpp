@@ -10,6 +10,7 @@ class CfgFunctions
 			class createBorder {};
 			class createMarker {};
 			class createMissionBuilding {};
+			class dirToString {};
 			class generateMapClutter {};
 			class getItemClassnames {};
 			class getMarkers {};
@@ -19,6 +20,7 @@ class CfgFunctions
 			class isDayTime {};
 			class parseBoolean {};
 			class spawnFootPatrolGroup {};
+			class spawnHitSquad {};
 			class spawnParkedVehicles {};
 			class spawnRadialUnits {};
 		};

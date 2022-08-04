@@ -16,6 +16,10 @@ SCO_WAVES_STARTED = false;
 
 if (isServer) then
 {
+	missionNamespace setVariable ["SCO_WAVES_STARTED", false, true];
+	missionNamespace setVariable ["SCO_ACTIVE_WAVE", false, true];
+	missionNamespace setVariable ["SCO_CURRENT_WAVE", 0, true];
+
 	//set up crate and its actions 
 	private _centerCrate = missionNamespace getVariable format ["crate_%1", _locID];
 	_centerCrate allowDamage false;
@@ -216,8 +220,8 @@ if (isServer) then
 		//main wave loop
 		for "_i" from 1 to _waveCount do
 		{
-			SCO_ACTIVE_WAVE = true;
-			SCO_CURRENT_WAVE = _i;
+			missionNamespace setVariable ["SCO_ACTIVE_WAVE", true, true];
+			missionNamespace setVariable ["SCO_CURRENT_WAVE", _i, true];
 			[[format ["<t size='3'>Wave %1 is starting</t>", _i ],"PLAIN DOWN", 5, true, true]] remoteExec ["cutText"];
 
 			private _numSquads = ceil (_i * _numSquadMultiplier);
@@ -264,7 +268,7 @@ if (isServer) then
 
 			//end-of-wave phase
 			{ deleteMarker _x; } forEach _waveMarkers;
-			SCO_ACTIVE_WAVE = false;
+			missionNamespace setVariable ["SCO_ACTIVE_WAVE", false, true];
 
 			//check if there is a win or loss condition met
 			if (_module getVariable "owner" == east or _i == _waveCount) exitWith { systemChat "End condition met." };

@@ -1,11 +1,13 @@
 //parse parameters of mission
 setDate [2022, 6, 16, ("Time" call BIS_fnc_getParamValue), 0];
-private _startingTickets = ("Tickets" call BIS_fnc_getParamValue);
-[west, _startingTickets] call BIS_fnc_respawnTickets;
-[east, _startingTickets] call BIS_fnc_respawnTickets;
+
 
 if (isServer) then
 {
+	private _startingTickets = ("Tickets" call BIS_fnc_getParamValue);
+	[west, _startingTickets] call BIS_fnc_respawnTickets;
+	[east, _startingTickets] call BIS_fnc_respawnTickets;
+
 	private _startTime = diag_tickTime;
 
 	//add the possible loadouts to the respawn menu

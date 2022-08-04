@@ -6,8 +6,10 @@ class CfgFunctions
 		class NormalFunctions
 		{
 			file = "functions";
+			class createBorder {};
 			class createMarker {};
 			class dirToString {};
+			class getItemClassnames {};
 			class getRoundsForWeapon {};
 			class isDayTime {};
 			class parseBoolean {};

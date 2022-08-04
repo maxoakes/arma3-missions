@@ -8,7 +8,7 @@ class Header
 {
 	gameType = Coop;
 	minPlayers = 1;
-	maxPlayers = 8;
+	maxPlayers = 12;
 };
 
 aiKills = 1;
@@ -35,7 +35,6 @@ wreckManagerMode = 0;
 
 class Params
 {
-	//time and weather
 	class Time
 	{
 		title = "Start time of mission";
@@ -88,9 +87,11 @@ class Params
 	class StartPosition
 	{
 		title = "Location of the Mission";
-		values[] = {0, 1, 2};
-		texts[] = {"Region 0", "Region 1", "Region 2"};
-		default = 0;
+		values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+		texts[] = {"Larche (Small Town)", "Dents du Midi (Rural Hill)", "Blanches (Rural vineyard)", "La Trinite (Small City)", 
+			"Houdan (Small urban vineyard)", "Le Port (Small coastal city)", "Vigny (Small cliff-side village)", 
+			"Moray (Small coastal village)", "Airport (Open urban area)", "Mont Chauve (Rural hilltop gas station)"};
+		default = 9;
 	};
 	class WaveCount
 	{
@@ -101,15 +102,15 @@ class Params
 	class WaveSquadMultiplier
 	{
 		title = "Multiplier for the number of squads. Standard is (N=squadSize*waveCount*this)";
-		values[] = {50, 100, 125, 150, 175, 200, 250, 300, 400, 500, 600, 800, 1000};
-		texts[] = {"0.5x", "1.0x", "1.25x", "1.5x", "1.75x", "2.0x", "2.5x", "3.0x", "4.0x", "5.0x", "6.0x", "8.0x", "10.0x"};
+		values[] = {10, 25, 33, 50, 100, 125, 150, 175, 200, 250, 300, 400, 500, 600, 800, 1000};
+		texts[] = {"0.1x", "0.25x", "0.33x", "0.5x", "1.0x", "1.25x", "1.5x", "1.75x", "2.0x", "2.5x", "3.0x", "4.0x", "5.0x", "6.0x", "8.0x", "10.0x"};
 		default = 100;
 	};
 	class SquadSize
 	{
 		title = "Number of units in an enemy squad";
 		values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-		default = 2;
+		default = 3;
 	};
 	class AreaSize
 	{
@@ -122,6 +123,13 @@ class Params
 		title = "Radius (in meters) of the Capture Area. This is the area the players need to defend.";
 		values[] = {5, 10, 15, 20, 25, 30, 40, 50};
 		default = 20;
+	};
+	class AllowArsenal
+	{
+		title = "Allow Arma Arsenal";
+		values[] = {1, 0};
+		texts[] = {"Yes", "No"};
+		default = 0;
 	};
 	class Debug
 	{

@@ -171,6 +171,8 @@ if (isServer) then
 	private _validMeetingMarkers = [_allObjectiveMarkers - _invalidMeetingMarkers, [_posHQ], { _input0 distance2D getMarkerPos _x }, "ASCEND"] call BIS_fnc_sortBy;
 	_validMeetingMarkers resize (_nearestPickLimit min count _validMeetingMarkers);
 	private _posMeeting = getMarkerPos (selectRandom _validMeetingMarkers);
+
+	private _expectedMissionRadius = ((_posSpawn distance2D _posMeeting) max (_posSpawn distance2D _posHQ))*1.2;
 	//end getting all objective positions
 
 	private _time4 = diag_tickTime;
@@ -218,41 +220,49 @@ if (isServer) then
 
 	private _time6 = diag_tickTime;
 
-	//set up management threads for tasks, patrols and vehicles
-	private _numRegionVehicles = "RegionVehiclePatrols" call BIS_fnc_getParamValue;
-
-	//define all cities to spawn patrols in
-	private _allTowns = nearestLocations [
-		getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), 
-		["Name", "NameVillage", "NameCity", "NameCityCapital"], worldSize];
+	//define all cities to spawn patrols in. The expected maximum mission area minus areas very close to spawn
+	private _poiTypes = ["Name", "NameVillage", "NameCity", "NameCityCapital", "NameLocal", "Airport"];
+	private _allMissionPOI = nearestLocations [_posSpawn, _poiTypes, _expectedMissionRadius] -
+		nearestLocations [_posSpawn, _poiTypes, 500];
 
 	{
-		private _size = ((size _x select 0) max (size _x select 1))*2;
 		[
 			format ["t%1", _forEachIndex], //var name
 			locationPosition _x, //position
 			text _x, //display name
-			[_size, _size], //size
+			size _x, //size
 			"ColorOpfor", //color string
 			"ELLIPSE", //type
 			"SolidBorder", //style
 			0, 0.5
 		] call SCO_fnc_createMarker;
-	} forEach _allTowns;
+	} forEach _allMissionPOI;
+
+	//set up management threads for tasks, patrols and vehicles
+	private _numRegionVehicles = ("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI);
 
 	//spawn threads
-	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh] spawn SCO_fnc_manageTasks;
+	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool] spawn SCO_fnc_manageTasks;
 	[_posMeeting, east, 6, _patrolUnitPool, [(AI_SKILL / 2), AI_SKILL], 0, 500] call SCO_fnc_spawnFootPatrolGroup;
 	[getPos _tent, east, 6, _patrolUnitPool, [(AI_SKILL / 2), 1.0 min (AI_SKILL + 0.1)], 0, 50] call SCO_fnc_spawnFootPatrolGroup;
-	[west, _allTowns, east, _patrolUnitPool, AI_SKILL, "CityFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrols;
-	[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
+	[west, _allMissionPOI, east, _patrolUnitPool, AI_SKILL, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrols;
+	[_allMissionPOI, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
 	if (_numNearbyVehicles > 0) then
 	{
 		for "_i" from 1 to _numNearbyVehicles do
 		{
-			[_allTowns, _conveyVehiclePool + _conveyVehiclePoolCUP, east, west] spawn SCO_fnc_manageTargetedVehiclePatrol;
+			[_allMissionPOI, _conveyVehiclePool + _conveyVehiclePoolCUP, east, west] spawn SCO_fnc_manageTargetedVehiclePatrol;
+		};
+	};
+
+	private _numNearbyPatrols = "NearbyFootPatrol" call BIS_fnc_getParamValue;
+	if (_numNearbyPatrols > 0) then
+	{
+		for "_i" from 1 to _numNearbyPatrols do
+		{
+			[_posSpawn, _patrolUnitPool] spawn SCO_fnc_manageTargetedFootPatrol;
 		};
 	};
 	//end setting up management threads
@@ -284,7 +294,7 @@ if (isServer) then
 		{
 			if (getMarkerColor _x == "ColorRed") then
 			{
-				_x setMarkerColor "ColorOpfor";
+				_x setMarkerColor "ColorBrown";
 			}
 			else
 			{
@@ -310,6 +320,16 @@ if (isServer) then
 			"", //display name
 			[_minDistanceFromHQ, _minDistanceFromHQ], //size
 			"ColorBlack", //color string
+			"ELLIPSE", //type
+			"Border" //style
+		] call SCO_fnc_createMarker;
+
+		[
+			"missionradius", //var name
+			_posSpawn, //position
+			"", //display name
+			[_expectedMissionRadius, _expectedMissionRadius], //size
+			"ColorPink", //color string
 			"ELLIPSE", //type
 			"Border" //style
 		] call SCO_fnc_createMarker;

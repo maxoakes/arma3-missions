@@ -1,18 +1,3 @@
-/*
-	Author: Scouter
-
-	Description:
-		Spawn a vehicle patrol near a random player. The vehicle will go as close to the player as possible
-		while still being on a road. Should be spawned rather than called.
-		Must be run concurrently with mission
-		
-	Parameter(s):
-		0: Array of Locations - (required) All locations that should have patrols
-		1: Array of Strings - (required) classnames of possible vehicles
-
-	Returns:
-		Void
-*/
 params ["_locations", "_patrolVehiclePool", "_enemySide", "_playerSide"];
 private _waypointSize = 100;
 systemChat "Starting nearby vehicle patrol manager.";

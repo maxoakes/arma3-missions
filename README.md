@@ -4,12 +4,13 @@ I have decided to go through all of the viable missions and revamp them. Many we
 
 * Paintball: VR
     * Originally created 2014
-    * Last updated June 17, 2022
-    * Tested with multiplier: not yet
+    * Last updated Aug 18, 2022
+    * Tested with multiplier: Aug 18, 2022
     * Originally there were seperate missions for night-time laser tag and day-time paintball and seperate arenas. Now, there is a single mission with parameters to switch between day and night, and VR-style arena or paintball-style arena. Also is procedurally generated.
 * Last Armory: Stratis
     * Originally created June 2020
     * Last updated June 27, 2022
+    * Tested with multiplier: Aug 18, 2022
     * Hopefully the last "armory" mission that I need to make. Allows the use of all vehicles and weapons, and also allows teleporting from spawn, on-demand sector control missions and wave clearance games.
     * First mission that I went in-depth to make the netcode work for a dedicated server as well as player-hosted. This mission should be used as an example for future missions.
     * Also actually had to make a prime factorization script. Never thought an interview question would be actually used...
@@ -25,6 +26,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
 * Manhunt: Chernarus
     * Created July 5, 2022
     * Last updated July 20, 2022
+    * Tested with multiplier: Aug 18, 2022
     * Admittedly, Chernarus is a big map, so this mission is a lot of walking and driving
     * A new type of mission. Goal is for players to locate, kill and confirm a target. After the kill is confirmed, all players must leave the map via their extraction vehicle.
     * Requires A3 CBA, CUP Weapons, CUP Units, CUP Vehicles, CUP Terrains - Core, CUP Terrains - Maps and CUP Terrains - CWA

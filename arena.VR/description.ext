@@ -38,7 +38,7 @@ class Params
 		title = "Arena Type";
 		values[] = {1, 0};
 		texts[] = {"VR (Laser Tag Experience)", "Shoot House (Paintball Experience)"};
-		default = 1;
+		default = 0;
 	};
 
 	class Density
@@ -46,8 +46,8 @@ class Params
 		title = "Density of Arena objects";
 		values[] = {0, 10, 25, 33, 50, 66, 75, 80, 90, 95, 99, 100};
 		texts[] = {"0% (Open arena)", "10%", "25% (For few players)", "33%", 
-			"50%", "66%", "75%", "80% (For many players)", "90%", "95%", "99%", "100% (Crowded)"};
-		default = 50;
+			"50%", "66% (For many players)", "75%", "80%", "90%", "95%", "99%", "100% (Crowded)"};
+		default = 33;
 	};
 
 	class Ramps
@@ -61,8 +61,7 @@ class Params
 	class Tickets
 	{
 		title = "Starting Tickets per Team";
-		values[] = {2, 4, 8, 10, 15, 20, 25, 50, 100, 1000};
-		texts[] = {"2", "4", "8", "10", "15", "20", "25", "50", "100", "1000"};
-		default = 10;
+		values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 50, 100, 1000};
+		default = 8;
 	};
 };

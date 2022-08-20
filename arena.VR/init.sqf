@@ -21,9 +21,9 @@ if (isServer) then
 		"SMG1","SMG2","SMG3","SMG4","SMG5"];
 
 	//remove ramps if the parameters call for it
-	private _useRamps = [("Ramps" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
+	private _disableRamps = [("Ramps" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	{
-		if (_useRamps) then 
+		if (_disableRamps) then 
 		{
 			private _angle = getDir _x;
 			private _pos = getPos _x;
@@ -83,9 +83,9 @@ if (isServer) then
 
 	//enable weapon and ammo options at base
 	{
-		[_x, ["Add Ammo for weapon in hand", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction"];
+		[_x, ["Add Ammo for weapon in hand", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
 		[_x, ["Get a random primary weapon", { _this call SCO_fnc_getRandomWeapon }, 
-			["AssaultRifle", "MachineGun", "SniperRifle", "Shotgun", "Rifle", "SubmachineGun"]]] remoteExec ["addAction"];
+			["AssaultRifle", "MachineGun", "SniperRifle", "Shotgun", "Rifle", "SubmachineGun"]]] remoteExec ["addAction", 0, true];
 	} forEach [crate, crate1];
 
 	//spawn thread to listen for end condition

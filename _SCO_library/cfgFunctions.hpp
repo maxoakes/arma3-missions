@@ -24,23 +24,11 @@ class CfgFunctions
 			class spawnParkedVehicles {};
 			class spawnRadialUnits {};
 		};
-		class SpawnFunctions
-		{
-			file = "functions\spawn";
-			class manageFootPatrols {};
-			class manageTargetedVehiclePatrol {};
-			class manageTasks {};
-			class manageVehiclePatrols {};
-		};
 		class ActionFunctions
 		{
 			file = "functions\addAction";
 			class getRandomWeapon {};
 			class refillWeapon {};
-		};
-		class CustomActions
-		{
-			file = "functions\custom";	
 		};
 	};
 };

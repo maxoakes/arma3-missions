@@ -3,7 +3,7 @@ class CfgFunctions
 	class SCO
 	{
 		tag = "SCO";
-		class functions
+		class NormalFunctions
 		{
 			file = "functions";
 			class addToUnitInventory {};
@@ -12,15 +12,20 @@ class CfgFunctions
 			class generateMapClutter {};
 			class getItemClassnames {};
 			class getMarkers {};
-			class manageFootPatrols {};
-			class manageVehiclePatrols {};
-			class manageTasks {};
 			class parseBoolean {};
-			class refillWeapon {};
 			class spawnFootPatrolGroup {};
+			class spawnHitSquad {};
 			class spawnParkedVehicles {};
 			class spawnRadialUnits {};
+		};
+		class SpawnFunctions
+		{
+			file = "functions\spawn";
+			class manageFootPatrols {};
+			class manageTargetedFootPatrol {};
 			class manageTargetedVehiclePatrol {};
+			class manageTasks {};
+			class manageVehiclePatrols {};
 		};
 	};
 };

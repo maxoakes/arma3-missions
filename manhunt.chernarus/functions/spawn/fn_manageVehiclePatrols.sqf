@@ -1,21 +1,6 @@
-/*
-	Author: Scouter
-
-	Description:
-		Tracks and spawns manned moving vehicles that move around the map.
-		Should be spawned rather than called; must be run concurrently with mission.
-		
-	Parameter(s):
-		0: Array of Locations - (required) all locations to spawn vehicles
-		1: Array of Strings - (required) all possible vehicles to spawn
-		2: Number - (required) number of vehicles to spawn
-		3: Side - (required) allegiance of the vehicles
-		
-	Returns:
-		Void
-*/
 params ["_locations", "_patrolVehiclePool", "_maxVehicles", "_side"];
 
+systemChat format ["Spawning %1 region patrol vehicles", _maxVehicles];
 private _spawnedGroups = [];
 for "_i" from 1 to _maxVehicles do
 {

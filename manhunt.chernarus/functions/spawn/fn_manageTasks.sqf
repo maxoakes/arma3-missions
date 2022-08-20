@@ -1,21 +1,4 @@
-/*
-	Author: Scouter
-
-	Description:
-		Manage the tasks of the mission. Should be spawned rather than called. 
-		Must be run concurrently.
-		
-	Parameter(s):
-		0: Object - the tent that is the initial destination for players
-		1: Object - the object that has the intel that says where the meeting is taking place
-		2: Position - where the meeting actually is
-		3: Object - the leader that is the target of the players
-		4: Object - the vehicle that the players all need to get into to end the mission
-
-	Returns:
-		Void
-*/
-params ["_tent", "_intel", "_posMeeting", "_warlord", "_extract"];
+params ["_tent", "_intel", "_posMeeting", "_warlord", "_extract", "_enemyUnitClassnames"];
 missionNamespace setVariable ["REVEAL_WARLORD_MEETING", false, true];
 //create task to kill warlord
 [
@@ -95,7 +78,6 @@ deleteMarker "respawn_west";
 //wait until the kill is confirmed
 waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
 ["taskKill", "SUCCEEDED"] call BIS_fnc_taskSetState;
-_extract lock false;
 
 //make a respawn checkpoint at the meeting site
 [
@@ -127,6 +109,33 @@ _extract lock false;
 
 //add diary entry for all players
 {player createDiaryRecord ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
+
+//spawn enemy units around helicopter
+private _squad = [getPos _extract, east, (count units west)*3, _enemyUnitClassnames, [0.3, 0.5], 0, 25] call SCO_fnc_spawnFootPatrolGroup;
+
+//wait until a player gets close to the extraction helo to make a secondary objective
+waitUntil { ({_x distance2D _extract < 200} count units west) > 0; };
+{player createDiaryRecord ["Diary", [localize "STR_DIARY_SECURE_TITLE", localize "STR_DIARY_SECURE_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
+//create task to kill warlord
+[
+	west, //side
+	"taskSecure", //id 
+	[ //desc
+		"$STR_TASK_SECURE_DESC", 
+		"$STR_TASK_SECURE_TITLE", 
+		"$STR_TASK_SECURE_LOC"
+	], 
+	_extract, //dest
+	true, //state
+	-1, //priority
+	true, //show notification
+	"defend", //type
+	true //visible in 3d
+] call BIS_fnc_taskCreate;
+
+waitUntil { ({alive _x or (_x distance2D _extract < 200)} count units _squad) == 0; };
+["taskSecure", "SUCCEEDED"] call BIS_fnc_taskSetState;
+_extract lock false;
 
 //wait until everyone is in the vehicle
 waitUntil {

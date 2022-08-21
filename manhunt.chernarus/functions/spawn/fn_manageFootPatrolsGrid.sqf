@@ -1,4 +1,4 @@
-params ["_playerSide", "_markers", "_enemySide", ["_patrolUnitPool", []], ["_skill", 0.5], ["_unitsPerSquad", 4], ["_spawnDistance", 1000]];
+params ["_playerSide", "_markers", "_enemySide", ["_patrolUnitPool", []], ["_skillRange", [0.3, 0.5]], ["_unitsPerSquad", 4], ["_spawnDistance", 1000]];
 
 private _footPatrolTracker = [];
 {
@@ -15,7 +15,6 @@ while {true} do
 		if ((({_x distance2D getMarkerPos _marker < _spawnDistance} count units _playerSide) > 0) and (_timesSpawned == 0)) then
 		{
 			//if spawning is allowed, spawn a group
-			private _skillRange = [(0 max (_skill - 0.2)), _skill];
 			private _numUnits = random [(0 max _unitsPerSquad - 1), _unitsPerSquad, (_unitsPerSquad + 1)];
 			[getMarkerPos _marker, _enemySide, _numUnits, _patrolUnitPool, _skillRange, 0, 500] call SCO_fnc_spawnFootPatrolGroup;
 			_x set [1, _timesSpawned + 1];

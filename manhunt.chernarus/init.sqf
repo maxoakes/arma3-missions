@@ -7,12 +7,13 @@ setTimeMultiplier ("TimeScale" call BIS_fnc_getParamValue);
 forceWeatherChange;
 
 //global variables
-AI_SKILL = ("MaxEnemySkill" call BIS_fnc_getParamValue)/10;
 REVEAL_WARLORD_MEETING = false;
 CONFIRMED_KILL = false;
 private _extractVeh = extract;
 
 //easily configurable variables
+private _aiSkillRange = [(("MaxEnemySkill" call BIS_fnc_getParamValue)/10)-0.3 max 0, (("MaxEnemySkill" call BIS_fnc_getParamValue)/10)+0.1 min 1.0];
+private _aiSkill = ("MaxEnemySkill" call BIS_fnc_getParamValue)/10;
 private _conveyVehiclePool = ["O_MRAP_02_hmg_F", "O_LSV_02_armed_F", "O_LSV_02_AT_F", "O_G_Offroad_01_armed_F"];
 private _conveyVehiclePoolCUP = ["CUP_O_UAZ_Open_RU", "CUP_O_UAZ_MG_CSAT", "CUP_O_UAZ_AGS30_CSAT", 
 	"CUP_O_Hilux_M2_OPF_G_F", "CUP_O_Hilux_AGS30_OPF_G_F", "CUP_O_Hilux_unarmed_OPF_G_F"];
@@ -207,7 +208,7 @@ if (isServer) then
 	} forEach nearestObjects [_posMeeting, _graveClassnames, 100, true];
 
 	//create meeting and set identity of warlord
-	private _warlordUnit = [_posMeeting, 4, 2, (_meetingUnitPool + _meetingUnitPoolCUP), AI_SKILL] call SCO_fnc_spawnRadialUnits;
+	private _warlordUnit = [_posMeeting, 4, 2, (_meetingUnitPool + _meetingUnitPoolCUP), (_aiSkill + 0.3 max 1.0)] call SCO_fnc_spawnRadialUnits;
 	missionNamespace setVariable ["CONFIRMED_KILL", false, true];
 	[_warlordUnit, "WhiteHead_24"] remoteExec ["setFace", 0, _warlordUnit];
 	[_warlordUnit, "STAND", "RANDOM"] call BIS_fnc_ambientAnimCombat;
@@ -243,9 +244,9 @@ if (isServer) then
 
 	//spawn threads
 	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool] spawn SCO_fnc_manageTasks;
-	[_posMeeting, east, 6, _patrolUnitPool, [(AI_SKILL / 2), AI_SKILL], 0, 500] call SCO_fnc_spawnFootPatrolGroup;
-	[getPos _tent, east, 6, _patrolUnitPool, [(AI_SKILL / 2), 1.0 min (AI_SKILL + 0.1)], 0, 50] call SCO_fnc_spawnFootPatrolGroup;
-	[west, _allMissionPOI, east, _patrolUnitPool, AI_SKILL, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
+	[_posMeeting, east, 6, _patrolUnitPool, _aiSkillRange, 0, 500] call SCO_fnc_spawnFootPatrolGroup;
+	[getPos _tent, east, 6, _patrolUnitPool, _aiSkillRange, 0, 50] call SCO_fnc_spawnFootPatrolGroup;
+	[west, _allMissionPOI, east, _patrolUnitPool, _aiSkillRange, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
 	[_allMissionPOI, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
@@ -294,7 +295,7 @@ if (isServer) then
 					};
 			};
 		};
-		[west, _mapPatrolGridMarkers, east, _patrolUnitPool, AI_SKILL, 4, _spawnDistance] spawn SCO_fnc_manageFootPatrolsGrid;
+		[west, _mapPatrolGridMarkers, east, _patrolUnitPool, _aiSkillRange, 4, _spawnDistance] spawn SCO_fnc_manageFootPatrolsGrid;
 	};
 	//end setting up management threads
 

@@ -1,4 +1,4 @@
-params ["_playerSide", "_locations", "_enemySide", ["_patrolUnitPool", []], ["_skill", 0.5], ["_unitsPerSquad", 4], ["_numSquadsPerArea", 1]];
+params ["_playerSide", "_locations", "_enemySide", ["_patrolUnitPool", []], ["_skillRange", [0.3,0.5]], ["_unitsPerSquad", 4], ["_numSquadsPerArea", 1]];
 
 private _footPatrolTracker = [];
 {
@@ -20,7 +20,6 @@ while {true} do
 			(_timesSpawned < _thisAreaSpawnLimit)) then
 		{
 			//if spawning is allowed, spawn a group
-			private _skillRange = [(0 max (_skill - 0.2)), _skill];
 			private _numUnits = random [(0 max _unitsPerSquad - 2), _unitsPerSquad, (_unitsPerSquad + 2)];
 			[locationPosition _loc, _enemySide, _numUnits, _patrolUnitPool, _skillRange, 0, (size _loc) call BIS_fnc_arithmeticMean] call SCO_fnc_spawnFootPatrolGroup;
 			_x set [1, _timesSpawned + 1];

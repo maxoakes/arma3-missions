@@ -301,12 +301,12 @@ if (isServer) then
 
 	//print timings
 	private _time7 = diag_tickTime;
-	format ["init.sqf: %1sec to build spawn", _time2 - _time1] remoteExec ["systemChat", 0];
-	format ["init.sqf: %1sec to generate clutter", _time3 - _time2] remoteExec ["systemChat", 0];
-	format ["init.sqf: %1sec to identify objective markers", _time4 - _time3] remoteExec ["systemChat", 0];
-	format ["init.sqf: %1sec to build HQ tent", _time5 - _time4] remoteExec ["systemChat", 0];
-	format ["init.sqf: %1sec to build meeting", _time6 - _time5] remoteExec ["systemChat", 0];
-	format ["init.sqf: %1sec to start management threads", _time7 - _time6] remoteExec ["systemChat", 0];
+	[format ["init.sqf: %1sec to build spawn", _time2 - _time1]] call SCO_fnc_printDebug;
+	[format ["init.sqf: %1sec to generate clutter", _time3 - _time2]] call SCO_fnc_printDebug;
+	[format ["init.sqf: %1sec to identify objective markers", _time4 - _time3]] call SCO_fnc_printDebug;
+	[format ["init.sqf: %1sec to build HQ tent", _time5 - _time4]] call SCO_fnc_printDebug;
+	[format ["init.sqf: %1sec to build meeting", _time6 - _time5]] call SCO_fnc_printDebug;
+	[format ["init.sqf: %1sec to start management threads", _time7 - _time6]] call SCO_fnc_printDebug;
 
 	private _debugMode = [("Debug" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	if (_debugMode) then

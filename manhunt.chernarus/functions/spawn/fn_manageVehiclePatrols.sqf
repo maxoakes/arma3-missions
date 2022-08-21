@@ -1,6 +1,6 @@
 params ["_locations", "_patrolVehiclePool", "_maxVehicles", "_side"];
 
-systemChat format ["Spawning %1 region patrol vehicles", _maxVehicles];
+[format ["Spawning %1 region patrol vehicles", _maxVehicles]] call SCO_fnc_printDebug;
 private _spawnedGroups = [];
 for "_i" from 1 to _maxVehicles do
 {
@@ -43,3 +43,4 @@ for "_i" from 1 to _maxVehicles do
 	_wpCycle setWaypointCompletionRadius 50;
 	_wpCycle setWaypointType "CYCLE";
 };
+["All vehicles region patrol vehicles spawned"] call SCO_fnc_printDebug;

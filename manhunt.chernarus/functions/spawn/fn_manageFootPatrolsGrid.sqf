@@ -4,7 +4,7 @@ private _footPatrolTracker = [];
 {
 	_footPatrolTracker pushBack [_x, 0];
 } forEach _markers;
-systemChat "Starting foot patrol manager for grid";
+["Starting foot patrol manager for grid"] call SCO_fnc_printDebug;
 
 while {true} do 
 {
@@ -18,7 +18,7 @@ while {true} do
 			private _numUnits = random [(0 max _unitsPerSquad - 1), _unitsPerSquad, (_unitsPerSquad + 1)];
 			[getMarkerPos _marker, _enemySide, _numUnits, _patrolUnitPool, _skillRange, 0, 500] call SCO_fnc_spawnFootPatrolGroup;
 			_x set [1, _timesSpawned + 1];
-			systemChat format ["Spawned patrol at node %1", _x select 0];
+			[format ["Spawned patrol at node %1", _x select 0]] call SCO_fnc_printDebug;
 		};
 	} forEach _footPatrolTracker;
 };

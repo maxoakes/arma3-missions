@@ -4,7 +4,7 @@ private _footPatrolTracker = [];
 {
 	_footPatrolTracker pushBack [_x, 0];
 } forEach _locations;
-systemChat "Starting foot patrol manager for POI";
+["Starting foot patrol manager for POI"] call SCO_fnc_printDebug;
 
 while {true} do 
 {
@@ -23,7 +23,7 @@ while {true} do
 			private _numUnits = random [(0 max _unitsPerSquad - 2), _unitsPerSquad, (_unitsPerSquad + 2)];
 			[locationPosition _loc, _enemySide, _numUnits, _patrolUnitPool, _skillRange, 0, (size _loc) call BIS_fnc_arithmeticMean] call SCO_fnc_spawnFootPatrolGroup;
 			_x set [1, _timesSpawned + 1];
-			systemChat format ["Spawned patrol in %1 for A=%2 and lim=%3. Now at %4", text _loc, _area, _thisAreaSpawnLimit, _x select 1];
+			[format ["Spawned patrol in %1 for A=%2 and lim=%3. Now at %4", text _loc, _area, _thisAreaSpawnLimit, _x select 1]] call SCO_fnc_printDebug;
 			
 		};
 	} forEach _footPatrolTracker;

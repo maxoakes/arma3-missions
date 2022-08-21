@@ -17,6 +17,9 @@ class CfgFunctions
 			class spawnHitSquad {};
 			class spawnParkedVehicles {};
 			class spawnRadialUnits {};
+
+			//custom
+			class printDebug {};
 		};
 		class SpawnFunctions
 		{

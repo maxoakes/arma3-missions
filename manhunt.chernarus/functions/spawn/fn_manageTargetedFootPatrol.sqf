@@ -1,5 +1,5 @@
 params ["_blacklistedPos", "_possibleClassnames", ["_skillRange", [0.3, 0.5]]];
-systemChat "Starting nearby foot patrol manager.";
+["Starting nearby foot patrol manager."] call SCO_fnc_printDebug;
 
 while {true} do 
 {
@@ -15,7 +15,7 @@ while {true} do
 	private _player = selectRandom _possibleTargets;
 
 	if (count _possibleTargets == 0) then { continue; };
-	systemChat format ["Spawning foot patrol targeting %1", name _player];
+	[format ["Spawning foot patrol targeting %1", name _player]] call SCO_fnc_printDebug;
 
 	//pick a spawn position that is roughly on the path with the player to the objective
 	//halfway between the player's looking dir and the dir to the objective
@@ -35,11 +35,11 @@ while {true} do
 		_blacklistedAreas pushBack ([getPos _x, 500]);
 	} forEach allPlayers;
 
-	systemChat format ["Target: %1, LookDir: %2, DestDir: %3, MidDir: %4, SelectedPos: %5", name _player, _playerDestinationDir, _playerLookingDir, _dirMid, mapGridPosition _spawnCenterPos];
+	[format ["Target: %1, LookDir: %2, DestDir: %3, MidDir: %4, SelectedPos: %5", name _player, _playerDestinationDir, _playerLookingDir, _dirMid, mapGridPosition _spawnCenterPos]] call SCO_fnc_printDebug;
 	private _spawnPos = [_spawnCenterPos, 0, 200, 4, 0, 20, 0, _blacklistedAreas, [[0,0,0], [0,0,0]]] call BIS_fnc_findSafePos;
 	if ((_spawnPos select 0) == 0 and (_spawnPos select 1) == 0) then
 	{
-		systemChat "Failed to find suitable targeted foot patrol spawn location.";
+		["Failed to find suitable targeted foot patrol spawn location."] call SCO_fnc_printDebug;
 		sleep 1;
 		continue;
 	};
@@ -104,7 +104,7 @@ while {true} do
 			] call SCO_fnc_createMarker;
 		};
 
-		systemChat format ["Current waypoint is %1", _currentWaypoint];
+		[format ["Current waypoint is %1", _currentWaypoint]] call SCO_fnc_printDebug;
 		waitUntil {
 			({_x distance2D waypointPosition _currentWaypoint < 20 } count units _squad > 0) or 
 			({(alive _x) and (_x distance2D _player < _despawnDistance)} count units _squad == 0)
@@ -129,7 +129,7 @@ while {true} do
 		//reset the waypoint
 		deleteWaypoint _currentWaypoint;
 		_squad addWaypoint [getPos _player, 0];
-		systemChat "Foot patrol waypoint updated";
+		["Foot patrol waypoint updated"] call SCO_fnc_printDebug;
 	};
 
 	//only delete the units if they are still alive.
@@ -141,7 +141,7 @@ while {true} do
 			deleteVehicle _x;
 		};
 	} forEach units _squad;
-	systemChat "End of foot patrol loop";
+	["End of foot patrol loop"] call SCO_fnc_printDebug;
 	sleep 5;
 };
 

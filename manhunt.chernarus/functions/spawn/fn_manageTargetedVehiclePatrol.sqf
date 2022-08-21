@@ -1,6 +1,6 @@
 params ["_locations", "_patrolVehiclePool", "_enemySide", "_playerSide"];
 private _waypointSize = 100;
-systemChat "Starting nearby vehicle patrol manager.";
+["Starting nearby vehicle patrol manager."] call SCO_fnc_printDebug;
 
 while {true} do 
 {
@@ -28,7 +28,7 @@ while {true} do
 	_result params ["_vehicle", "_crew", "_group"];
 	_vehicle setVehiclePosition [_spawnPos, [], 0, "NONE"];
 	_group setGroupIdGlobal [format ["Repeating Patrol %1", ({side _x == _enemySide} count allGroups)]];
-	systemChat "Spawning nearby vehicle patrol.";
+	["Spawning nearby vehicle patrol."] call SCO_fnc_printDebug;
 	
 	//check if the vehicle is stuck. It can happen if they need to turn around at the player-near-point
 	//should be running for the entirety of the vehicles existance
@@ -49,7 +49,7 @@ while {true} do
 				break;
 			};
 		};
-		systemChat "vehicle is probably stuck. forcing end to loop";
+		["Vehicle is probably stuck. Forcing end to this loop."] call SCO_fnc_printDebug;
 	};
 
 	//create waypoints near player and at end of route
@@ -86,9 +86,9 @@ while {true} do
 			deleteVehicle _x;
 		} forEach _crew;
 		deleteGroup _group;
-		systemChat "Cleaning up vehicle and crew";
+		["Cleaning up vehicle and crew"] call SCO_fnc_printDebug;
 	};
-	systemChat "Vehicle patrol tracking ended";
+	["Vehicle patrol tracking ended"] call SCO_fnc_printDebug;
 };
 
 

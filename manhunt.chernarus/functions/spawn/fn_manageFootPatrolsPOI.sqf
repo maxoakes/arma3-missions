@@ -4,6 +4,7 @@ private _footPatrolTracker = [];
 {
 	_footPatrolTracker pushBack [_x, 0];
 } forEach _locations;
+systemChat "Starting foot patrol manager for POI";
 
 while {true} do 
 {

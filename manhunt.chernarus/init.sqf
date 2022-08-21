@@ -245,7 +245,7 @@ if (isServer) then
 	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool] spawn SCO_fnc_manageTasks;
 	[_posMeeting, east, 6, _patrolUnitPool, [(AI_SKILL / 2), AI_SKILL], 0, 500] call SCO_fnc_spawnFootPatrolGroup;
 	[getPos _tent, east, 6, _patrolUnitPool, [(AI_SKILL / 2), 1.0 min (AI_SKILL + 0.1)], 0, 50] call SCO_fnc_spawnFootPatrolGroup;
-	[west, _allMissionPOI, east, _patrolUnitPool, AI_SKILL, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrols;
+	[west, _allMissionPOI, east, _patrolUnitPool, AI_SKILL, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
 	[_allMissionPOI, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
@@ -265,6 +265,37 @@ if (isServer) then
 			[_posSpawn, _patrolUnitPool] spawn SCO_fnc_manageTargetedFootPatrol;
 		};
 	};
+
+	//generate grid for region patrols
+	private _mapPatrolGridMarkers = [];
+	private _step = "AreaFootPatrolDensity" call BIS_fnc_getParamValue;
+	if (_step > 0) then
+	{
+		private _offset = _step/2;
+		private _spawnDistance = 800;
+		for "_xAxis" from _offset to worldSize step _step do
+		{
+			for "_yAxis" from _offset to worldSize step _step do
+			{
+				private _pos = [_xAxis, _yAxis];
+				if (getTerrainHeightASL _pos > 0 and (_pos distance2D _posSpawn > _spawnDistance)) then
+				{
+					private _m = [
+						format ["patrol-%1-%2", _xAxis, _yAxis], //var name
+						_pos, //position
+						"", //display name
+						[0.5, 0.5], //size
+						"ColorUnknown", //color string
+						"ICON", //type
+						"mil_dot", //style
+						0, 0
+					] call SCO_fnc_createMarker;
+					_mapPatrolGridMarkers pushBack _m;
+					};
+			};
+		};
+		[west, _mapPatrolGridMarkers, east, _patrolUnitPool, AI_SKILL, 4, _spawnDistance] spawn SCO_fnc_manageFootPatrolsGrid;
+	};
 	//end setting up management threads
 
 	//print timings
@@ -279,6 +310,9 @@ if (isServer) then
 	private _debugMode = [("Debug" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	if (_debugMode) then
 	{
+		{
+			_x setMarkerAlpha 1;
+		} forEach _mapPatrolGridMarkers;
 		{
 			_x setMarkerAlpha 1;
 			_x setMarkerColor "ColorWhite";

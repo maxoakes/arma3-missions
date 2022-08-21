@@ -110,7 +110,7 @@ class Params
 	};
 	class AreaFootPatrolDensity
 	{
-		title = "One patrol per every N sq. meters will patrol the map";
+		title = "Patrol Spawn nodes in squares of NxN size";
 		values[] = {0, 500, 800, 1000, 1200, 1500, 1800, 2000, 2200, 2500, 3000, 4000, 5000};
 		texts[] = {"None", "500m", "800m", "1km", "1.2km", "1.5km", "1.8km", "2km", "2.2km", "2.5km", "3km", "4km", "5km"};
 		default = 1000;

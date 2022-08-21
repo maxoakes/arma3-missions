@@ -90,14 +90,14 @@ class Params
 	};
 	class NearbyVehiclePatrol
 	{
-		title = "Number of Concurrent Nearby Vehicle Patrols";
+		title = "Number of concurrent targeted vehicle patrols to players";
 		values[] = {0, 1, 2, 3, 4};
 		texts[] = {"None", "1", "2", "3", "4"};
 		default = 1;
 	};
 	class NearbyFootPatrol
 	{
-		title = "Number of Concurrent targeted foot patrols to players";
+		title = "Number of concurrent targeted foot patrols to players";
 		values[] = {0, 1, 2, 3, 4};
 		texts[] = {"None", "1", "2", "3", "4"};
 		default = 1;

@@ -3,45 +3,66 @@ systemChat "Starting nearby foot patrol manager.";
 
 while {true} do 
 {
-	//get the list of players that are not in a safe zone, like the spawn
+	private _despawnDistance = 1500;
+	//pick a player that is not in a safe zone
 	private _possibleTargets = [];
 	{
 		if (_x distance2D _blacklistedPos > 200 and alive _x) then
 		{
 			_possibleTargets pushBack _x;
-		}
+		};
 	} forEach allPlayers;
-	//pick a spawn position in a player's path
 	private _player = selectRandom _possibleTargets;
 
 	if (count _possibleTargets == 0) then { continue; };
-	systemChat format ["Spawning foot patrol targeting", name _player];
+	systemChat format ["Spawning foot patrol targeting %1", name _player];
 
-	private _waypointPosition = _player getPos [100, getDir _player];
-	private _playerDestinationDir = (_player getDir taskDestination (currentTask _player)) + 360;
-	private _playerLookingDir = getDir _player + 360;
-	private _spawnCenterPos = _player getPos [800, [_playerDestinationDir, _playerLookingDir] call BIS_fnc_arithmeticMean];
+	//pick a spawn position that is roughly on the path with the player to the objective
+	//halfway between the player's looking dir and the dir to the objective
+	private _playerDestinationDir = (_player getDir taskDestination (currentTask _player));
+	private _playerLookingDir = getDir _player;
+	private _dirDiff = abs (_playerDestinationDir - _playerLookingDir);
+	private _dirMid = [_playerDestinationDir, _playerLookingDir] call BIS_fnc_arithmeticMean;
+	if (_dirDiff > 180) then
+	{
+		_dirMid = ((360 - _dirDiff)/2) + ([_playerDestinationDir, _playerLookingDir] call BIS_fnc_greatestNum);
+	};
+	
+	//pick a spawn position that is safe to spawn enemeies that is not too close to players
+	private _spawnCenterPos = _player getPos [600, _dirMid];
 	private _blacklistedAreas = [];
 	{
 		_blacklistedAreas pushBack ([getPos _x, 500]);
 	} forEach allPlayers;
 
-	systemChat format ["Target: %1, LookDir: %2, DestDir: %3, SelectedPos: %4", name _player, _playerDestinationDir, _playerLookingDir, mapGridPosition _spawnCenterPos];
-	private _spawnPos = [_spawnCenterPos, 0, 500, 4, 0, 20, 0, _blacklistedAreas, [[0,0,0], [0,0,0]]] call BIS_fnc_findSafePos;
+	systemChat format ["Target: %1, LookDir: %2, DestDir: %3, MidDir: %4, SelectedPos: %5", name _player, _playerDestinationDir, _playerLookingDir, _dirMid, mapGridPosition _spawnCenterPos];
+	private _spawnPos = [_spawnCenterPos, 0, 200, 4, 0, 20, 0, _blacklistedAreas, [[0,0,0], [0,0,0]]] call BIS_fnc_findSafePos;
 	if ((_spawnPos select 0) == 0 and (_spawnPos select 1) == 0) then
 	{
 		systemChat "Failed to find suitable targeted foot patrol spawn location.";
+		sleep 1;
 		continue;
 	};
 
-	//spawn the squad
+	//spawn the squad and pick the initial waypoint
+	private _waypointPosition = _player getPos [100, _playerLookingDir];
+	if (surfaceIsWater _waypointPosition) then
+	{
+		_waypointPosition = getPos _player;
+	};
 	private _squad = [_spawnPos, east, _waypointPosition, 4, _possibleClassnames, _skillRange, "AWARE", "RED", "LINE"] call SCO_fnc_spawnHitSquad;
 	_squad setGroupIdGlobal [format ["Targeted Foot Patrol %1", ({side _x == east} count allGroups)]];
 
-	while {{(alive _x) and (_x distance2D _player < 2000)} count units _squad > 0} do
+	while {true} do
 	{
+		private _currentWaypoint = [_squad, currentWaypoint _squad];
+		_currentWaypoint setWaypointCompletionRadius 25;
 		if ([("Debug" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean) then
 		{
+			deleteMarker "fps";
+			deleteMarker "fpsp";
+			deleteMarker "fpsr";
+			deleteMarker "fpo";
 			[
 				"fps", //var name
 				_spawnPos, //position
@@ -66,7 +87,7 @@ while {true} do
 				"fpsr", //var name
 				_spawnCenterPos, //position
 				"", //display name
-				[500, 500], //size
+				[200, 200], //size
 				"ColorOrange", //color string
 				"ELLIPSE", //type
 				"Border" //style
@@ -83,12 +104,45 @@ while {true} do
 			] call SCO_fnc_createMarker;
 		};
 
-		waitUntil {{ _x distance2D _waypointPosition < 25 } count units _squad > 0};
-		_waypointPosition = getPos _player;
+		systemChat format ["Current waypoint is %1", _currentWaypoint];
+		waitUntil {
+			({_x distance2D waypointPosition _currentWaypoint < 20 } count units _squad > 0) or 
+			({(alive _x) and (_x distance2D _player < _despawnDistance)} count units _squad == 0)
+		};
+		if ({(alive _x) and (_x distance2D _player < _despawnDistance)} count units _squad == 0) then
+		{
+			break;
+		};
+		
+		//pick the nearest active player from that previous waypoint
+		private _sortedPlayers = [allPlayers, [waypointPosition _currentWaypoint], { _input0 distance2D _x }, "ASCEND"] call BIS_fnc_sortBy;
+		if (count _sortedPlayers == 0) then
+		{
+			_squad deleteGroupWhenEmpty true;
+			{
+				deleteVehicle _x;
+			} forEach units _squad;
+			break;
+		};
+		_player = selectRandom _sortedPlayers;
+
+		//reset the waypoint
+		deleteWaypoint _currentWaypoint;
+		_squad addWaypoint [getPos _player, 0];
 		systemChat "Foot patrol waypoint updated";
 	};
-	sleep 5;
+
+	//only delete the units if they are still alive.
+	//If we get here, the units are out of range from a player or the units are dead
+	_squad deleteGroupWhenEmpty true;
+	{
+		if (alive _x) then
+		{
+			deleteVehicle _x;
+		};
+	} forEach units _squad;
 	systemChat "End of foot patrol loop";
+	sleep 5;
 };
 
 

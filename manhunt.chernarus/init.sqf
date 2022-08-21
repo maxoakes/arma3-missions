@@ -239,7 +239,7 @@ if (isServer) then
 	} forEach _allMissionPOI;
 
 	//set up management threads for tasks, patrols and vehicles
-	private _numRegionVehicles = ("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI);
+	private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 50;
 
 	//spawn threads
 	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool] spawn SCO_fnc_manageTasks;

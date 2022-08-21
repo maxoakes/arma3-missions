@@ -9,7 +9,8 @@ for "_i" from 1 to _maxVehicles do
 	private _locSize = ((size _startLocation select 0) max (size _startLocation select 1))*2;
 
 	//pick a safe spawn position to place vehicle
-	private _spawnPos = [locationPosition _startLocation, 0, _locSize, 10, 0, 0.7, 0, [], [locationPosition _startLocation, locationPosition _startLocation]] call BIS_fnc_findSafePos;
+	private _nearestRoad = [locationPosition _startLocation, 2000] call BIS_fnc_nearestRoad;
+	private _spawnPos = [locationPosition _startLocation, 0, _locSize, 15, 0, 0.5, 0, [], [getPos _nearestRoad, getPos _nearestRoad]] call BIS_fnc_findSafePos;
 
 	//spawn the vehicle
 	private _result = [_spawnPos, 0, selectRandom _patrolVehiclePool, _side] call BIS_fnc_spawnVehicle;

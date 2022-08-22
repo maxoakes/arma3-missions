@@ -54,7 +54,7 @@ class Params
 	{
 		title = "Ramps at Spawns";
 		values[] = {1, 0};
-		texts[] = {"Yes", "No"};
+		texts[] = {"No", "Yes"};
 		default = 0;
 	};
 

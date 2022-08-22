@@ -26,6 +26,7 @@ class CfgFunctions
 			file = "functions\spawn";
 			class manageFootPatrolsPOI {};
 			class manageFootPatrolsGrid {};
+			class manageAirPatrols {};
 			class manageTargetedFootPatrol {};
 			class manageTargetedVehiclePatrol {};
 			class manageTasks {};

@@ -12,7 +12,7 @@ STR_TASK_TENT_LOC, HQ Tent
 
 STR_TASK_TENT_UPDATE_DESC, The warlord is not in his tent.
 STR_TASK_TENT_UPDATE_TITLE, Kill the Warlord
-STR_TASK_TENT_UPDATE_DESC, Unknown
+STR_TASK_TENT_UPDATE_LOC, Unknown
 
 STR_TASK_INTEL_DESC, The warload is not at his tent. Find intel that can help ascertain his whereabouts.
 STR_TASK_INTEL_TITLE, Find the warlord's location
@@ -20,11 +20,11 @@ STR_TASK_INTEL_DESC, Computer
 
 STR_TASK_EXTRACT_DESC, The warlord has been confirmed dead. Get everyone into the extraction vehicle.
 STR_TASK_EXTRACT_TITLE, Get to the Extraction Vehicle
-STR_TASK_EXTRACT_DESC, Vehicle
+STR_TASK_EXTRACT_LOC, Vehicle
 
 STR_TASK_SECURE_DESC, The extraction helicopter has been found by an enemy patrol. Kill all of the enemies at the extraction site.
 STR_TASK_SECURE_TITLE, Secure the Extraction Vehicle
-STR_TASK_SECURE_DESC, Extraction Area
+STR_TASK_SECURE_LOC, Extraction Area
 
 STR_DIARY_INITIAL_TITLE, Target: Dmitri Kozlov
 STR_DIARY_INITIAL_TEXT, "<img image='images\warlord.jpg' width='200' height='200'/><br></br><br></br>Dmitri Kozlov<br></br><br></br>Responsible for the recent genocide in the Chernarus region. Believed to have nearly 4000 soldiers under his command. Currently, he is still operating within Chernarus. We believe he is in his command tent.<br></br><br></br>Your mission is to track down Kozlov and eliminate him. Your team will also need to confirm his identity before or after he is killed.<br></br><br></br>There are likely several patrols in the region, both on foot and in vehicles. It will be best to avoid open and urban areas."

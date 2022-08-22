@@ -1,5 +1,6 @@
 params ["_locations", "_patrolVehiclePool", "_enemySide", "_playerSide"];
 private _waypointSize = 100;
+private _locationTypes = ["Name", "NameVillage", "NameCity", "NameCityCapital"];
 ["Starting nearby vehicle patrol manager."] call SCO_fnc_printDebug;
 
 while {true} do 
@@ -13,22 +14,26 @@ while {true} do
 	};
 
 	//get a lot of towns that are far away from the player
-	private _locationPool = nearestLocations [_midpointTarget, ["Name", "NameVillage", "NameCity", "NameCityCapital"], 3000] - 
-		nearestLocations [_midpointTarget, ["Name", "NameVillage", "NameCity", "NameCityCapital"], 1500];
+	private _locationPool = nearestLocations [_midpointTarget, _locationTypes, 3000] - nearestLocations [_midpointTarget, _locationTypes, 1500];
 
 	//pick some starting town and a town that is the furthest away from the start.
 	//Mathmatically, this should be the town that is as far to the other side of the circle as possible
 	private _startLocation = selectRandom _locationPool;
-	private _endLocation = ([_locationPool, [locationPosition _startLocation], { _input0 distance2D (locationPosition _x) }, "DESCEND"] call BIS_fnc_sortBy) select 0;
-	private _locSize = ((size _startLocation select 0) max (size _startLocation select 1))*2;
+	private _startRoad = [locationPosition _startLocation, 2000] call BIS_fnc_nearestRoad;
+	(getRoadInfo _startRoad) params ["_mapType", "_width", "_isPedestrian", "_texture", "_textureEnd", "_material", "_begPos", "_endPos", "_isBridge"];
+	private _roadDir = _begPos getDir _endPos;
+	private _target = [_midpointTarget, 2000] call BIS_fnc_nearestRoad;
+	private _proposedEndPos = _target getPos [1500, (_startRoad getDir _target)];
+	private _endLocation = ([_locationPool, [_proposedEndPos], { _input0 distance2D (locationPosition _x) }, "ASCEND"] call BIS_fnc_sortBy) select 0;
 
 	//pick a safe spawn position to place vehicle
-	private _spawnPos = [locationPosition _startLocation, 0, _locSize, 8, 0, 0.7, 0, [], [locationPosition _startLocation, locationPosition _startLocation]] call BIS_fnc_findSafePos;
+	private _spawnPos = [getPos _startRoad, 0, 100, 10, 0, 1, 0, [], [getPos _startRoad, getPos _startRoad]] call BIS_fnc_findSafePos;
 	private _result = [_spawnPos, 180, selectRandom _patrolVehiclePool, east] call BIS_fnc_spawnVehicle;
 	_result params ["_vehicle", "_crew", "_group"];
 	_vehicle setVehiclePosition [_spawnPos, [], 0, "NONE"];
+	_vehicle setDir _roadDir;
 	_group setGroupIdGlobal [format ["Repeating Patrol %1", ({side _x == _enemySide} count allGroups)]];
-	["Spawning nearby vehicle patrol."] call SCO_fnc_printDebug;
+	[format ["Spawning targeted vehicle patrol starting at %1, ending at %2.", text _startLocation, text _endLocation]] call SCO_fnc_printDebug;
 	
 	//check if the vehicle is stuck. It can happen if they need to turn around at the player-near-point
 	//should be running for the entirety of the vehicles existance
@@ -53,7 +58,6 @@ while {true} do
 	};
 
 	//create waypoints near player and at end of route
-	private _target = [_midpointTarget, 2000] call BIS_fnc_nearestRoad;
 	if (_target == objNull) then
 	{
 		_target = selectRandom (units _playerSide arrayIntersect playableUnits);

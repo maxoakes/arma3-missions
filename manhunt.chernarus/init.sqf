@@ -14,9 +14,11 @@ private _extractVeh = extract;
 //easily configurable variables
 private _aiSkillRange = [(("MaxEnemySkill" call BIS_fnc_getParamValue)/10)-0.3 max 0, (("MaxEnemySkill" call BIS_fnc_getParamValue)/10)+0.1 min 1.0];
 private _aiSkill = ("MaxEnemySkill" call BIS_fnc_getParamValue)/10;
-private _conveyVehiclePool = ["O_MRAP_02_hmg_F", "O_LSV_02_armed_F", "O_LSV_02_AT_F", "O_G_Offroad_01_armed_F"];
-private _conveyVehiclePoolCUP = ["CUP_O_UAZ_Open_RU", "CUP_O_UAZ_MG_CSAT", "CUP_O_UAZ_AGS30_CSAT", 
+private _convoyVehiclePool = ["O_MRAP_02_hmg_F", "O_LSV_02_armed_F", "O_LSV_02_AT_F", "O_G_Offroad_01_armed_F"];
+private _convoyVehiclePoolCUP = ["CUP_O_UAZ_Open_RU", "CUP_O_UAZ_MG_CSAT", "CUP_O_UAZ_AGS30_CSAT", 
 	"CUP_O_Hilux_M2_OPF_G_F", "CUP_O_Hilux_AGS30_OPF_G_F", "CUP_O_Hilux_unarmed_OPF_G_F"];
+private _convoyTankPool = ["CUP_O_T72_RU", "CUP_O_T90_RU", "CUP_O_BRDM2_RUS", "CUP_O_BMP2_RU", "CUP_O_GAZ_Vodnik_PK_RU"];
+private _airPatrolPool = ["CUP_O_Mi8_RU", "CUP_O_Mi8_RU", "CUP_O_Mi8AMT_RU", "CUP_O_Ka52_RU"];
 private _meetingUnitPool = ["O_G_Soldier_F", "O_G_Soldier_lite_F", "O_G_Soldier_SL_F", "O_G_Soldier_TL_F", "O_G_Soldier_AR_F", "O_G_medic_F"];
 private _meetingUnitPoolCUP = ["CUP_O_INS_Officer", "CUP_O_INS_Story_Bardak", "CUP_O_INS_Story_Lopotev", "CUP_O_INS_Commander"];
 private _patrolUnitPool = ["CUP_O_INS_Soldier_AA", "CUP_O_INS_Soldier_Ammo", "CUP_O_INS_Soldier_AT", "CUP_O_INS_Soldier_AR", 
@@ -196,7 +198,7 @@ if (isServer) then
 	[_crate, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 	[_crate, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
 
-	[getPos _tent, 3, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
+	[getPos _tent, 3, (_convoyVehiclePool + _convoyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
 	//end setting up HQ tent
 
 	private _time5 = diag_tickTime;
@@ -216,7 +218,7 @@ if (isServer) then
 	[_warlordUnit, [format [localize "STR_ACTION_CONFIRM", name _warlordUnit], {missionNamespace setVariable ["CONFIRMED_KILL", true, true];}, nil, 3, true, true, "", "true", 3, false, "", ""]] remoteExec ["addAction", 0, true];
 
 	//create parked cars near meeting location
-	[_posMeeting, 4, (_conveyVehiclePool + _conveyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
+	[_posMeeting, 4, (_convoyVehiclePool + _convoyVehiclePoolCUP), 5] call SCO_fnc_spawnParkedVehicles;
 	//end setting up meeting
 
 	private _time6 = diag_tickTime;
@@ -247,14 +249,15 @@ if (isServer) then
 	[_posMeeting, east, 6, _patrolUnitPool, _aiSkillRange, 0, 500] call SCO_fnc_spawnFootPatrolGroup;
 	[getPos _tent, east, 6, _patrolUnitPool, _aiSkillRange, 0, 50] call SCO_fnc_spawnFootPatrolGroup;
 	[west, _allMissionPOI, east, _patrolUnitPool, _aiSkillRange, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
-	[_allMissionPOI, _conveyVehiclePool + _conveyVehiclePoolCUP, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
+	[_allMissionPOI, _convoyVehiclePool + _convoyVehiclePoolCUP + _convoyTankPool, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
+	[_posHQ, _expectedMissionRadius, _posSpawn, 2000, _airPatrolPool, "NumberAirPatrols" call BIS_fnc_getParamValue, east] spawn SCO_fnc_manageAirPatrols;
 
 	private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;
 	if (_numNearbyVehicles > 0) then
 	{
 		for "_i" from 1 to _numNearbyVehicles do
 		{
-			[_allMissionPOI, _conveyVehiclePool + _conveyVehiclePoolCUP, east, west] spawn SCO_fnc_manageTargetedVehiclePatrol;
+			[_allMissionPOI, _convoyVehiclePool + _convoyVehiclePoolCUP + _convoyTankPool, east, west] spawn SCO_fnc_manageTargetedVehiclePatrol;
 		};
 	};
 
@@ -301,15 +304,15 @@ if (isServer) then
 
 	//print timings
 	private _time7 = diag_tickTime;
-	[format ["init.sqf: %1sec to build spawn", _time2 - _time1]] call SCO_fnc_printDebug;
-	[format ["init.sqf: %1sec to generate clutter", _time3 - _time2]] call SCO_fnc_printDebug;
-	[format ["init.sqf: %1sec to identify objective markers", _time4 - _time3]] call SCO_fnc_printDebug;
-	[format ["init.sqf: %1sec to build HQ tent", _time5 - _time4]] call SCO_fnc_printDebug;
-	[format ["init.sqf: %1sec to build meeting", _time6 - _time5]] call SCO_fnc_printDebug;
-	[format ["init.sqf: %1sec to start management threads", _time7 - _time6]] call SCO_fnc_printDebug;
+	[format ["%1sec to build spawn", _time2 - _time1]] call SCO_fnc_printDebug;
+	[format ["%1sec to generate clutter", _time3 - _time2]] call SCO_fnc_printDebug;
+	[format ["%1sec to identify objective markers", _time4 - _time3]] call SCO_fnc_printDebug;
+	[format ["%1sec to build HQ tent", _time5 - _time4]] call SCO_fnc_printDebug;
+	[format ["%1sec to build meeting", _time6 - _time5]] call SCO_fnc_printDebug;
+	[format ["%1sec to start management threads", _time7 - _time6]] call SCO_fnc_printDebug;
 
 	private _debugMode = [("Debug" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
-	if (_debugMode) then
+	if (_debugMode or is3DENPreview) then
 	{
 		{
 			_x setMarkerAlpha 1;

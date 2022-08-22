@@ -4,6 +4,7 @@ params ["_blacklistedPos", "_possibleClassnames", ["_skillRange", [0.3, 0.5]]];
 while {true} do 
 {
 	private _despawnDistance = 1500;
+	private _predictedPathDistance = 200;
 	//pick a player that is not in a safe zone
 	private _possibleTargets = [];
 	{
@@ -45,7 +46,7 @@ while {true} do
 	};
 
 	//spawn the squad and pick the initial waypoint
-	private _waypointPosition = _player getPos [100, _playerLookingDir];
+	private _waypointPosition = _player getPos [_predictedPathDistance, _playerLookingDir];
 	if (surfaceIsWater _waypointPosition) then
 	{
 		_waypointPosition = getPos _player;

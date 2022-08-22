@@ -141,7 +141,7 @@ if (isServer) then
 		};
 	}];
 
-	//update marker for the vehyicle since it can technically move if there is more than one player
+	//update marker for the vehicle since it can technically move if there is more than one player
 	[_extractMarker, _extractVeh] spawn
 	{
 		while {true} do
@@ -342,8 +342,9 @@ if (isServer) then
 					_sum = _sum vectorAdd getPos _x; 
 				} forEach _allPlayers;
 				private _newPos = _sum vectorMultiply (1/(count _allPlayers));
+				private _safePos = [_newPos, 0, 50, 5, 0, 20, 0, [], [_newPos, _newPos]] call BIS_fnc_findSafePos;
 
-				_marker setMarkerPos _newPos;
+				_marker setMarkerPos _safePos;
 				[format ["Dynamic respawn marker updated to %1 based on %2 units.", _newPos, count _allPlayers]] call SCO_fnc_printDebug;
 			};
 		};

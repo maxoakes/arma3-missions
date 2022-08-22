@@ -6,14 +6,14 @@ private _footPatrolTracker = [];
 } forEach _locations;
 ["Starting foot patrol manager for POI"] call SCO_fnc_printDebug;
 
-while {true} do 
+while {_numSquadsPerArea > 0} do 
 {
 	sleep 1;
 	{
 		_x params ["_loc", "_timesSpawned"];
 		private _area = ((size _loc select 0) * (size _loc select 1) * pi) / 1000000; //area in sq km
 		private _spawningDistance = (size _loc select 0) max (size _loc select 1)+1000;
-		private _thisAreaSpawnLimit = (ceil (_area*10) * _numSquadsPerArea) min 8;
+		private _thisAreaSpawnLimit = (ceil (_area*5) * _numSquadsPerArea) min 12;
 		//check if a player unit is nearby a town
 		//also check if the spawn limit for that town has been reached. (based on its area)
 		if ((({_x distance2D locationPosition _loc < _spawningDistance} count units _playerSide) > 0) and 

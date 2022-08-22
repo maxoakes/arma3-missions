@@ -7,7 +7,7 @@ while {true} do
 {
 	
 	//pick random west unit position. If no units are spawned yet, target the spawn
-	private _midpointTarget = getMarkerPos "respawn_west";
+	private _midpointTarget = getMarkerPos "start";
 	if (count playableUnits > 0) then
 	{
 		_midpointTarget = getPos selectRandom (units _playerSide arrayIntersect playableUnits);

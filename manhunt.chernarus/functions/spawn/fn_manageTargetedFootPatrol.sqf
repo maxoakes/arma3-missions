@@ -3,7 +3,7 @@ params ["_blacklistedPos", "_possibleClassnames", ["_skillRange", [0.3, 0.5]]];
 
 while {true} do 
 {
-	private _despawnDistance = 1500;
+	private _despawnDistance = 1000;
 	private _predictedPathDistance = 200;
 	//pick a player that is not in a safe zone
 	private _possibleTargets = [];

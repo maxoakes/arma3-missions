@@ -6,7 +6,7 @@ private _footPatrolTracker = [];
 } forEach _markers;
 ["Starting foot patrol manager for grid"] call SCO_fnc_printDebug;
 
-while {true} do 
+while {_spawnDistance > 0} do 
 {
 	sleep 1;
 	{

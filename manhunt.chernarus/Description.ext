@@ -92,26 +92,29 @@ class Params
 	{
 		title = "Number of concurrent targeted vehicle patrols to players";
 		values[] = {0, 1, 2, 3, 4};
-		texts[] = {"None", "1", "2", "3", "4"};
+		texts[] = {"None", "1 vehicle", "2 vehicles", "3 vehicles", "4 vehicles"};
 		default = 1;
 	};
 	class NearbyFootPatrol
 	{
 		title = "Number of concurrent targeted foot patrols to players";
 		values[] = {0, 1, 2, 3, 4};
-		texts[] = {"None", "1", "2", "3", "4"};
+		texts[] = {"None", "1 patrol", "2 patrols", "3 patrols", "4 patrols"};
 		default = 1;
 	};
 	class AreaVehiclePatrolDensity
 	{
-		title = "For each town/POI, how many vehicles are patrolling the mission area?";
-		values[] = {0, 1, 2, 3, 4, 5, 6, 8, 10};
+		title = "For each town/POI, how many vehicles are patrolling the mission area? Limited to 60 vehicle patrols for performance.";
+		values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+		texts[] = {"None", "1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x"};
 		default = 1;
 	};
 	class NumberAirPatrols
 	{
 		title = "Number of initial helicopter patrols in mission area";
-		values[] = {0, 1, 2, 3, 4, 5, 6, 8, 10};
+		values[] = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+		texts[] = {"None", "1 helicopter", "2 helicopters", "3 helicopters", "4 helicopters", "5 helicopters", 
+			"6 helicopters", "7 helicopters", "8 helicopters"};
 		default = 2;
 	};
 	class AreaFootPatrolDensity
@@ -123,8 +126,9 @@ class Params
 	};
 	class POIFootPatrolMultiplier
 	{
-		title = "For every 0.1 sq km in POI size, how many patrols will there be? Capped at 8 patrols regardless of size and parameter.";
+		title = "For every 0.2 sq km in POI size, how many patrols will there be? P = min( ceil([area in sq km] * this), 12)";
 		values[] = {0, 1, 2, 3, 4, 5, 6};
+		texts[] = {"None", "1 patrol", "2 patrols", "3 patrols", "4 patrols", "5 patrols", "6 patrols"};
 		default = 1;
 	};
 	class PlayerStamina
@@ -145,29 +149,40 @@ class Params
 	{
 		title = "Location that the helicopter spawns. It is the insertion and extraction point.";
 		values[] = {0, 1, 2, 3, 4, 5, 6};
-		texts[] = {"Krutoy Cap", "Kamenka, Hill 121", "Above Balota Airstrip", "Rify Coastline", "Novy Lug Farmhouse", "Pustoshka Farms", "Near Northwest Airfield"};
+		texts[] = {"Krutoy Cap", "Kamenka, Hill 121", "Above Balota Airstrip", "Rify Coastline", 
+			"Novy Lug Farmhouse", "Pustoshka Farms", "Near Northwest Airfield"};
 		default = 0;
 	};
 	class MinObjectiveDistance
 	{
 		title = "Minimum Distance Objectives can be from Insertion Point";
 		values[] = {50, 100, 250, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000};
-		texts[] = {"50", "100", "250", "500m", "1.0km", "1.5km", "2.0km", "2.5km", "3.0km", "4.0km", "5.0km", "6.0km"};
+		texts[] = {"50m", "100m", "250m", "500m", "1.0km", "1.5km", "2.0km", "2.5km", "3.0km", "4.0km", "5.0km", "6.0km"};
 		default = 1000;
 	};
 	class MinMeetingDistanceFromHQ
 	{
 		title = "Minimum Distance Meeting can be from HQ Tent";
 		values[] = {50, 100, 250, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000};
-		texts[] = {"50", "100", "250", "500m", "1.0km", "1.5km", "2.0km", "2.5km", "3.0km", "4.0km", "5.0km", "6.0km"};
+		texts[] = {"50m", "100m", "250m", "500m", "1.0km", "1.5km", "2.0km", "2.5km", "3.0km", "4.0km", "5.0km", "6.0km"};
 		default = 2000;
 	};
 	class PickNNearestObjectives
 	{
 		title = "Pick Randomly from N Nearest Objectives from Previous Objective";
 		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 60, 75, 100, 100000};
-		texts[] ={"1", "2", "3", "4", "5", "6", "8", "10", "12", "15", "20", "25", "30", "40", "50", "60", "75", "100", "All"};
+		texts[] ={"1 spot", "2 spots", "3 spots", "4 spots", "5 spots", "6 spots", "8 spots", "10 spots", 
+			"12 spots", "15 spots", "20 spots", "25 spots", "30 spots", "40 spots", "50 spots", "60 spots", 
+			"75 spots", "100 spots", "All spots"};
 		default = 8;
+	};
+	class DynamicRespawnUpdateInterval
+	{
+		title = "How long before the dynamic respawn updates to the centroid of player positions?";
+		values[] = {0, 10, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 900, 1200, 1800};
+		texts[] ={"Disabled", "10 sec", "30 sec", "1 min", "2 min", "3 min", "4 min", "5 min", "6 min", "7 min", 
+			"8 min", "9 min", "10 min", "15 min", "20 min", "30 min"};
+		default = 300;
 	};
 	class Debug
 	{

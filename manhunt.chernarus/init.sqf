@@ -101,6 +101,17 @@ if (isServer) then
 		_x setPos _posSpawn; 
 	} forEach units west;
 
+	//create a marker to denote the start position. Different usage than respawn_west
+	private _startMarker = [
+		"start", //var name
+		_posSpawn, //position
+		"", //display name
+		[1, 1], //size
+		"ColorBLUFOR", //color string
+		"ICON", //type
+		"Empty" //style
+	] call SCO_fnc_createMarker;
+
 	arsenal allowDamage false;
 	clearItemCargoGlobal arsenal;
 	clearWeaponCargoGlobal arsenal;
@@ -130,7 +141,7 @@ if (isServer) then
 		};
 	}];
 
-	//update marker for the boat since it is important to the mission
+	//update marker for the vehyicle since it can technically move if there is more than one player
 	[_extractMarker, _extractVeh] spawn
 	{
 		while {true} do
@@ -242,12 +253,12 @@ if (isServer) then
 	} forEach _allMissionPOI;
 
 	//set up management threads for tasks, patrols and vehicles
-	private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 50;
+	private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 60;
 
 	//spawn threads
 	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool] spawn SCO_fnc_manageTasks;
 	[_posMeeting, east, 6, _patrolUnitPool, _aiSkillRange, 0, 500] call SCO_fnc_spawnFootPatrolGroup;
-	[getPos _tent, east, 6, _patrolUnitPool, _aiSkillRange, 0, 50] call SCO_fnc_spawnFootPatrolGroup;
+	[_posHQ, east, 6, _patrolUnitPool, _aiSkillRange, 0, 50] call SCO_fnc_spawnFootPatrolGroup;
 	[west, _allMissionPOI, east, _patrolUnitPool, _aiSkillRange, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
 	[_allMissionPOI, _convoyVehiclePool + _convoyVehiclePoolCUP + _convoyTankPool, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
 	[_posHQ, _expectedMissionRadius, _posSpawn, 2000, _airPatrolPool, "NumberAirPatrols" call BIS_fnc_getParamValue, east] spawn SCO_fnc_manageAirPatrols;
@@ -300,6 +311,44 @@ if (isServer) then
 		};
 		[west, _mapPatrolGridMarkers, east, _patrolUnitPool, _aiSkillRange, 4, _spawnDistance] spawn SCO_fnc_manageFootPatrolsGrid;
 	};
+
+	private _interval = "DynamicRespawnUpdateInterval" call BIS_fnc_getParamValue;
+	if (_interval > 0) then
+	{
+		private _dynamicRespawnMarker = [
+				"respawn_west_dynamic", //var name
+				_posSpawn, //position
+				"Dynamic Respawn", //display name
+				[1, 1], //size
+				"ColorBlufor", //color string
+				"ICON", //type
+				"respawn_inf" //style
+			] call SCO_fnc_createMarker;
+			
+		private _dynamicRespawnMarkerManager = [_dynamicRespawnMarker, _interval] spawn
+		{
+			params ["_marker", "_interval"];
+			["Starting dynamic respawn marker manager"] call SCO_fnc_printDebug;
+
+			while {true} do
+			{
+				sleep _interval;
+				private _allPlayers = playableUnits;
+				if (count _allPlayers == 0) then { continue; };
+
+				//calculate 2D centroid of all players
+				private _sum = [0, 0, 0];
+				{
+					_sum = _sum vectorAdd getPos _x; 
+				} forEach _allPlayers;
+				private _newPos = _sum vectorMultiply (1/(count _allPlayers));
+
+				_marker setMarkerPos _newPos;
+				[format ["Dynamic respawn marker updated to %1 based on %2 units.", _newPos, count _allPlayers]] call SCO_fnc_printDebug;
+			};
+		};
+	};
+
 	//end setting up management threads
 
 	//print timings

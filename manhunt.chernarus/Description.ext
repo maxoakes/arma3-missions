@@ -102,6 +102,14 @@ class Params
 		texts[] = {"None", "1 patrol", "2 patrols", "3 patrols", "4 patrols"};
 		default = 1;
 	};
+	class TargetedFootPatrolInterval
+	{
+		title = "How long before the targeted foot patrol squad respawns?";
+		values[] = {0, 10, 30, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 900, 1200, 1800};
+		texts[] ={"Disabled", "10 sec", "30 sec", "1 min", "2 min", "3 min", "4 min", "5 min", "6 min", "7 min", 
+			"8 min", "9 min", "10 min", "15 min", "20 min", "30 min"};
+		default = 30;
+	};
 	class AreaVehiclePatrolDensity
 	{
 		title = "For each town/POI, how many vehicles are patrolling the mission area? Limited to 60 vehicle patrols for performance.";

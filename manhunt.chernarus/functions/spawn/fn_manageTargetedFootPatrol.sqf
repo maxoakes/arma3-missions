@@ -1,4 +1,4 @@
-params ["_blacklistedPos", "_possibleClassnames", ["_skillRange", [0.3, 0.5]]];
+params ["_blacklistedPos", "_possibleClassnames", ["_skillRange", [0.3, 0.5]], ["_interval", 10]];
 ["Starting nearby foot patrol manager."] call SCO_fnc_printDebug;
 
 while {true} do 
@@ -46,7 +46,7 @@ while {true} do
 	};
 
 	//spawn the squad and pick the initial waypoint
-	private _waypointPosition = _player getPos [_predictedPathDistance, _playerLookingDir];
+	private _waypointPosition = _player getPos [_predictedPathDistance, _playerDestinationDir];
 	if (surfaceIsWater _waypointPosition) then
 	{
 		_waypointPosition = getPos _player;
@@ -143,7 +143,7 @@ while {true} do
 		};
 	} forEach units _squad;
 	["End of foot patrol loop"] call SCO_fnc_printDebug;
-	sleep 5;
+	sleep _interval;
 };
 
 

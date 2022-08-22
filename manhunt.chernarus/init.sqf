@@ -273,11 +273,12 @@ if (isServer) then
 	};
 
 	private _numNearbyPatrols = "NearbyFootPatrol" call BIS_fnc_getParamValue;
-	if (_numNearbyPatrols > 0) then
+	private _footPatrolInterval = "TargetedFootPatrolInterval" call BIS_fnc_getParamValue;
+	if (_numNearbyPatrols > 0 and _footPatrolInterval > 0) then
 	{
 		for "_i" from 1 to _numNearbyPatrols do
 		{
-			[_posSpawn, _patrolUnitPool] spawn SCO_fnc_manageTargetedFootPatrol;
+			[_posSpawn, _patrolUnitPool, _aiSkillRange, _footPatrolInterval] spawn SCO_fnc_manageTargetedFootPatrol;
 		};
 	};
 

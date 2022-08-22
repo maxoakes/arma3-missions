@@ -16,9 +16,21 @@
 */
 params ["_target", "_caller", "_actionId", "_numMags"];
 
-if (primaryWeapon _caller != "") then
+if (currentWeapon _caller != "") then
 {
-	private _magazines = getArray (configFile >> "CfgWeapons" >> currentWeapon _caller >> "magazines");
+	private _possibleMuzzles = currentMuzzle _caller; getArray (configFile >> "CfgWeapons" >> currentWeapon _caller >> "muzzles");
+	private _currentMuzzle = currentMuzzle _caller;
+
+	private _magazines = [];
+	if (_currentMuzzle == currentWeapon _caller) then
+	{
+		_magazines = getArray (configFile >> "CfgWeapons" >> currentWeapon _caller >> "magazines");
+	}
+	else
+	{
+		_magazines = getArray (configFile >> "CfgWeapons" >> currentWeapon _caller >> _currentMuzzle >> "magazines");
+	};
+
 	private _regularMag = _magazines select 0;
 	private _magName = getText (configFile >> "CfgMagazines" >> _regularMag >> "displayName");
 

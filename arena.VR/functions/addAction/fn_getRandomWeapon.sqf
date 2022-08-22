@@ -15,6 +15,7 @@
 		Void
 */
 params ["_target", "_caller", "_id", "_possibleWeaponTypes"];
+hint "Getting a random weapon. Please wait...";
 
 private _allWeapons = (configFile >> "cfgWeapons") call BIS_fnc_getCfgSubClasses;
 
@@ -35,9 +36,13 @@ private _possiblePrimaries = [];
 } foreach _allWeapons;
 
 //delete the current primary weapon and its ammo
+private _compatibleMags = [primaryWeapon _caller] call BIS_fnc_compatibleMagazines;
 {
-	_caller removeMagazines _x;
-} forEach getArray (configFile >> "CfgWeapons" >> primaryWeapon _caller >> "magazines");
+	if (toLowerANSI _x in _compatibleMags) then
+	{
+		_caller removeMagazines _x;
+	};
+} forEach (magazines _caller);
 _caller removeWeapon primaryWeapon _caller;
 
 private _isDayTime = [] call SCO_fnc_isDayTime;

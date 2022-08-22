@@ -256,7 +256,7 @@ if (isServer) then
 	private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 60;
 
 	//spawn threads
-	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool] spawn SCO_fnc_manageTasks;
+	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool, _convoyVehiclePool + _convoyVehiclePoolCUP] spawn SCO_fnc_manageTasks;
 	[_posMeeting, east, 6, _patrolUnitPool, _aiSkillRange, 0, 500] call SCO_fnc_spawnFootPatrolGroup;
 	[_posHQ, east, 6, _patrolUnitPool, _aiSkillRange, 0, 50] call SCO_fnc_spawnFootPatrolGroup;
 	[west, _allMissionPOI, east, _patrolUnitPool, _aiSkillRange, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;

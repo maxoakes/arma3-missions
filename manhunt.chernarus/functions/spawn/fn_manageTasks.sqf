@@ -83,7 +83,7 @@ waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
 [
 	"respawn_west_meeting", //var name
 	_tent getPos [7, getDir _tent], //position
-	"HQ Tent", //display name
+	"Meeting Location", //display name
 	[1, 1], //size
 	"ColorBLUFOR", //color string
 	"ICON", //type

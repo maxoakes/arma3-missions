@@ -73,9 +73,8 @@ if (isServer) then
 	} forEach (["objective_"] call SCO_fnc_getMarkers) + (["start_"] call SCO_fnc_getMarkers);
 
 	//set up markers
-	private _markerHQ = "confirmed";
-	_markerHQ setMarkerAlpha 0; //initially hide HQ marker as it is not properly set
-	"meeting" setMarkerAlpha 0;
+	private _markerHQ = ["confirmed", [0,0], "", [1, 1], "ColorOpfor", "ICON", "hd_objective", 0, 0] call SCO_fnc_createMarker;
+	private _markerMeeting = ["meeting", [0,0], "", [1, 1], "ColorOpfor", "ICON", "hd_destroy", 0, 0] call SCO_fnc_createMarker;
 
 	//create the respawn inventories
 	{
@@ -90,10 +89,16 @@ if (isServer) then
 	{
 		extract setPos (getMarkerPos _spawnMarker);
 		extract setVectorUp surfaceNormal getPos extract;
-		arsenal setPos (extract getRelPos [5, 250]);
-		arsenal setVectorUp surfaceNormal getPos arsenal;
-		lamp setPos (arsenal getRelPos [2, random 360]);
-		lamp setVectorUp surfaceNormal getPos lamp;
+
+		private _arsenal = createVehicle ["B_supplyCrate_F", (extract getRelPos [5, 250]), [], 0, "CAN_COLLIDE"];
+		_arsenal setVectorUp surfaceNormal getPos _arsenal;
+		_arsenal allowDamage false;
+		["AmmoboxInit", [_arsenal, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
+		[_arsenal, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
+		[_arsenal, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
+
+		private _lamp = createVehicle ["Land_Camping_Light_F", (_arsenal getRelPos [2, random 360]), [], 0, "CAN_COLLIDE"];
+		_lamp setVectorUp surfaceNormal getPos _lamp;
 		"respawn_west" setMarkerPos (extract getRelPos [10, 200]);
 	};
 	private _posSpawn = getMarkerPos "respawn_west";
@@ -102,23 +107,7 @@ if (isServer) then
 	} forEach units west;
 
 	//create a marker to denote the start position. Different usage than respawn_west
-	private _startMarker = [
-		"start", //var name
-		_posSpawn, //position
-		"", //display name
-		[1, 1], //size
-		"ColorBLUFOR", //color string
-		"ICON", //type
-		"Empty" //style
-	] call SCO_fnc_createMarker;
-
-	arsenal allowDamage false;
-	clearItemCargoGlobal arsenal;
-	clearWeaponCargoGlobal arsenal;
-	clearMagazineCargoGlobal arsenal;
-	["AmmoboxInit", [arsenal, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
-	[arsenal, [localize "STR_ACTION_HEAL", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
-	[arsenal, [localize "STR_ACTION_AMMO", "functions\fn_refillWeapon.sqf", 4]] remoteExec ["addAction", 0, true];
+	private _startMarker = ["start", _posSpawn, "", [1, 1], "ColorBLUFOR", "ICON", "Empty"] call SCO_fnc_createMarker;
 
 	private _extractMarker = [
 		"extract", //var name
@@ -162,27 +151,26 @@ if (isServer) then
 	private _time3 = diag_tickTime;
 
 	//identify all valid markers for each type of objective
-	private _minDistanceToObjective = "MinObjectiveDistance" call BIS_fnc_getParamValue;
-	private _minDistanceFromHQ = "MinMeetingDistanceFromHQ" call BIS_fnc_getParamValue;
 	private _nearestPickLimit = "PickNNearestObjectives" call BIS_fnc_getParamValue;
 	private _allObjectiveHQMarkers = ["objective_tent_"] call SCO_fnc_getMarkers;
-	private _allObjectiveMeetingMarkers = ["objective_meet_"] call SCO_fnc_getMarkers;
-	private _allObjectiveMarkers = _allObjectiveHQMarkers + _allObjectiveMeetingMarkers;
-	private _invalidObjectiveMarkers = ["objective_", _posSpawn, _minDistanceToObjective] call SCO_fnc_getMarkers;
+	private _allObjectiveMeetingMarkers = ["objective_"] call SCO_fnc_getMarkers;
+
+	private _minDistanceSpawnToHQ = "MinDistanceSpawnHQ" call BIS_fnc_getParamValue;
+	private _invalidHQMarkers = ["objective_tent_", _posSpawn, _minDistanceSpawnToHQ] call SCO_fnc_getMarkers;
 
 	//of the set (_allObjectiveMarkers - _invalidObjectiveMarkers), get the N closest markers to the spawn point
-	private _validHQMarkers = [_allObjectiveHQMarkers - _invalidObjectiveMarkers, [_posSpawn], { _input0 distance2D getMarkerPos _x }, "ASCEND"] call BIS_fnc_sortBy;
+	private _validHQMarkers = [_allObjectiveHQMarkers - _invalidHQMarkers, [_posSpawn], { _input0 distance2D getMarkerPos _x }, "ASCEND"] call BIS_fnc_sortBy;
 	_validHQMarkers resize (_nearestPickLimit min count _validHQMarkers);
 	private _posHQ = getMarkerPos (selectRandom _validHQMarkers);
 
-	//build a list of markers that are too close to the spawn or the HQ tent
-	private _invalidMeetingMarkers = (["objective_", _posHQ, _minDistanceFromHQ] call SCO_fnc_getMarkers);
-	{
-		_invalidMeetingMarkers pushBackUnique _x;
-	} forEach _invalidObjectiveMarkers;
+	private _minDistanceFromSpawnToMeeting = "MinDistanceSpawnMeeting" call BIS_fnc_getParamValue;
+	private _invalidMeetingMarkers = ["objective_", _posSpawn, _minDistanceFromSpawnToMeeting] call SCO_fnc_getMarkers;
+	
+	private _minDistanceFromHQToMeeting = "MinDistanceHQMeeting" call BIS_fnc_getParamValue;
+	_invalidMeetingMarkers append (["objective_", _posHQ, _minDistanceFromHQToMeeting] call SCO_fnc_getMarkers);
 
-	//of the set (_allObjectiveMarkers - _invalidMeetingMarkers), get the N closest markers to the spawn point
-	private _validMeetingMarkers = [_allObjectiveMarkers - _invalidMeetingMarkers, [_posHQ], { _input0 distance2D getMarkerPos _x }, "ASCEND"] call BIS_fnc_sortBy;
+	//of the set (_allObjectiveMeetingMarkers - _invalidMeetingMarkers), get the N closest markers to the spawn point
+	private _validMeetingMarkers = [_allObjectiveMeetingMarkers - _invalidMeetingMarkers, [_posHQ], { _input0 distance2D getMarkerPos _x }, "ASCEND"] call BIS_fnc_sortBy;
 	_validMeetingMarkers resize (_nearestPickLimit min count _validMeetingMarkers);
 	private _posMeeting = getMarkerPos (selectRandom _validMeetingMarkers);
 
@@ -215,7 +203,7 @@ if (isServer) then
 	private _time5 = diag_tickTime;
 
 	//set up meeting
-	"meeting" setMarkerPos _posMeeting;
+	_markerMeeting setMarkerPos _posMeeting;
 	{
 		deleteVehicle _x;
 	} forEach nearestObjects [_posMeeting, _graveClassnames, 100, true];
@@ -241,19 +229,13 @@ if (isServer) then
 
 	{
 		[
-			format ["t%1", _forEachIndex], //var name
-			locationPosition _x, //position
-			text _x, //display name
-			size _x, //size
-			"ColorOpfor", //color string
-			"ELLIPSE", //type
-			"SolidBorder", //style
-			0, 0.5
+			format ["t%1", _forEachIndex], locationPosition _x, text _x, size _x, 
+			"ColorOpfor", "ELLIPSE", "SolidBorder", 0, 0.5
 		] call SCO_fnc_createMarker;
 	} forEach _allMissionPOI;
 
 	//set up management threads for tasks, patrols and vehicles
-	private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 60;
+	private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 40;
 
 	//spawn threads
 	[_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool, _convoyVehiclePool + _convoyVehiclePoolCUP] spawn SCO_fnc_manageTasks;
@@ -365,62 +347,67 @@ if (isServer) then
 	private _debugMode = [("Debug" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean;
 	if (_debugMode or is3DENPreview) then
 	{
+		_markerHQ setMarkerAlpha 1;
+		_markerMeeting setMarkerAlpha 1;
 		{
 			_x setMarkerAlpha 1;
 		} forEach _mapPatrolGridMarkers;
 		{
 			_x setMarkerAlpha 1;
 			_x setMarkerColor "ColorWhite";
-			_x setMarkerType "mil_dot";
-		} forEach (["objective_"] call SCO_fnc_getMarkers);
-		{
-			_x setMarkerColor "ColorRed";
-		} forEach _invalidObjectiveMarkers;
-		{
-			_x setMarkerColor "ColorBlue";
-			_x setMarkerType "mil_triangle";
-		} forEach _validHQMarkers;
-		{
-			if (getMarkerColor _x == "ColorRed") then
+			if ("tent" in _x) then
 			{
-				_x setMarkerColor "ColorBrown";
+				_x setMarkerType "mil_triangle";
 			}
 			else
 			{
-				_x setMarkerColor "ColorOrange";
+				_x setMarkerType "mil_dot";
 			};
-		} forEach _invalidMeetingMarkers;
-		{
-			_x setMarkerColor "ColorGreen";
+		} forEach _allObjectiveMeetingMarkers;
+
+		{ //all valid hq tent positions
+			_x setMarkerColor "ColorBlue";
+		} forEach _validHQMarkers;
+
+		{ //all valid meeting locations
+			if (markerColor _x == "ColorBlue") then
+			{
+				//valid for both HQ and meeting
+				_x setMarkerColor "ColorKhaki";
+			}
+			else
+			{
+				//valid for meeting only
+				_x setMarkerColor "ColorGreen";
+			};
 		} forEach _validMeetingMarkers;
+
+		{ //all invalid objective positions
+			_x setMarkerColor "ColorRed";
+		} forEach (_invalidHQMarkers + _invalidMeetingMarkers);
+
 		[
-			"spawnradius", //var name
-			_posSpawn, //position
-			"", //display name
-			[_minDistanceToObjective, _minDistanceToObjective], //size
-			"ColorBlufor", //color string
-			"ELLIPSE", //type
-			"Border" //style
+			"_minDistanceSpawnToHQ", _posSpawn, "",
+			[_minDistanceSpawnToHQ, _minDistanceSpawnToHQ],
+			"ColorYellow", "ELLIPSE", "Border"
 		] call SCO_fnc_createMarker;
 
 		[
-			"hqradius", //var name
-			_posHQ, //position
-			"", //display name
-			[_minDistanceFromHQ, _minDistanceFromHQ], //size
-			"ColorBlack", //color string
-			"ELLIPSE", //type
-			"Border" //style
+			"_minDistanceFromSpawnToMeeting", _posSpawn, "",
+			[_minDistanceFromSpawnToMeeting, _minDistanceFromSpawnToMeeting],
+			"ColorRed", "ELLIPSE", "Border"
 		] call SCO_fnc_createMarker;
 
 		[
-			"missionradius", //var name
-			_posSpawn, //position
-			"", //display name
-			[_expectedMissionRadius, _expectedMissionRadius], //size
-			"ColorPink", //color string
-			"ELLIPSE", //type
-			"Border" //style
+			"_minDistanceFromHQToMeeting", _posHQ, "",
+			[_minDistanceFromHQToMeeting, _minDistanceFromHQToMeeting],
+			"ColorOpfor", "ELLIPSE", "Border"
+		] call SCO_fnc_createMarker;
+
+		[
+			"_expectedMissionRadius", _posSpawn, "",
+			[_expectedMissionRadius, _expectedMissionRadius],
+			"ColorBlack", "ELLIPSE", "Border"
 		] call SCO_fnc_createMarker;
 	};
 };

@@ -25,7 +25,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * If it is nighttime, night vision goggles will sometimes spawn in vehicles.
 * Manhunt: Chernarus
     * Created July 5, 2022
-    * Last updated July 20, 2022
+    * Last updated Aug 23, 2022
     * Tested with multiplier: Aug 18, 2022
     * Admittedly, Chernarus is a big map, so this mission is a lot of walking and driving
     * A new type of mission. Goal is for players to locate, kill and confirm a target. After the kill is confirmed, all players must leave the map via their extraction vehicle.
@@ -33,8 +33,6 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * For recreating this mission in other maps, the following objects are needed in the mission editor:
         * Some number of west (blufor) units. This implimentation has 8. Can be placed anywhere
         * One "respawn_west" marker
-        * One ammobox with variable name "arsenal"
-        * One small light source like a camping lantern with variable name "lamp"
         * One vehicle that can carry at least the maximum number of players with variable name "extract"
         * One marker to indicate an HQ location with variable name "confirmed"
         * One marker to indicate a meeting location with the variable name "meeting"

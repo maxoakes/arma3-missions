@@ -82,7 +82,7 @@ waitUntil { (CONFIRMED_KILL and !(alive _warlord)); };
 //make a respawn checkpoint at the meeting site
 [
 	"respawn_west_meeting", //var name
-	_tent getPos [7, getDir _tent], //position
+	_posMeeting, //position
 	"Meeting Location", //display name
 	[1, 1], //size
 	"ColorBLUFOR", //color string

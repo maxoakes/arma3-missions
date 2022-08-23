@@ -72,7 +72,7 @@ class Params
 		title = "Environment: Rain Amount";
 		values[] = {0, 10, 25, 50, 75, 90, 100};
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
-		default = 10;
+		default = 0;
 	};
 	class StartPosition
 	{

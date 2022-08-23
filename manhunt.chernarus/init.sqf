@@ -1,5 +1,5 @@
 //apply time and weather settings
-setDate [2018, 10, 15, ("Time" call BIS_fnc_getParamValue), 0];
+setDate [2009, 10, 15, ("Time" call BIS_fnc_getParamValue), 0];
 setTimeMultiplier ("TimeScale" call BIS_fnc_getParamValue);
 0 setOvercast ("OvercastPercent" call BIS_fnc_getParamValue)/100;
 0 setFog ("FogPercent" call BIS_fnc_getParamValue)/100;

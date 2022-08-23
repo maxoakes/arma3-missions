@@ -34,8 +34,6 @@ I have decided to go through all of the viable missions and revamp them. Many we
         * Some number of west (blufor) units. This implimentation has 8. Can be placed anywhere
         * One "respawn_west" marker
         * One vehicle that can carry at least the maximum number of players with variable name "extract"
-        * One marker to indicate an HQ location with variable name "confirmed"
-        * One marker to indicate a meeting location with the variable name "meeting"
         * Any number of markers with variable names starting with "objective_tent_" or "objective_meet_". Tent markers must be in a perfectly flat area that can fit a tent. The meeting markers need only be somehwhat flat with an open area of about 5 meter radius.
         * Any number of markers with a variable name starting with "start_". Must be big enough to have the extraction vehicle.
             * Note: All start markers must be added to description.ext

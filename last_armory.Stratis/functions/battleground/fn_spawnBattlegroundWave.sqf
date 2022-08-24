@@ -1,12 +1,8 @@
 params ["_target", "_caller", "_actionId", "_arguments"];
-private _type = _arguments select 0;
-private _unitClassname = _arguments select 1;
-private _vehicleClassname = _arguments select 2;
-private _skill = _arguments select 3;
-private _amount = _arguments select 4;
+_arguments params ["_type", "_unitClassname", "_vehicleClassname", "_skill", "_amount", "_radius"];
 
 //get a location on the outer edge of the battleground radius
-private _spawnPos = [getPos _target, BATTLEGROUND_RADIUS / 1.5, BATTLEGROUND_RADIUS, 20, 0, MAX_GRADIENT, 0] call BIS_fnc_findSafePos;
+private _spawnPos = [getPos _target, _radius / 1.5, _radius, 20, 0, SCO_MAX_GRADIENT, 0] call BIS_fnc_findSafePos;
 private _mapOrigin = getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition");
 
 if ((_mapOrigin select 0 == _spawnPos select 0) and (_mapOrigin select 1 ==_spawnPos select 1)) exitWith
@@ -15,11 +11,7 @@ if ((_mapOrigin select 0 == _spawnPos select 0) and (_mapOrigin select 1 ==_spaw
 };
 
 //create a marker at the spawn location that was chosen
-private _marker = createMarker [format ["e%1",floor random 99999999], _spawnPos];
-_marker setMarkerShape "ICON";
-_marker setMarkerText format ["%1 spawn", _type];
-_marker setMarkerType "mil_destroy";
-_marker setMarkerColor "ColorRed";
+private _marker = [format ["e%1",floor random 99999999], _spawnPos, format ["%1 spawn", _type], [1, 1], "ColorRed", "ICON", "mil_destroy"] call SCO_fnc_createMarker;
 
 //create the group and destination waypoint
 private _group = createGroup east;
@@ -79,7 +71,7 @@ waitUntil {
 	sleep 1;
 	((!alive _caller) or 
 	 ({ alive _x } count units _group == 0) or 
-	 ((_caller distance2D _target) > BATTLEGROUND_RADIUS * 1.5)
+	 ((_caller distance2D _target) > _radius * 1.5)
 	);
 };
 

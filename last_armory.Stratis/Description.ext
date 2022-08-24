@@ -36,51 +36,79 @@ class Params
 {
 	class Time
 	{
-		title = "Time of day";
+		title = "Environment: Time of day";
 		values[] = {0, 6, 12, 18};
 		texts[] = {"Midnight", "Dawn", "High Noon", "Dusk"};
 		default = 12;
 	};
+	class TimeScale
+	{
+		title = "Environment: Time Scale";
+		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 20, 60};
+		texts[] = {"Realtime", "2x", "3x", "4x", "5x", "6x", "8x", "10x", "12x", "20x", "60x"};
+		default = 4;
+	};
 	class Fog
 	{
-		title = "Fog Level";
+		title = "Environment: Fog Level";
 		values[] = {0, 10, 25, 50, 75, 90, 100};
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
 	class Clouds
 	{
-		title = "Overcast Amount";
+		title = "Environment: Overcast Amount";
 		values[] = {0, 10, 25, 50, 75, 90, 100};
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
 	class Rain
 	{
-		title = "Rain Amount";
+		title = "Environment: Rain Amount";
 		values[] = {0, 10, 25, 50, 75, 90, 100};
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
+	class EnableBattleground
+	{
+		title = "Battleground: Enable";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 1;
+	};
 	class TargetSize
 	{
-		title = "Battleground Area Radius";
+		title = "Battleground: Area Radius";
 		values[] = {100, 250, 400, 500, 750, 1000, 1500, 2000};
 		texts[] = {"100m", "250m", "400m", "500m", "750m", "1.0km", "1.5km", "2.0km"};
 		default = 400;
 	};
+	class EnableSectorControl
+	{
+		title = "Sector Control: Enable";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 1;
+	};
 	class SectorSize
 	{
-		title = "Radius of Sector Capture Zone";
+		title = "Sector Control: Radius of Sector Capture Zone";
 		values[] = {10, 25, 50, 100, 150, 200, 250};
 		texts[] = {"10m", "25m", "50m", "100m", "150m", "200m", "250m"};
 		default = 25;
 	};
 	class SectorWaveUnitCount
 	{
-		title = "Multiplier for Number of Enemies per Wave (this * current wave number)";
+		title = "Sector Control: Multiplier for Number of Enemies per Wave (this * current wave number)";
 		values[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-		texts[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
+		texts[] = {"1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x"};
 		default = 2;
+	};
+	class Debug
+	{
+		title = "Debug Mode";
+		values[] = {1, 0};
+		texts[] = {"On", "Off"};
+		default = 0;
 	};
 };

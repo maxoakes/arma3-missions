@@ -1,6 +1,7 @@
-params ["_target", "_caller", "_actionId", "_loc"];
+params ["_target", "_caller", "_actionId", "_p"];
+_p params ["_loc", "_radius"];
 
-private _pos = [getPos _loc, 0, 100, 5, 0, MAX_GRADIENT, 0] call BIS_fnc_findSafePos;
+private _pos = [getPos _loc, 0, 100, 5, 0, SCO_MAX_GRADIENT, 0] call BIS_fnc_findSafePos;
 private _center = getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition");
 
 if ((_center select 0 == _pos select 0) and (_center select 1 == _pos select 1)) exitWith
@@ -19,18 +20,8 @@ _spawn allowDamage false;
 //create the markers for the battleground area
 private _randomName = format ["%1",floor random 999999];
 
-private _markerBorder = createMarker [ format ["c%1", _this select 1], _pos];
-_markerBorder setMarkerShape "ELLIPSE";
-_markerBorder setMarkerBrush "SolidFull";
-_markerBorder setMarkerAlpha 0.25;
-_markerBorder setMarkerColor "ColorBlack";
-_markerBorder setMarkerSize [BATTLEGROUND_RADIUS, BATTLEGROUND_RADIUS];
-
-private _markerCenter = createMarker [ format ["x%1", _randomName], _pos];
-_markerCenter setMarkerShape "ICON";
-_markerCenter setMarkerText format ["%1's Battleground", name _caller];
-_markerCenter setMarkerType "mil_flag";
-_markerCenter setMarkerColor "ColorBlue";
+private _markerBorder = [format ["c%1", _this select 1], _pos, "", [_radius, _radius], "ColorBlack", "ELLIPSE", "SolidFull", 0, 0.25] call SCO_fnc_createMarker;
+private _markerCenter = [format ["x%1", _randomName], _pos, format ["%1's Battleground", name _caller], [1, 1], "ColorBlue", "ICON", "mil_flag"] call SCO_fnc_createMarker;
 
 //teleport the player
 player setPos [(_pos select 0), (_pos select 1)-2];
@@ -61,16 +52,16 @@ private _targetOptions = [
 	private _thisAction = _baseAction;
 	_thisAction set [0, format ["<t color='#ffffff'>Spawn %1</t>", _x select 0]];
 	_thisAction set [1, { _this call SCO_fnc_spawnBattleGroundWave }];
-	_thisAction set [2, _x];
+	_thisAction set [2, _x + [_radius]];
 	_spawn addAction _thisAction;
 } forEach _targetOptions;
 
 //spawn a thread to track if the player is dead and within the battleground
 //also track number of remaining enemies
-private _counter = [_caller, _pos] spawn
+private _counter = [_caller, _pos, _radius] spawn
 {
-	params ["_player", "_center"];
-	while {(alive _player) and (_player distance2D _center < BATTLEGROUND_RADIUS)} do
+	params ["_player", "_center", "_radius"];
+	while {(alive _player) and (_player distance2D _center < _radius)} do
 	{
 		//while the player is in the battleground, track the number of enemy units alive
 		private _numEnemyAlive = 0;
@@ -79,7 +70,7 @@ private _counter = [_caller, _pos] spawn
 			{
 				_numEnemyAlive = _numEnemyAlive + 1;
 			};
-		} foreach (nearestObjects [_center, ["Man", "Car", "Helicopter"], BATTLEGROUND_RADIUS]);
+		} foreach (nearestObjects [_center, ["Man", "Car", "Helicopter"], _radius]);
 		hint format ["Enemies remaining: %1", _numEnemyAlive];
 		sleep 1;
 	};
@@ -97,5 +88,5 @@ deleteMarker _markerCenter;
 deleteMarker _markerBorder;
 if (alive _caller) then
 {
-	_caller setPos SPAWN_POS;
+	_caller setPos getMarkerPos "respawn_west";
 };

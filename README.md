@@ -9,11 +9,12 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * Originally there were seperate missions for night-time laser tag and day-time paintball and seperate arenas. Now, there is a single mission with parameters to switch between day and night, and VR-style arena or paintball-style arena. Also is procedurally generated.
 * Last Armory: Stratis
     * Originally created June 2020
-    * Last updated June 27, 2022
+    * Last updated Aug 24, 2022
     * Tested with multiplier: Aug 18, 2022
     * Hopefully the last "armory" mission that I need to make. Allows the use of all vehicles and weapons, and also allows teleporting from spawn, on-demand sector control missions and wave clearance games.
     * First mission that I went in-depth to make the netcode work for a dedicated server as well as player-hosted. This mission should be used as an example for future missions.
     * Also actually had to make a prime factorization script. Never thought an interview question would be actually used...
+    * Generally a playground for fun scripts
 * Free-for-all: Altis
     * Originally created March 2018 on Chernarus
     * Last updated July 2, 2022

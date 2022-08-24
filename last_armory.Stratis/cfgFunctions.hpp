@@ -7,21 +7,37 @@ class CfgFunctions
 		{
 			file = "functions";
 			class createBorder {};
+			class createMarker {};
 			class getObjectClassnames {};
 			class getPrimeFactorization {};
+			class parseBoolean {};
+			class printDebug {};
 		};
 		class ActionFunctions
 		{
 			file = "functions\addAction";
 			class refillWeapon {};
 		};
-		class CustomActions
+		class Battleground
 		{
-			file = "functions\custom";
+			file = "functions\battleground";
 			class generateBattlegroundAndTeleport {};
-			class generateRandomSectorControl {};
 			class spawnBattlegroundWave {};
-			class spawnEmptyVehicleAndMoveInto {};
+		};
+		class Garage
+		{
+			file = "functions\garage";
+			class armoryGarage {};
+		}
+		class Spawning
+		{
+			file = "functions\spawning";
+			class spawnEmptyVehicle {};
+		};
+		class Sector
+		{
+			file = "functions\sector";
+			class generateRandomSectorControl {};
 		};
 	};
 };

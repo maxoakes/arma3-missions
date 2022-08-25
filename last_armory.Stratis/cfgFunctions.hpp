@@ -24,11 +24,6 @@ class CfgFunctions
 			class generateBattlegroundAndTeleport {};
 			class spawnBattlegroundWave {};
 		};
-		class Garage
-		{
-			file = "functions\garage";
-			class armoryGarage {};
-		}
 		class Spawning
 		{
 			file = "functions\spawning";

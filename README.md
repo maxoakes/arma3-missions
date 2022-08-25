@@ -14,7 +14,7 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * Hopefully the last "armory" mission that I need to make. Allows the use of all vehicles and weapons, and also allows teleporting from spawn, on-demand sector control missions and wave clearance games.
     * First mission that I went in-depth to make the netcode work for a dedicated server as well as player-hosted. This mission should be used as an example for future missions.
     * Also actually had to make a prime factorization script. Never thought an interview question would be actually used...
-    * Generally a playground for fun scripts
+    * Generally a playground for fun scripts and prototypes
 * Free-for-all: Altis
     * Originally created March 2018 on Chernarus
     * Last updated July 2, 2022

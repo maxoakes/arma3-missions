@@ -8,7 +8,7 @@ class CfgFunctions
 			file = "functions";
 			class addToUnitInventory {};
 			class createMarker {};
-			class createMissionBuilding {};
+			class placeObjectsFromArray {};
 			class generateMapClutter {};
 			class getItemClassnames {};
 			class getMarkers {};

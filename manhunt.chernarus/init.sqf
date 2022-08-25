@@ -188,7 +188,7 @@ if (isServer) then
 
 	//create the tent and get the tent object and intel within it
 	private _hqDir = getDir (nearestBuilding _posHQ) + 90; //align it with a nearby building
-	private _missionObjects = [_posHQ, _placementArray, 0, _hqDir] call SCO_fnc_createMissionBuilding;
+	private _missionObjects = [_posHQ, _placementArray, 0, _hqDir] call SCO_fnc_placeObjectsFromArray;
 	private _tent = _missionObjects select 0;
 	private _intel = _missionObjects select 3;
 	private _crate = _missionObjects select 17;

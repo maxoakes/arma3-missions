@@ -9,12 +9,11 @@ I have decided to go through all of the viable missions and revamp them. Many we
     * Originally there were seperate missions for night-time laser tag and day-time paintball and seperate arenas. Now, there is a single mission with parameters to switch between day and night, and VR-style arena or paintball-style arena. Also is procedurally generated.
 * Last Armory: Stratis
     * Originally created June 2020
-    * Last updated Aug 24, 2022
+    * Last updated Aug 25, 2022
     * Tested with multiplier: Aug 18, 2022
     * Hopefully the last "armory" mission that I need to make. Allows the use of all vehicles and weapons, and also allows teleporting from spawn, on-demand sector control missions and wave clearance games.
-    * First mission that I went in-depth to make the netcode work for a dedicated server as well as player-hosted. This mission should be used as an example for future missions.
-    * Also actually had to make a prime factorization script. Never thought an interview question would be actually used...
     * Generally a playground for fun scripts and prototypes
+    * Also actually had to make a prime factorization script. Never thought an interview question would be actually used...
 * Free-for-all: Altis
     * Originally created March 2018 on Chernarus
     * Last updated July 2, 2022
@@ -35,6 +34,8 @@ I have decided to go through all of the viable missions and revamp them. Many we
         * Some number of west (blufor) units. This implimentation has 8. Can be placed anywhere
         * One "respawn_west" marker
         * One vehicle that can carry at least the maximum number of players with variable name "extract"
-        * Any number of markers with variable names starting with "objective_tent_" or "objective_meet_". Tent markers must be in a perfectly flat area that can fit a tent. The meeting markers need only be somehwhat flat with an open area of about 5 meter radius.
+        * Any number of markers with variable names starting with "objective_tent_" or "objective_meet_".
+            * Tent markers must be in a perfectly flat area that can fit a tent.
+            * The meeting markers need only be somehwhat flat with an open area of about 5 meter radius.
         * Any number of markers with a variable name starting with "start_". Must be big enough to have the extraction vehicle.
             * Note: All start markers must be added to description.ext

@@ -17,7 +17,8 @@ disabledAI = 1;
 joinUnassigned = 0;
 
 //respawn settings
-respawn = "BASE";
+respawn = BASE;
+respawnTemplates[] = {"MenuPosition"};
 respawnDelay = 2;
 respawnOnStart = 1; // true
 reviveMode = 2; // controlled by player attributes

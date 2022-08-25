@@ -28,7 +28,7 @@ if (isServer) then
 	private _time0 = diag_tickTime;
 
 	//create the physical border of the spawn area
-	[_spawnPos, _spawnRadius, ["Land_HBarrier_1_F"], 1.65, 90, 0, true] call SCO_fnc_createBorder;
+	[_spawnPos, _spawnRadius+1, ["Land_HBarrier_1_F"], 1.65, 90, 0, true] call SCO_fnc_createBorder;
 
 	//create spawn building
 	private _teleportAreaObject = createVehicle ["Land_JumpTarget_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
@@ -167,6 +167,7 @@ if (isServer) then
 				["AmmoboxInit", [_obj, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
 				[_obj, ["Heal Yourself", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 				[_obj, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
+				[_obj, ["Teleport to sniper range", { (_this select 1) setPos getMarkerPos "sniping_range"}]] remoteExec ["addAction", 0, true];
 			};
 		};
 
@@ -192,6 +193,21 @@ if (isServer) then
 	};
 
 	private _time2 = diag_tickTime;
+
+	//start creation of shooting ranges
+	if (getMarkerColor "sniping_range" != "") then
+	{
+		//if the sniping range marker exists, start its creation
+		private _snipingRange = "snipingRange";
+		["sniping_range", true, [200, 400, 600], 0] call SCO_fnc_createSnipingRange;
+		["sniping_range", false, [100, 200, 300], 5] call SCO_fnc_createSnipingRange;
+		["sniping_range", false, [800, 1000, 1200], -5] call SCO_fnc_createSnipingRange;
+	};
+
+	private _time3 = diag_tickTime;
+	//end create shooting ranges
+
 	[format ["%1sec to build spawn", _time1 - _time0]] call SCO_fnc_printDebug;
 	[format ["%1sec to build addAction objects", _time2 - _time1]] call SCO_fnc_printDebug;
+	[format ["%1sec to create shooting ranges", _time3 - _time2]] call SCO_fnc_printDebug;
 };

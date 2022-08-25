@@ -8,6 +8,7 @@ class CfgFunctions
 			file = "functions";
 			class createBorder {};
 			class createMarker {};
+			class placeObjectsFromArray {};
 			class getObjectClassnames {};
 			class getPrimeFactorization {};
 			class parseBoolean {};
@@ -23,6 +24,11 @@ class CfgFunctions
 			file = "functions\battleground";
 			class generateBattlegroundAndTeleport {};
 			class spawnBattlegroundWave {};
+		};
+		class TargetPractice
+		{
+			file = "functions\targets";
+			class createSnipingRange {};
 		};
 		class Spawning
 		{

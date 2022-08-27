@@ -25,6 +25,11 @@ class CfgFunctions
 			class generateBattlegroundAndTeleport {};
 			class spawnBattlegroundWave {};
 		};
+		class Maze
+		{
+			file = "functions\maze";
+			class createWallMaze {};
+		};
 		class TargetPractice
 		{
 			file = "functions\targets";

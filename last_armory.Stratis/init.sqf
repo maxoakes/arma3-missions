@@ -207,7 +207,13 @@ if (isServer) then
 	private _time3 = diag_tickTime;
 	//end create shooting ranges
 
+	//start maze creation
+	["maze"] call SCO_fnc_createWallMaze;
+
+	private _time4 = diag_tickTime;
+	//end maze creation
 	[format ["%1sec to build spawn", _time1 - _time0]] call SCO_fnc_printDebug;
 	[format ["%1sec to build addAction objects", _time2 - _time1]] call SCO_fnc_printDebug;
 	[format ["%1sec to create shooting ranges", _time3 - _time2]] call SCO_fnc_printDebug;
+	[format ["%1sec to create maze", _time4 - _time3]] call SCO_fnc_printDebug;
 };

@@ -15,4 +15,4 @@ if (_isDebug or is3DENPreview) then
 	};
 	_string remoteExec ["systemChat", 0];
 };
-diag_log "SCO_fnc_printDebug =: " + _string;
+diag_log format ["SCO_fnc_printDebug =: %1", _string];

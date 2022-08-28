@@ -27,7 +27,11 @@ if (isServer) then
 	//start creating spawn area
 	private _time0 = diag_tickTime;
 
-	//create the physical border of the spawn area
+	//create the physical border of the spawn area and delete anything that is there already
+	{
+		_x allowDamage false;
+		hideObjectGlobal _x;
+	} forEach nearestObjects [_spawnPos ,[], _spawnRadius, true];
 	[_spawnPos, _spawnRadius+1, ["Land_HBarrier_1_F"], 1.65, 90, 0, true] call SCO_fnc_createBorder;
 
 	//create spawn building
@@ -63,6 +67,9 @@ if (isServer) then
 	//an emulation of a dictionary object. 'key' is the type of vehicle (Car, Ship, Plane, etc)
 	//value is an array of vehicle classnames of that type
 	private _vehicleDictionary = [["Vehicle"]] call SCO_fnc_getObjectClassnames;
+	private _allLandSpawns = ["land_spawn"] call SCO_fnc_getMarkers;
+	private _allWaterSpawns = ["boat_spawn"] call SCO_fnc_getMarkers;
+	private _allPlaneSpawns = ["plane_spawn"] call SCO_fnc_getMarkers;
 
 	//iterate over the sudo-objects and assign objects and behaviors to each of them
 	private _numObjects = count _objectSet;
@@ -185,7 +192,7 @@ if (isServer) then
 							(_this select 1) moveInDriver _veh;
 						};
 					}];
-					_spawnAction set [2, [_x, "respawn_west", "plane_spawn", "boat_spawn"]];
+					_spawnAction set [2, [_x, _allLandSpawns, _allPlaneSpawns, _allWaterSpawns]];
 					[_obj, _spawnAction] remoteExec ["addAction", 0, true];
 				} forEach (_x select 1);
 			};
@@ -209,9 +216,15 @@ if (isServer) then
 
 	//start maze creation
 	["maze"] call SCO_fnc_createWallMaze;
+	["maze_1"] call SCO_fnc_createWallMaze;
 
 	private _time4 = diag_tickTime;
 	//end maze creation
+
+	//short-range live shooting range with AI
+	//utilities building
+	//race controller
+
 	[format ["%1sec to build spawn", _time1 - _time0]] call SCO_fnc_printDebug;
 	[format ["%1sec to build addAction objects", _time2 - _time1]] call SCO_fnc_printDebug;
 	[format ["%1sec to create shooting ranges", _time3 - _time2]] call SCO_fnc_printDebug;

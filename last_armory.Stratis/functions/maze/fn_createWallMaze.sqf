@@ -193,7 +193,7 @@ for "_col" from 1 to (_numCells select 0) do
 			else
 			{
 				private _pos = [_col + 0.5, _row] call SCO_fnc_getSegmentPos;
-				["maze_entry", _pos, "Entry", [0.5, 0.5], "ColorYellow", "ICON", "mil_dot"] call SCO_fnc_createMarker;
+				[format ["%1_entry", _areaMarker], _pos, "Entry", [0.5, 0.5], "ColorYellow", "ICON", "mil_dot"] call SCO_fnc_createMarker;
 				private _groundArrow = createVehicle ["Sign_Arrow_Direction_Yellow_F", _pos, [], 0, "CAN_COLLIDE"];
 				_groundArrow setDir _baseAngle;
 				_mazeObjects pushBack _groundArrow;
@@ -210,7 +210,7 @@ for "_col" from 1 to (_numCells select 0) do
 			else
 			{
 				private _pos = [_col + 0.5, _row + 1] call SCO_fnc_getSegmentPos;
-				["maze_exit", _pos, "Exit", [0.5, 0.5], "ColorYellow", "ICON", "mil_dot"] call SCO_fnc_createMarker;
+				[format ["%1_exit", _areaMarker], _pos, "Exit", [0.5, 0.5], "ColorYellow", "ICON", "mil_dot"] call SCO_fnc_createMarker;
 				private _groundArrow = createVehicle ["Sign_Arrow_Direction_Yellow_F", _pos, [], 0, "CAN_COLLIDE"];
 				_groundArrow setDir _baseAngle;
 				_mazeObjects pushBack _groundArrow;

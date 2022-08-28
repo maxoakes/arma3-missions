@@ -8,6 +8,7 @@ class CfgFunctions
 			file = "functions";
 			class createBorder {};
 			class createMarker {};
+			class getMarkers {};
 			class placeObjectsFromArray {};
 			class getObjectClassnames {};
 			class getPrimeFactorization {};

@@ -24,7 +24,7 @@
 		private _originObject = cursorObject;
 		{
 			private _classname = typeOf _x;
-			if (_classname == "#mark" or _classname == "" or _classname == "#animator) then { continue; };
+			if (_classname == "#mark" or _classname == "" or _classname == "#animator") then { continue; };
 			private _posRel = _originObject worldToModel getPosATL _x; 
 			private _dir = getDir _x;
 			_objects pushBack [_classname, _posRel, _dir, getPosASL _x];

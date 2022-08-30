@@ -175,6 +175,7 @@ if (isServer) then
 				[_obj, ["Heal Yourself", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 				[_obj, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
 				[_obj, ["Teleport to sniper range", { (_this select 1) setPos getMarkerPos "sniping_range"}]] remoteExec ["addAction", 0, true];
+				[_obj, ["Teleport to 360 shooting range", { (_this select 1) setPos getMarkerPos "shooting_range"}]] remoteExec ["addAction", 0, true];
 			};
 		};
 
@@ -202,21 +203,32 @@ if (isServer) then
 	private _time2 = diag_tickTime;
 
 	//start creation of shooting ranges
-	if (getMarkerColor "sniping_range" != "") then
+	if (["EnableShootingRanges" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
 	{
-		//if the sniping range marker exists, start its creation
-		private _snipingRange = "snipingRange";
-		["sniping_range", true, [200, 400, 600], 0] call SCO_fnc_createSnipingRange;
-		["sniping_range", false, [100, 200, 300], 5] call SCO_fnc_createSnipingRange;
-		["sniping_range", false, [800, 1000, 1200], -5] call SCO_fnc_createSnipingRange;
+		if (getMarkerColor "sniping_range" != "") then
+		{
+			//if the sniping range marker exists, start its creation
+			private _snipingRange = "snipingRange";
+			["sniping_range", true, [200, 400, 600], 0] call SCO_fnc_createSnipingRange;
+			["sniping_range", false, [100, 200, 300], 5] call SCO_fnc_createSnipingRange;
+			["sniping_range", false, [800, 1000, 1200], -5] call SCO_fnc_createSnipingRange;
+		};
+
+		if ((getMarkerColor "shooting_range" != "") and (getMarkerSize "shooting_range" select 0 > 10)) then
+		{
+			["shooting_range"] call SCO_fnc_createShootingRange;
+		};
 	};
 
 	private _time3 = diag_tickTime;
 	//end create shooting ranges
 
 	//start maze creation
-	["maze"] call SCO_fnc_createWallMaze;
-	["maze_1"] call SCO_fnc_createWallMaze;
+	if (["EnableMazes" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
+	{
+		["maze"] call SCO_fnc_createWallMaze;
+		["maze_1"] call SCO_fnc_createWallMaze;
+	};
 
 	private _time4 = diag_tickTime;
 	//end maze creation

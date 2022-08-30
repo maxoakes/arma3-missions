@@ -35,6 +35,8 @@ class CfgFunctions
 		{
 			file = "functions\targets";
 			class createSnipingRange {};
+			class createShootingRange {};
+			class spawnShootingRangeWave {};
 		};
 		class Spawning
 		{

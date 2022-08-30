@@ -15,11 +15,11 @@
 	Returns:
 		Array of Objects
 */
-params ["_center", "_radius", "_objects", "_spacing", ["_relativeDir", 0], ["_verticalOffset", 0], ["_makeExits", false]];
+params ["_center", "_radius", "_objects", "_spacing", ["_relativeDir", 0], ["_verticalOffset", 0], ["_makeExits", false], ["_radialOffset", 0]];
 
 private _count = round ((2 * 3.14592653589793 * _radius) / _spacing);
 private _step = 360 / _count;
-private _angle = 0;
+private _angle = _radialOffset;
 
 private _factors = [];
 if (_makeExits) then
@@ -36,6 +36,12 @@ if (count _factors != 0) then
 private _spawned = [];
 for "_i" from 0 to (_count - 1) do
 {
+	private _objectClassname = selectRandom _objects;
+	if (_objectClassname == "") then
+	{
+		continue;
+	};
+
 	private _pos = [
 		(_center select 0) + (sin(_angle)* _radius),
 		(_center select 1) + (cos(_angle)* _radius),
@@ -62,7 +68,7 @@ for "_i" from 0 to (_count - 1) do
 			};
 		};
 	};
-	private _post = createVehicle [selectRandom _objects, _pos, [], 0, "CAN_COLLIDE"];
+	private _post = createVehicle [_objectClassname, _pos, [], 0, "CAN_COLLIDE"];
 	_post setDir _angle + _relativeDir;
 	_post allowDamage false;
 	_angle = _angle + _step;

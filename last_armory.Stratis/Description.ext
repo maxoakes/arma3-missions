@@ -105,6 +105,20 @@ class Params
 		texts[] = {"1x", "2x", "3x", "4x", "5x", "6x", "7x", "8x", "9x", "10x"};
 		default = 2;
 	};
+	class EnableMazes
+	{
+		title = "Mazes: Enable";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 1;
+	};
+	class EnableShootingRanges
+	{
+		title = "Shooting Ranges: Enable";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 1;
+	};
 	class Debug
 	{
 		title = "Debug Mode";

@@ -12,6 +12,7 @@
 		4: Number - (optional) Rotation of each border object relative to how it should be positioned
 		5: Number - (optional) vertical offset in meters above ground level
 		6: Boolean - (optional) make holes at symetrical parts of the border
+		7: Number - (optional) angle offset that objects will be placed
 	Returns:
 		Array of Objects
 */

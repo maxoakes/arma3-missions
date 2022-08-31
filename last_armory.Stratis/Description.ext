@@ -70,6 +70,13 @@ class Params
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
 		default = 0;
 	};
+	class EnableSpawnDome
+	{
+		title = "Spawn: Dome";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 0;
+	};
 	class EnableBattleground
 	{
 		title = "Battleground: Enable";
@@ -115,6 +122,13 @@ class Params
 	class EnableShootingRanges
 	{
 		title = "Shooting Ranges: Enable";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 1;
+	};
+	class EnableRacing
+	{
+		title = "Racing: Enable";
 		values[] = {0, 1};
 		texts[] = {"Disable", "Enable"};
 		default = 1;

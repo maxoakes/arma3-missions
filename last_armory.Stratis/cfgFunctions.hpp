@@ -43,6 +43,12 @@ class CfgFunctions
 			file = "functions\spawning";
 			class spawnEmptyVehicle {};
 		};
+		class Racing
+		{
+			file = "functions\race";
+			class createRaceBuilding {};
+			class createRace {};
+		};
 		class Sector
 		{
 			file = "functions\sector";

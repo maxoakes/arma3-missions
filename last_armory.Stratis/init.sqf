@@ -10,7 +10,8 @@ forceWeatherChange;
 SCO_BLACKLISTED_MARKERS = allMapMarkers; //all pre-placed markers
 SCO_MAX_GRADIENT = 0.45;
 private _spawnPos = getMarkerPos "respawn_west";
-private _spawnRadius = (getMarkerSize "respawn_west" select 0) * 1.1;
+private _spawnRadius = getMarkerSize "respawn_west" select 0;
+private _spawnDir = markerDir "respawn_west";
 
 //easily accessible local variables
 private _vehicleNameColor = "#f7f0db";
@@ -28,11 +29,29 @@ if (isServer) then
 	private _time0 = diag_tickTime;
 
 	//create the physical border of the spawn area and delete anything that is there already
+	private _addActionObjectRadius = 0;
+	if (["EnableSpawnDome" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
 	{
-		_x allowDamage false;
-		hideObjectGlobal _x;
-	} forEach nearestObjects [_spawnPos ,[], _spawnRadius, true];
-	[_spawnPos, _spawnRadius+1, ["Land_HBarrier_1_F"], 1.65, 90, 0, true] call SCO_fnc_createBorder;
+		{
+			_x allowDamage false;
+			hideObjectGlobal _x;
+		} forEach nearestObjects [_spawnPos, [], 17, true];
+
+		private _dome = createVehicle ["Land_Dome_Small_F", _spawnPos, [], 0, "CAN_COLLIDE"];
+		_dome allowDamage false;
+		_dome setDir _spawnDir;
+		_addActionObjectRadius = 9;
+	}
+	else
+	{
+		{
+			_x allowDamage false;
+			hideObjectGlobal _x;
+		} forEach nearestObjects [_spawnPos ,[], _spawnRadius + 2, true];
+
+		[_spawnPos, _spawnRadius, ["Land_HBarrier_1_F"], 1.65, 90, 0, true, _spawnDir] call SCO_fnc_createBorder;
+		_addActionObjectRadius = _spawnRadius - 3;
+	};
 
 	//create spawn building
 	private _teleportAreaObject = createVehicle ["Land_JumpTarget_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
@@ -42,9 +61,6 @@ if (isServer) then
 	_teleportAreaMarker setMarkerBrush "Border";
 	missionNamespace setVariable ["MAP_TELEPORT_ORIGIN_MARKER", _teleportAreaMarker, true];
 
-	//anonymous grass cutter
-	createVehicle ["Land_ClutterCutter_large_F", _spawnPos, [], 0, "CAN_COLLIDE"];
-
 	private _time1 = diag_tickTime;
 	//end creating spawn area
 
@@ -53,14 +69,14 @@ if (isServer) then
 	private _objectSet = [
 		//[list of vehicle types to spawn, model classname of the object, direction offset]
 		[[],"Land_PhoneBooth_01_malden_F", 0], //battleground object
-		[[],"Land_Target_Single_01_F", 0], //sector control spawner
-		[["Helicopter"], "Land_FeedRack_01_F", 0], //helicopter spawn
-		[["Plane"], "Land_LuggageHeap_03_F", 0], //plane spawn
-		[["Ship", "Submarine"], "Land_ConcreteWell_02_F", 0], //boat spawn
+		[[],"MapBoard_stratis_F", 0], //sector control spawner
+		[["Helicopter"], "Land_PortableWeatherStation_01_white_F", 0], //helicopter spawn
+		[["Plane"], "Land_LandMark_F", 90], //plane spawn
+		[["Ship", "Submarine"], "Land_WaterBottle_01_stack_F", 0], //boat spawn
 		[[], "Land_LampHarbour_F", 0], //lighting
 		[["Car", "Motorcycle"], "Land_fs_feed_F", 0], //car spawn
-		[["WheeledAPC"], "Land_ScrapHeap_1_F", 60], //apc spawn
-		[["Tank", "TrackedAPC"], "Land_Tombstone_07_F", 180], //tank spawn
+		[["WheeledAPC"], "Land_Pallet_MilBoxes_F", 0], //apc spawn
+		[["Tank", "TrackedAPC"], "Land_TankTracks_01_long_F", 90], //tank spawn
 		[[], "Land_Sign_WarningNoWeapon_F", 0] //arsenal manager
 	];
 
@@ -73,7 +89,7 @@ if (isServer) then
 
 	//iterate over the sudo-objects and assign objects and behaviors to each of them
 	private _numObjects = count _objectSet;
-	private _dir = 0;
+	private _dir = _spawnDir;
 	for "_i" from 0 to (_numObjects - 1) do
 	{
 		(_objectSet select _i) params ["_vehicleTypes", "_objectClassname", "_dirOffset"];
@@ -82,9 +98,10 @@ if (isServer) then
 		private _baseAction = ["addAction", { hint "Scroll while looking at this object to select a vehicle." }, "", 8, true, true, "", "true", 6, false, "", ""];
 
 		//create the physical object and place them in a circle pattern using the specified object models
-		private _pos = _spawnPos getPos [_spawnRadius / 1.3, _dir];
+		private _pos = _spawnPos getPos [_addActionObjectRadius, _dir];
 		private _obj = createVehicle [_objectClassname, _pos, [], 0, "CAN_COLLIDE"];		
 		_obj allowDamage false;
+		_obj enableSimulationGlobal false;
 		_obj setDir _dir + _dirOffset;
 		_dir = _dir + (360/_numObjects);
 
@@ -236,9 +253,15 @@ if (isServer) then
 	//short-range live shooting range with AI
 	//utilities building
 	//race controller
+	if (["EnableRacing" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
+	{
+		["race_center"] call SCO_fnc_createRaceBuilding;
+	};
 
+	private _time5 = diag_tickTime;
 	[format ["%1sec to build spawn", _time1 - _time0]] call SCO_fnc_printDebug;
 	[format ["%1sec to build addAction objects", _time2 - _time1]] call SCO_fnc_printDebug;
 	[format ["%1sec to create shooting ranges", _time3 - _time2]] call SCO_fnc_printDebug;
 	[format ["%1sec to create maze", _time4 - _time3]] call SCO_fnc_printDebug;
+	[format ["%1sec to create race center", _time5 - _time4]] call SCO_fnc_printDebug;
 };

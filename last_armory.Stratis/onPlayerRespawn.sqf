@@ -11,6 +11,7 @@ _newUnit assignItem "ItemGPS";
 
 _newUnit execVM "simpleEP.sqf";
 
+_newUnit setPosATL [getPos _newUnit select 0, getPos _newUnit select 1, 0];
 _newUnit spawn
 {
 	private _radius = (getMarkerSize MAP_TELEPORT_ORIGIN_MARKER) select 0;

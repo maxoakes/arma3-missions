@@ -1,8 +1,7 @@
 params ["_target", "_caller", "_actionId", "_arguments"];
 _arguments params ["_radius", "_spawns", "_waveAmount", "_amountPerWave", "_waveInterval"];
 
-SCO_SHOOTING_RANGE_WAVE_ACTIVE = true;
-publicVariable "SCO_SHOOTING_RANGE_WAVE_ACTIVE";
+missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", true, true];
 
 private _scoreCalculator = [_target, _radius, _caller, _waveAmount*_amountPerWave] spawn {
 	params ["_center", "_radius", "_player", "_maxScore"];
@@ -41,5 +40,4 @@ for "_i" from 1 to _waveAmount do
 
 waitUntil {{alive _x} count _allUnits == 0};
 ["Ending shooting range wave function"] call SCO_fnc_printDebug;
-SCO_SHOOTING_RANGE_WAVE_ACTIVE = false;
-publicVariable "SCO_SHOOTING_RANGE_WAVE_ACTIVE";
+missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", false, true];

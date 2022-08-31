@@ -27,8 +27,7 @@ for "_i" from 2 to _numRows do
 	_obsticles append _rowObjects;
 };
 
-SCO_SHOOTING_RANGE_WAVE_ACTIVE = false;
-publicVariable "SCO_SHOOTING_RANGE_WAVE_ACTIVE";
+missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", false, true];
 
 //addActions
 [_centerObject, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];

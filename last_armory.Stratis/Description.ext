@@ -1,7 +1,7 @@
 #include "cfgFunctions.hpp"
 
 onLoadName = "Scouter's Open Armory: Stratis";
-onLoadMission = "Pick a gun, pick a vehicle, and do whatever. Spawn waves of enemies, capture a target, or form a deathmatch between players.";
+onLoadMission = "Pick a gun, pick a vehicle, shoot some targets, do whatever. Check the map's briefing menu in-game to see all the features.";
 author = "Scouter";
 
 class Header

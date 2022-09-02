@@ -37,7 +37,7 @@ missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", false, true];
 
 [_centerObject, ["Teleport to spawn", {
 	params ["_target", "_caller", "_id", "_args"];
-	args params ["_center", "_radius"];
+	_args params ["_center", "_radius"];
 	(_this select 1) setPos getMarkerPos "respawn_west";
 	{
 		if (side _x == east) then { deleteVehicle _x; };

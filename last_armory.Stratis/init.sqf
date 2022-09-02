@@ -193,6 +193,11 @@ if (isServer) then
 				[_obj, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
 				[_obj, ["Teleport to sniper range", { (_this select 1) setPos getMarkerPos "sniping_range"}]] remoteExec ["addAction", 0, true];
 				[_obj, ["Teleport to 360 shooting range", { (_this select 1) setPos getMarkerPos "shooting_range"}]] remoteExec ["addAction", 0, true];
+				[_obj, ["Open BIS Garage", {
+					private _vehicle = createVehicle [ "Land_HelipadEmpty_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
+					["Open", [true, _vehicle]] call BIS_fnc_garage;
+					}]
+				] remoteExec ["addAction", 0, true];
 			};
 		};
 

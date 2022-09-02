@@ -1,5 +1,6 @@
 params ["_marker"];
 
+race_start allowDamage false;
 private _centerPos = getMarkerPos _marker;
 private _angle = markerDir _marker;
 private _placementArray = [
@@ -52,12 +53,16 @@ private _placementArray = [
 private _objects = [_centerPos, _placementArray, 0, _angle, true, 1] call SCO_fnc_placeObjectsFromArray;
 { _x enableSimulationGlobal false; } forEach _objects;
 _objects params ["_building", "_initialSlingload", "_raceObject", "_raceLobbyObject", "_utilitiesObject"];
+_building enableSimulationGlobal true;
 
 //race center
 missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
 private _lobbyMarker = ["race_lobby", getPos _raceLobbyObject, "Lobby Range", [3, 5.4], "ColorOrange", "RECTANGLE", "SolidBorder", _angle, 0.5] call SCO_fnc_createMarker;
 {
-	[_raceObject, [format ["Start %1m Race", _x], 
+	private _distance = _x;
+	private _raceTitle = format ["%1m Race", _distance];
+	if (_distance == -1) then { _raceTitle = "User Defined Race"; };
+	[_raceObject, [format ["Start %1", _raceTitle], 
 	{
 		params ["_target", "_caller", "_id", "_args"];
 		_args params ["_lobby", "_distance"];
@@ -65,10 +70,21 @@ private _lobbyMarker = ["race_lobby", getPos _raceLobbyObject, "Lobby Range", [3
 		private _participants = allPlayers inAreaArray _lobby;
 		format ["Stay in the race lobby for the next 5 seconds to participate in the race: %1", _participants apply {name _x}] remoteExec ["systemChat", 0];
 		sleep 5;
+
 		_participants = allPlayers inAreaArray _lobby;
-		[[_participants, _lobby, _distance], "functions\race\fn_createRace.sqf"] remoteExec ["execVM", 2];
-	}, [_lobbyMarker, _x]]] remoteExec ["addAction", 0, true];
-} forEach [500, 1000, 2000, 3000, 4000, 5000, 6000];
+		private _userDefinedMarkers = [];
+		{
+			private _markers = _x;
+			//if it is a user-placed marker in global chat that has 'finish' in the text
+			if (("_USER_DEFINED" in _markers) and ("finish" in (markerText _markers)) and (markerChannel _markers == 0)) then
+			{
+				_userDefinedMarkers pushBack _markers;
+			};
+		} forEach allMapMarkers;
+		[[_participants, _lobby, _distance, _userDefinedMarkers], "functions\race\fn_createRace.sqf"] remoteExec ["execVM", 2];
+		
+	}, [_lobbyMarker, _x], 2, true, true, "", "!SCO_RACE_ACTIVE"]] remoteExec ["addAction", 0, true];
+} forEach [-1, 1000, 2000, 3000, 4000, 5000, 6000, 8000, 10000];
 
 
 //utilites object

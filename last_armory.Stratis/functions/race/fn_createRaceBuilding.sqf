@@ -59,33 +59,80 @@ _building enableSimulationGlobal true;
 missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
 private _lobbyMarker = ["race_lobby", getPos _raceLobbyObject, "Lobby Range", [3, 5.4], "ColorOrange", "RECTANGLE", "SolidBorder", _angle, 0.5] call SCO_fnc_createMarker;
 {
-	private _distance = _x;
-	private _raceTitle = format ["%1m Race", _distance];
-	if (_distance == -1) then { _raceTitle = "User Defined Race"; };
+	_x params ["_mode", "_distance", "_enableDamage"];
+
+	//set the title of the action to start race
+	private _raceTitle = "";
+	switch _mode do
+	{
+		case 0:
+		{
+			_raceTitle = format ["Random %1m Race", _distance];
+		};
+		case 1:
+		{
+			_raceTitle = "User Defined Land Race";
+		};
+		case 3:
+		{
+			_raceTitle = "User Defined Heli Race";
+		};
+		default
+		{
+			_raceTitle = "Unknown Race Type";
+		}
+	};
+	private _raceTitle = format ["%1 (Vehicle Damage: %2)", _raceTitle , _enableDamage];
+
+	//create the addAction
 	[_raceObject, [format ["Start %1", _raceTitle], 
 	{
+		//function to start race
 		params ["_target", "_caller", "_id", "_args"];
-		_args params ["_lobby", "_distance"];
+		_args params ["_lobby", "_raceSettings"];
+		_raceSettings params ["_mode", "_distance", "_enableDamage"];
+
+		//disable races from being created at this point, until this race is done
 		missionNamespace setVariable ["SCO_RACE_ACTIVE", true, true];
+
+		//get all of the people that want to participate
 		private _participants = allPlayers inAreaArray _lobby;
 		format ["Stay in the race lobby for the next 5 seconds to participate in the race: %1", _participants apply {name _x}] remoteExec ["systemChat", 0];
 		sleep 5;
-
 		_participants = allPlayers inAreaArray _lobby;
-		private _userDefinedMarkers = [];
-		{
-			private _markers = _x;
-			//if it is a user-placed marker in global chat that has 'finish' in the text
-			if (("_USER_DEFINED" in _markers) and ("finish" in (markerText _markers)) and (markerChannel _markers == 0)) then
-			{
-				_userDefinedMarkers pushBack _markers;
-			};
-		} forEach allMapMarkers;
-		[[_participants, _lobby, _distance, _userDefinedMarkers], "functions\race\fn_createRace.sqf"] remoteExec ["execVM", 2];
-		
-	}, [_lobbyMarker, _x], 2, true, true, "", "!SCO_RACE_ACTIVE"]] remoteExec ["addAction", 0, true];
-} forEach [-1, 1000, 2000, 3000, 4000, 5000, 6000, 8000, 10000];
 
+		//attempt to interpret all race settings
+		private _startRace = true; //if any errors are caught, this will stop the race from starting
+		private _chosenMarker = "";
+		if (_mode == 1 or _mode == 3) then //it is a user-defined race
+		{
+			private _finishMarkers = ["finish"] call SCO_fnc_getUserDefinedMarkers;
+			if (count _finishMarkers == 0) then
+			{
+				_startRace = false;
+				"No custom finish line markers found. No race will be created." remoteExec ["systemChat", 0];
+				missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
+			}
+			else
+			{
+				_chosenMarker = selectRandom _finishMarkers;
+				private _distToRoad = (getMarkerPos _chosenMarker) distance2D ([getMarkerPos _chosenMarker, 6000] call BIS_fnc_nearestRoad);
+				if (_distToRoad < 10 and (_mode == 1)) then
+				{
+					_mode = 1; //place it on the nearest road
+				}
+				else
+				{
+					_mode = 2; //place it off road
+				};
+			};
+		};
+		if (_startRace) then
+		{
+			[[_participants, _lobby, _mode, _distance, _chosenMarker, _enableDamage], "functions\race\fn_createRace.sqf"] remoteExec ["execVM", 2];
+		};
+	}, [_lobbyMarker, _x], 2, true, true, "", "!SCO_RACE_ACTIVE"]] remoteExec ["addAction", 0, true];
+} forEach [[0, 5000, false], [0, 5000, true], [0, 10000, true], [1, 0, false], [1, 0, true], [3, 0, false]]; //[mode, distance, allowDamage]
 
 //utilites object
 [_utilitiesObject, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];

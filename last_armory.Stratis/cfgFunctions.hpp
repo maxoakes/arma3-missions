@@ -48,6 +48,9 @@ class CfgFunctions
 			file = "functions\race";
 			class createRaceBuilding {};
 			class createRace {};
+			class getUserDefinedMarkers {};
+			class findRaceFinishPosition {};
+			class raceScoreTracker {};
 		};
 		class Sector
 		{

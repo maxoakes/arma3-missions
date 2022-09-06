@@ -10,6 +10,7 @@ _newUnit addItem "ItemGPS";
 _newUnit assignItem "ItemGPS";
 
 _newUnit execVM "simpleEP.sqf";
+SCO_PREVIOUS_LOADOUT = getUnitLoadout _oldUnit;
 
 _newUnit setPosATL [getPos _newUnit select 0, getPos _newUnit select 1, 0];
 _newUnit spawn

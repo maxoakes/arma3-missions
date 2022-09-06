@@ -46,7 +46,7 @@ switch _mode do
 	};
 	case 3: //heli race
 	{
-		_chosenPos = [getMarkerPos _marker, 0, 500, 20, 0, 0.5, 0, [], [getMarkerPos _marker, getMarkerPos _marker]] call BIS_fnc_findSafePos;
+		_chosenPos = [getMarkerPos _marker, 0, 100, 20, 0, 0.5, 0, [], [getMarkerPos _marker, getMarkerPos _marker]] call BIS_fnc_findSafePos;
 	};
 };
 

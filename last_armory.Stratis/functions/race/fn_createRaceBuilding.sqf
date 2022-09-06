@@ -52,87 +52,125 @@ private _placementArray = [
 
 private _objects = [_centerPos, _placementArray, 0, _angle, true, 1] call SCO_fnc_placeObjectsFromArray;
 { _x enableSimulationGlobal false; } forEach _objects;
-_objects params ["_building", "_initialSlingload", "_raceObject", "_raceLobbyObject", "_utilitiesObject"];
+_objects params ["_building", "_initialSlingload", "_raceObject", "_lobbyCenterObject", "_utilitiesObject"];
 _building enableSimulationGlobal true;
+["respawn_west_lobby", (getMarkerPos _marker) getPos [10, markerDir _marker + 270], "Lobby Building", [1, 1], "Default", "ICON", "Empty"] call SCO_fnc_createMarker;
 
-//race center
-missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
-private _lobbyMarker = ["race_lobby", getPos _raceLobbyObject, "Lobby Range", [3, 5.4], "ColorOrange", "RECTANGLE", "SolidBorder", _angle, 0.5] call SCO_fnc_createMarker;
+if (["EnableRacing" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
 {
-	_x params ["_mode", "_distance", "_enableDamage"];
-
-	//set the title of the action to start race
-	private _raceTitle = "";
-	switch _mode do
+	//race center
+	missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
+	private _lobbyMarker = ["lobby_area", getPos _lobbyCenterObject, "Lobby Range", [3, 5.4], "ColorOrange", "RECTANGLE", "SolidBorder", _angle, 0.5] call SCO_fnc_createMarker;
 	{
-		case 0:
-		{
-			_raceTitle = format ["Random %1m Race", _distance];
-		};
-		case 1:
-		{
-			_raceTitle = "User Defined Land Race";
-		};
-		case 3:
-		{
-			_raceTitle = "User Defined Heli Race";
-		};
-		default
-		{
-			_raceTitle = "Unknown Race Type";
-		}
-	};
-	private _raceTitle = format ["%1 (Vehicle Damage: %2)", _raceTitle , _enableDamage];
+		_x params ["_mode", "_distance", "_enableDamage"];
 
-	//create the addAction
-	[_raceObject, [format ["Start %1", _raceTitle], 
-	{
-		//function to start race
-		params ["_target", "_caller", "_id", "_args"];
-		_args params ["_lobby", "_raceSettings"];
-		_raceSettings params ["_mode", "_distance", "_enableDamage"];
-
-		//disable races from being created at this point, until this race is done
-		missionNamespace setVariable ["SCO_RACE_ACTIVE", true, true];
-
-		//get all of the people that want to participate
-		private _participants = allPlayers inAreaArray _lobby;
-		format ["Stay in the race lobby for the next 5 seconds to participate in the race: %1", _participants apply {name _x}] remoteExec ["systemChat", 0];
-		sleep 5;
-		_participants = allPlayers inAreaArray _lobby;
-
-		//attempt to interpret all race settings
-		private _startRace = true; //if any errors are caught, this will stop the race from starting
-		private _chosenMarker = "";
-		if (_mode == 1 or _mode == 3) then //it is a user-defined race
+		//set the title of the action to start race
+		private _raceTitle = "";
+		switch _mode do
 		{
-			private _finishMarkers = ["finish"] call SCO_fnc_getUserDefinedMarkers;
-			if (count _finishMarkers == 0) then
+			case 0:
 			{
-				_startRace = false;
-				"No custom finish line markers found. No race will be created." remoteExec ["systemChat", 0];
-				missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
+				_raceTitle = format ["Random %1m Race", _distance];
+			};
+			case 1:
+			{
+				_raceTitle = "User Defined Land Race";
+			};
+			case 3:
+			{
+				_raceTitle = "User Defined Heli Race";
+			};
+			default
+			{
+				_raceTitle = "Unknown Race Type";
 			}
-			else
+		};
+		private _raceTitle = format ["%1 (Vehicle Damage: %2)", _raceTitle , _enableDamage];
+
+		//create the addAction
+		[_raceObject, [format ["Start %1", _raceTitle], 
+		{
+			//function to start race
+			params ["_target", "_caller", "_id", "_args"];
+			_args params ["_lobby", "_raceSettings"];
+			_raceSettings params ["_mode", "_distance", "_enableDamage"];
+
+			//disable races from being created at this point, until this race is done
+			missionNamespace setVariable ["SCO_RACE_ACTIVE", true, true];
+
+			//get all of the people that want to participate
+			private _participants = allPlayers inAreaArray _lobby;
+			format ["Stay in the race lobby for the next 5 seconds to participate in the race: %1", _participants apply {name _x}] remoteExec ["systemChat", 0];
+			sleep 5;
+			_participants = allPlayers inAreaArray _lobby;
+
+			//attempt to interpret all race settings
+			private _startRace = true; //if any errors are caught, this will stop the race from starting
+			private _chosenMarker = "";
+			if (_mode == 1 or _mode == 3) then //it is a user-defined race
 			{
-				_chosenMarker = selectRandom _finishMarkers;
-				private _distToRoad = (getMarkerPos _chosenMarker) distance2D ([getMarkerPos _chosenMarker, 6000] call BIS_fnc_nearestRoad);
-				if (_distToRoad < 10 and (_mode == 1)) then
+				private _finishMarkers = ["finish"] call SCO_fnc_getUserDefinedMarkers;
+				if (count _finishMarkers == 0) then
 				{
-					_mode = 1; //place it on the nearest road
+					_startRace = false;
+					"No custom finish line markers found. No race will be created." remoteExec ["systemChat", 0];
+					missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
 				}
 				else
 				{
-					_mode = 2; //place it off road
+					_chosenMarker = selectRandom _finishMarkers;
+					if (_mode != 3) then
+					{
+						private _distToRoad = (getMarkerPos _chosenMarker) distance2D ([getMarkerPos _chosenMarker, 6000] call BIS_fnc_nearestRoad);
+						if (_distToRoad < 10) then
+						{
+							_mode = 1; //place it on the nearest road
+						}
+						else
+						{
+							_mode = 2; //place it off road
+						};
+					};
 				};
 			};
-		};
-		if (_startRace) then
-		{
-			[[_participants, _lobby, _mode, _distance, _chosenMarker, _enableDamage], "functions\race\fn_createRace.sqf"] remoteExec ["execVM", 2];
-		};
-	}, [_lobbyMarker, _x], 2, true, true, "", "!SCO_RACE_ACTIVE"]] remoteExec ["addAction", 0, true];
-} forEach [[0, 5000, false], [0, 5000, true], [0, 10000, true], [1, 0, false], [1, 0, true], [3, 0, false]]; //[mode, distance, allowDamage]
+			if (_startRace) then
+			{
+				[[_participants, _lobby, _mode, _distance, _chosenMarker, _enableDamage], "functions\race\fn_createRace.sqf"] remoteExec ["execVM", 2];
+			};
+		}, [_lobbyMarker, _x], 2, true, true, "", "!SCO_RACE_ACTIVE"]] remoteExec ["addAction", 0, true];
+	} forEach [[0, 5000, false], [0, 5000, true], [0, 10000, true], [1, 0, false], [1, 0, true], [3, 0, true]]; //[mode, distance, allowDamage]
+};
 
 //utilites object
-[_utilitiesObject, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
+private _slingloadableClassnames = [
+	"Land_Device_slingloadable_F", "B_Slingload_01_Ammo_F", 
+	"B_Slingload_01_Cargo_F", "B_Slingload_01_Fuel_F", 
+	"B_Slingload_01_Medevac_F", "B_Slingload_01_Repair_F",
+	"Land_Pod_Heli_Transport_04_covered_F", "Land_Pod_Heli_Transport_04_medevac_F"
+];
+private _slingloadPos = getPosASL _initialSlingload;
+private _slingloadDir = getDir _initialSlingload;
+deleteVehicle _initialSlingload;
+
+[_utilitiesObject, ["Teleport to spawn", { (_this select 1) setPos getMarkerPos "respawn_west"}]] remoteExec ["addAction", 0, true];
+[_utilitiesObject, ["Give me Zeus ability", { [_this select 1, curator1] remoteExec ["assignCurator", 2] }, nil, 1.5, true, true, "", "isNull getAssignedCuratorUnit curator1"]] remoteExec ["addAction", 0, true];
+[_utilitiesObject, ["Remove my Zeus ability", {	[curator1] remoteExec ["unassignCurator", 2] }, nil, 1.5, true, true, "", "getAssignedCuratorUnit curator1 == _this"]] remoteExec ["addAction", 0, true];
+
+{
+	[_utilitiesObject, [format ["Spawn %1 on roof", getText (configFile >> "cfgVehicles" >> _x >> "displayName")], 
+		{
+			params ["_target", "_caller", "_actionId", "_arguments"];
+			_arguments params ["_classname", "_pos", "_dir", "_array"];
+			private _nearestSlingloads = nearestObjects [_pos, _array, 20];
+			if (count _nearestSlingloads == 0) then
+			{
+				private _veh = createVehicle [_classname, _pos, [], 0, "CAN_COLLIDE"];
+				_veh setDir _dir;
+			}
+			else
+			{
+				hint format ["There is already a slingload object nearby (Count: %1)", count _nearestSlingloads];
+			};
+		}, [_x, _slingloadPos, _slingloadDir, _slingloadableClassnames]]] remoteExec ["addAction", 0, true];
+} forEach _slingloadableClassnames;
+

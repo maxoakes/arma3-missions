@@ -18,7 +18,7 @@ joinUnassigned = 0;
 
 //respawn settings
 respawn = BASE;
-respawnTemplates[] = {"MenuPosition"};
+respawnTemplatesWest[] = {"MenuPosition"};
 respawnDelay = 2;
 respawnOnStart = 1; // true
 reviveMode = 2; // controlled by player attributes

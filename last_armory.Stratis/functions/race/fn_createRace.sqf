@@ -1,6 +1,6 @@
 params ["_participants", "_lobbyMarker", ["_mode", 0], ["_distance", 5000], ["_customFinishMarker", ""], ["_enableDamage", false]];
 
-[format ["Creating Race via %1. isDedicated:%2, isServer:%3 hasInterface:%4", clientOwner, isDedicated, isServer, hasInterface]] call SCO_fnc_printDebug;
+[format ["Creating Race (mode %5), via %1. isDedicated:%2, isServer:%3 hasInterface:%4", clientOwner, isDedicated, isServer, hasInterface, _mode]] call SCO_fnc_printDebug;
 
 //add AI to race if there are not a lot of players
 if (count _participants < 2) then
@@ -49,7 +49,7 @@ switch _mode do
 //set up starting positions
 private _startPositions = [];
 private _positionWidth = 6;
-if (_mode == 3) then { _positionWidth = 12; };
+if (_mode == 3) then { _positionWidth = 18; };
 private _numColumns = 4;
 private _numPositions = 16; //max num players
 for "_i" from 0 to _numPositions-1 do
@@ -59,7 +59,7 @@ for "_i" from 0 to _numPositions-1 do
 
 	private _backOffset = _positionWidth * _row;
 	private _leftOffset = _positionWidth * (_col - (_numColumns-1)/2);
-	private _relPos = [_leftOffset, (-22 - _backOffset), 0];
+	private _relPos = [_leftOffset, (-22 - _backOffset), -2];
 	_startPositions pushBack _relPos;
 	//[format ["starting%1", _i], race_start modelToWorld _relPos, "", [0.5, 0.5], "ColorOrange", "ICON", "mil_dot"] call SCO_fnc_createMarker;
 }; 
@@ -74,7 +74,7 @@ for "_i" from 0 to (count _participants) - 1 do
 	//create vehicle
 	private _pos = race_start modelToWorld (_startPositions select _i);
 	private _veh = createVehicle [_chosenVehicleClassname, _pos, [], 0, "CAN_COLLIDE"];
-	_veh allowDamage false;
+	_veh allowDamage _enableDamage;
 	_veh setDir getDir race_start;
 	_veh setVehicleAmmo 0;
 	_veh setFuel 0;
@@ -108,7 +108,6 @@ private _dnfTimeout = 30 max (getMarkerPos _raceStartMarker distance2D getMarker
 
 //give all participants waypoints
 private _finishRadius = 5;
-if (_mode == 3) then { _finishRadius = 20; };
 {
 	private _raceWP = group _x addWaypoint [getPos _finishPost, 0];
 	_raceWP setWaypointType "MOVE";
@@ -116,6 +115,13 @@ if (_mode == 3) then { _finishRadius = 20; };
 	_raceWP setWaypointName "Race";
 	_raceWP setWaypointCompletionRadius 5;
 	_raceWP setWaypointStatements ["true", "deleteWaypoint [group this, currentWaypoint group this];" ];
+	if (_mode == 3) then
+	{
+		_finishRadius = 20;
+		_raceWP setWaypointCompletionRadius _finishRadius;
+		_raceWP setWaypointType "LAND";
+		_raceWP setWaypointScript "A3\functions_f\waypoints\fn_wpLand.sqf";
+	};
 } forEach _participants;
 
 //start race procedure

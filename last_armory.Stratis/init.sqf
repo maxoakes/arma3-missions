@@ -189,15 +189,17 @@ if (isServer) then
 			case 9: //arsenal manager and utilities
 			{
 				["AmmoboxInit", [_obj, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
+				[_obj, ["Restore Previous Loadout", "(_this select 1) setUnitLoadout SCO_PREVIOUS_LOADOUT", nil, 1.5, true, true, "", "!isNil 'SCO_PREVIOUS_LOADOUT'"]] remoteExec ["addAction", 0, true];
 				[_obj, ["Heal Yourself", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 				[_obj, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
 				[_obj, ["Teleport to sniper range", { (_this select 1) setPos getMarkerPos "sniping_range"}]] remoteExec ["addAction", 0, true];
 				[_obj, ["Teleport to 360 shooting range", { (_this select 1) setPos getMarkerPos "shooting_range"}]] remoteExec ["addAction", 0, true];
-				[_obj, ["Open BIS Garage", {
-					private _vehicle = createVehicle [ "Land_HelipadEmpty_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
-					["Open", [true, _vehicle]] call BIS_fnc_garage;
-					}]
-				] remoteExec ["addAction", 0, true];
+				[_obj, ["Teleport to lobby building", { (_this select 1) setPos ((getMarkerPos "lobby_center") getPos [10, markerDir "lobby_center" + 270])}]] remoteExec ["addAction", 0, true];
+				// [_obj, ["Open BIS Garage", {
+				// 	private _vehicle = createVehicle [ "Land_HelipadEmpty_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
+				// 	["Open", [true, _vehicle]] call BIS_fnc_garage;
+				// 	}]
+				// ] remoteExec ["addAction", 0, true];
 			};
 		};
 
@@ -253,20 +255,29 @@ if (isServer) then
 	};
 
 	private _time4 = diag_tickTime;
-	//end maze creation
 
-	//short-range live shooting range with AI
-	//utilities building
-	//race controller
-	if (["EnableRacing" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
-	{
-		["race_center"] call SCO_fnc_createRaceBuilding;
-	};
+	["lobby_center"] call SCO_fnc_createRaceBuilding;
 
+	//start zeus creation
 	private _time5 = diag_tickTime;
+
+	curator1 addCuratorEditingArea [0, getMarkerPos "respawn_west", 500];
+	curator1 setCuratorEditingAreaType false;
+	curator1 removeCuratorAddons [
+		"A3_Modules_F_Bootcamp",
+		"A3_Modules_F_Bootcamp_Misc",
+		"A3_Modules_F_Curator_Respawn",
+		"A3_Modules_F_Curator_Multiplayer",
+		"A3_Modules_F_Curator_Curator",
+		"A3_Modules_F_Curator_Intel",
+		"A3_Modules_F_Curator_Misc"
+	];
+
+	private _time6 = diag_tickTime;
 	[format ["%1sec to build spawn", _time1 - _time0]] call SCO_fnc_printDebug;
 	[format ["%1sec to build addAction objects", _time2 - _time1]] call SCO_fnc_printDebug;
 	[format ["%1sec to create shooting ranges", _time3 - _time2]] call SCO_fnc_printDebug;
 	[format ["%1sec to create maze", _time4 - _time3]] call SCO_fnc_printDebug;
 	[format ["%1sec to create race center", _time5 - _time4]] call SCO_fnc_printDebug;
+	[format ["%1sec to create zeus functionality", _time6 - _time5]] call SCO_fnc_printDebug;
 };

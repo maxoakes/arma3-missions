@@ -15,7 +15,10 @@ private _scoreCalculator = [_target, _radius, _caller, _waveAmount*_amountPerWav
 		} forEach (_center nearObjects ["Man", 8]);
 		hint format ["Score is %1/%2", _maxScore - (count _bodies), _maxScore];
 	};
-	_player sideChat format ["I finished shooting range wave with a score of %1/%2", _maxScore - (count _bodies), _maxScore];
+	if  ({_center distance2D _x < _radius and alive _x} count units west > 0) then
+	{
+		_player sideChat format ["I finished shooting range wave with a score of %1/%2", _maxScore - (count _bodies), _maxScore];
+	};
 };
 
 private _allUnits = [];
@@ -38,9 +41,12 @@ for "_i" from 1 to _waveAmount do
 	sleep _waveInterval;
 };
 
-waitUntil {({alive _x} count _allUnits == 0) or (scriptDone _scoreCalculator)};
+waitUntil {({alive _x} count _allUnits == 0) or {_target distance2D _x < _radius and alive _x} count units west == 0};
+
+["Ending shooting range wave function"] call SCO_fnc_printDebug;
+missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", false, true];
+
+sleep 5;
 {
 	deleteVehicle _x;
 } forEach _allUnits;
-["Ending shooting range wave function"] call SCO_fnc_printDebug;
-missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", false, true];

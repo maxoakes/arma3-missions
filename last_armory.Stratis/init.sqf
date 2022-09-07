@@ -140,7 +140,7 @@ if (isServer) then
 						private _activeSector = entities 'ModuleSector_F' select 0;
 						if (!isNil "_activeSector") then
 						{
-							private _startRadius = _activeSector getVariable "size";
+							private _startRadius = ["SectorSize", 50] call BIS_fnc_getParamValue;
 							private _safePos = [getPos _activeSector, _startRadius, _startRadius + 100, 3, 0, 0, 0, [], [getPos _caller, getPos _caller]] call BIS_fnc_findSafePos;
 							_caller setPos _safePos;
 							_caller setDir (_safePos getDir _activeSector);
@@ -258,15 +258,14 @@ if (isServer) then
 
 	curator1 addCuratorEditingArea [0, getMarkerPos "respawn_west", 500];
 	curator1 setCuratorEditingAreaType false;
-	curator1 removeCuratorAddons [
-		"A3_Modules_F_Bootcamp",
+	[curator1, ["A3_Modules_F_Bootcamp",
 		"A3_Modules_F_Bootcamp_Misc",
 		"A3_Modules_F_Curator_Respawn",
 		"A3_Modules_F_Curator_Multiplayer",
 		"A3_Modules_F_Curator_Curator",
 		"A3_Modules_F_Curator_Intel",
 		"A3_Modules_F_Curator_Misc"
-	];
+	]] remoteExec ["removeCuratorAddons", 0, true];
 
 	private _time6 = diag_tickTime;
 	[format ["%1sec to build spawn", _time1 - _time0]] call SCO_fnc_printDebug;

@@ -241,7 +241,7 @@ if (["EnableSectorControl" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean
 			private _activeSector = entities 'ModuleSector_F' select 0;
 			if (!isNil "_activeSector") then
 			{
-				private _startRadius = _activeSector getVariable "size";
+				private _startRadius = ["SectorSize", 50] call BIS_fnc_getParamValue;
 				private _safePos = [getPos _activeSector, _startRadius, _startRadius + 100, 3, 0, 0, 0, [], [getPos _caller, getPos _caller]] call BIS_fnc_findSafePos;
 				_caller setPos _safePos;
 				_caller setDir (_safePos getDir _activeSector);

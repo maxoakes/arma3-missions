@@ -1,6 +1,6 @@
 #include "cfgFunctions.hpp"
 
-onLoadName = "Scouter's Open Armory: Stratis";
+onLoadName = "Scouter's Final Armory: Stratis";
 onLoadMission = "Pick a gun, pick a vehicle, shoot some targets, do whatever. Check the map's briefing menu in-game to see all the features.";
 author = "Scouter";
 
@@ -129,6 +129,13 @@ class Params
 	class EnableRacing
 	{
 		title = "Racing: Enable";
+		values[] = {0, 1};
+		texts[] = {"Disable", "Enable"};
+		default = 1;
+	};
+	class EnableZeus
+	{
+		title = "Zeus: Enable";
 		values[] = {0, 1};
 		texts[] = {"Disable", "Enable"};
 		default = 1;

@@ -107,13 +107,13 @@ private _raceEndMarker = ["race_end", getPos _finishPost, "End", [1, 1], "ColorO
 private _dnfTimeout = 30 max (getMarkerPos _raceStartMarker distance2D getMarkerPos _raceEndMarker)/100;
 
 //give all participants waypoints
-private _finishRadius = 5;
+private _finishRadius = 6;
 {
 	private _raceWP = group _x addWaypoint [getPos _finishPost, 0];
 	_raceWP setWaypointType "MOVE";
 	_raceWP setWaypointSpeed "FULL";
 	_raceWP setWaypointName "Race";
-	_raceWP setWaypointCompletionRadius 5;
+	_raceWP setWaypointCompletionRadius _finishRadius;
 	_raceWP setWaypointStatements ["true", "deleteWaypoint [group this, currentWaypoint group this];" ];
 	if (_mode == 3) then
 	{

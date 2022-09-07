@@ -1,5 +1,5 @@
 params ["_target", "_caller", "_actionId", "_p"];
-_p params ["_loc", "_radius"];
+_p params ["_loc", "_radius", "_returnMarker"];
 
 private _pos = [getPos _loc, 0, 100, 5, 0, SCO_MAX_GRADIENT, 0] call BIS_fnc_findSafePos;
 private _center = getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition");
@@ -88,5 +88,5 @@ deleteMarker _markerCenter;
 deleteMarker _markerBorder;
 if (alive _caller) then
 {
-	_caller setPos getMarkerPos "respawn_west";
+	_caller setPos getMarkerPos _returnMarker;
 };

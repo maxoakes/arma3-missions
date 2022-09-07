@@ -53,7 +53,7 @@ if (isServer) then
 		_addActionObjectRadius = _spawnRadius - 3;
 	};
 
-	//create spawn building
+	//create teleport area
 	private _teleportAreaObject = createVehicle ["Land_JumpTarget_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
 	private _teleportAreaMarker = [_teleportAreaObject] call BIS_fnc_boundingBoxMarker;
 	_teleportAreaMarker setMarkerShape "ELLIPSE";
@@ -68,12 +68,10 @@ if (isServer) then
 	//a list of sudo-class/object containing basic information for the utility objects in the spawn
 	private _objectSet = [
 		//[list of vehicle types to spawn, model classname of the object, direction offset]
-		[[],"Land_PhoneBooth_01_malden_F", 0], //battleground object
-		[[],"MapBoard_stratis_F", 0], //sector control spawner
+		[[],"MapBoard_stratis_F", 0], //fast travel
 		[["Helicopter"], "Land_PortableWeatherStation_01_white_F", 0], //helicopter spawn
 		[["Plane"], "Land_LandMark_F", 90], //plane spawn
 		[["Ship", "Submarine"], "Land_WaterBottle_01_stack_F", 0], //boat spawn
-		[[], "Land_LampHarbour_F", 0], //lighting
 		[["Car", "Motorcycle"], "Land_fs_feed_F", 0], //car spawn
 		[["WheeledAPC"], "Land_Pallet_MilBoxes_F", 0], //apc spawn
 		[["Tank", "TrackedAPC"], "Land_TankTracks_01_long_F", 90], //tank spawn
@@ -108,93 +106,90 @@ if (isServer) then
 		//change the behavior of the spawned object
 		switch (_i) do
 		{
-			case 0: //battleground teleport object
+			case 0: //fast travel
 			{
-				if (["EnableBattleground" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
-				{
-					//build a list of locations that one can teleport to
-					private _radius = ["TargetSize", 400] call BIS_fnc_getParamValue;
-					private _poiList = ["NameVillage", "NameCity", "NameCityCapital", "NameLocal"];
-					private _towns = nearestLocations [getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), _poiList, worldSize];
+				[_obj, ["Teleport to sniper range",
+					{
+						params ["_target", "_caller", "_actionId", "_arguments"];
+						_caller setPos getMarkerPos "sniping_range";
+						_caller setDir markerDir "sniping_range";
+					}]
+				] remoteExec ["addAction", 0, true];
 
-					//exclude locations that are within some distance of the spawn
-					private _blackListed = [];
+				[_obj, ["Teleport to 360 shooting range",
 					{
-						_blackListed append nearestLocations [getMarkerPos _x, _poiList, _radius * 3];
-					} foreach SCO_BLACKLISTED_MARKERS;
+						params ["_target", "_caller", "_actionId", "_arguments"];
+						private _safePos = [getMarkerPos "shooting_range", 2, 10, 0.5, 0, 0, 0, [], [getMarkerPos "shooting_range", getMarkerPos "shooting_range"]] call BIS_fnc_findSafePos;
+						_caller setPos _safePos;
+						_caller setDir random 360;
+					}]
+				] remoteExec ["addAction", 0, true];
 
+				[_obj, ["Teleport to lobby building",
 					{
-						private _thisAction = _baseAction;
-						_thisAction set [0, format ["Battleground: %1", text _x]];
-						_thisAction set [1, { _this call SCO_fnc_generateBattlegroundAndTeleport }];
-						_thisAction set [2, [_x, _radius]];
-						[_obj, _thisAction] remoteExec ["addAction", 0, true]; //add action to all players
-					} foreach (_towns - _blackListed);
-				};
-			};
-			case 1: //sector control spawner
-			{
-				if (["EnableSectorControl" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
-				{
+						params ["_target", "_caller", "_actionId", "_arguments"];
+						private _pos = (getMarkerPos "lobby_center") getPos [10, markerDir "lobby_center" + 270];
+						_caller setPos _pos;
+						_caller setDir (_pos getDir (getMarkerPos "lobby_center"));
+					}]
+				] remoteExec ["addAction", 0, true];
+
+				[_obj, ["Teleport near active sector",
 					{
-						private _thisAction = _baseAction;
-						_thisAction set [0, format ["Sector Control: %1 waves", _x]];
-						_thisAction set [1, { [_this, "functions\sector\fn_generateRandomSectorControl.sqf"] remoteExec ["execVM", 2]; }];
-						_thisAction set [2, _x];
-						_thisAction set [7, "count (entities 'ModuleSector_F') == 0"];
-						[_obj, _thisAction] remoteExec ["addAction", 0, true];
-					} forEach [1, 2, 3, 4, 5, 8, 10];
-				};
+						params ["_target", "_caller", "_actionId", "_arguments"];
+						private _activeSector = entities 'ModuleSector_F' select 0;
+						if (!isNil "_activeSector") then
+						{
+							private _startRadius = _activeSector getVariable "size";
+							private _safePos = [getPos _activeSector, _startRadius, _startRadius + 100, 3, 0, 0, 0, [], [getPos _caller, getPos _caller]] call BIS_fnc_findSafePos;
+							_caller setPos _safePos;
+							_caller setDir (_safePos getDir _activeSector);
+						};
+					}, nil, 1.5, true, true, "", "count (entities 'ModuleSector_F') > 0"]
+				] remoteExec ["addAction", 0, true];
 			};
-			case 2: //helicopter spawner
+			case 1: //helicopter spawner
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Helicopters"]];
 				[_obj, _thisAction] remoteExec ["addAction", 0, true];
 			};
-			case 3: //plane spawner
+			case 2: //plane spawner
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Planes and Jets"]];
 				[_obj, _thisAction] remoteExec ["addAction", 0, true];
 			};
-			case 4: //boat spawner
+			case 3: //boat spawner
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Water Vehicles"]];
 				[_obj, _thisAction] remoteExec ["addAction", 0, true];
 			};
-			case 5: //lighting
-			{
-
-			};
-			case 6: //car spawn
+			case 4: //car spawn
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Land Vehicles"]];
 				[_obj, _thisAction] remoteExec ["addAction", 0, true];
 			};
-			case 7: //apc spawn
+			case 5: //apc spawn
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "APCs"]];
 				[_obj, _thisAction] remoteExec ["addAction", 0, true];
 			};
-			case 8: //tank spawn
+			case 6: //tank spawn
 			{
 				private _thisAction = _baseAction;
 				_thisAction set [0, format ["<t color='%1'>%2</t>", _vehicleObjectTextColor, "Tanks"]];
 				[_obj, _thisAction] remoteExec ["addAction", 0, true];
 			};
-			case 9: //arsenal manager and utilities
+			case 7: //arsenal manager and utilities
 			{
 				["AmmoboxInit", [_obj, true, { (_this distance _target) < 10 }]] call BIS_fnc_arsenal;
 				[_obj, ["Restore Previous Loadout", "(_this select 1) setUnitLoadout SCO_PREVIOUS_LOADOUT", nil, 1.5, true, true, "", "!isNil 'SCO_PREVIOUS_LOADOUT'"]] remoteExec ["addAction", 0, true];
 				[_obj, ["Heal Yourself", "(_this select 1) setDamage 0;"]] remoteExec ["addAction", 0, true];
 				[_obj, ["Add Ammo for this Weapon", { _this call SCO_fnc_refillWeapon }, 4]] remoteExec ["addAction", 0, true];
-				[_obj, ["Teleport to sniper range", { (_this select 1) setPos getMarkerPos "sniping_range"}]] remoteExec ["addAction", 0, true];
-				[_obj, ["Teleport to 360 shooting range", { (_this select 1) setPos getMarkerPos "shooting_range"}]] remoteExec ["addAction", 0, true];
-				[_obj, ["Teleport to lobby building", { (_this select 1) setPos ((getMarkerPos "lobby_center") getPos [10, markerDir "lobby_center" + 270])}]] remoteExec ["addAction", 0, true];
 				// [_obj, ["Open BIS Garage", {
 				// 	private _vehicle = createVehicle [ "Land_HelipadEmpty_F", getMarkerPos "teleport", [], 0, "CAN_COLLIDE"];
 				// 	["Open", [true, _vehicle]] call BIS_fnc_garage;

@@ -4,63 +4,89 @@ race_start allowDamage false;
 private _centerPos = getMarkerPos _marker;
 private _angle = markerDir _marker;
 private _placementArray = [
-	["Land_Cargo_HQ_V1_F",[0,0,-3.0754],0], //0, main building
-	["B_Slingload_01_Cargo_F",[-0.5,2,-0.749884],254.18], //1, slingload position object
-	["MapBoard_stratis_F",[6.25269,3.25488,-3.27695],29.993], //2, race object
-	["Land_ClutterCutter_small_F",[4.5,0.75,-3.08],0], //3, marker center object
-	["Land_TripodScreen_01_dual_v1_black_F",[-0.864624,0.758301,-3.27468],180.003], //4, utilities object
-	["Land_PlasticBarrier_03_F",[0.549561,0.129883,-3.27473],175.969],
-	["I_E_CargoNet_01_ammo_F",[0.753418,1.57422,-3.27472],268.077],
-	["PlasticBarrier_03_orange_F",[-1.31543,-0.359375,-3.27473],343.942],
+	["Land_Cargo_HQ_V1_F",[0,0,-3.8754],0], //0 building
+	["B_Slingload_01_Cargo_F",[-0.375,2.125,-0.749884],254.18], //1 slingload
+	["Land_ClutterCutter_small_F",[4.5,0.75,-3.8754],0], //2 lobby center
+	["MapBoard_stratis_F",[6.25293,3.25464,-3.27694],30.0032], //3 race object
+	["Land_TripodScreen_01_dual_v1_black_F",[0.903564,2.11108,-3.27469],255.005], //4 utility
+	["Land_PhoneBooth_01_malden_F",[-6.08203,-0.856934,-3.8754],90], //5 battleground
+	["Land_MapBoard_Enoch_F",[-3.42603,2.30005,-3.27694],316.128], //6 sector control
+	["Land_Camping_Light_F",[-0.0559082,0.5271,-2.39018],359.942],
+	["Land_PortableCabinet_01_closed_black_F",[0.733154,0.630127,-2.94317],165.001],
+	["Land_PortableDesk_01_black_F",[-0.0527344,1.44531,-3.27469],269.998],
 	["Sign_Sphere10cm_F",[1.5,-1,-2.6254],0],
-	["B_supplyCrate_F",[-0.979736,2.08496,-3.27473],178.324],
+	["Land_PortableCabinet_01_bookcase_olive_F",[1.4043,0.24585,-3.27472],89.9947],
+	["Land_PortableCabinet_01_closed_black_F",[0.717285,0.602783,-3.27472],179.999],
 	["Sign_Sphere10cm_F",[1.5,-1.5,-2.6254],0],
 	["Sign_Sphere10cm_F",[1.5,-2,-2.6254],0],
-	["VirtualReammoBox_camonet_F",[-2.80396,1.2793,-3.27473],91.3817],
+	["Land_DeskChair_01_black_F",[-0.606445,2.25317,-3.27473],359.994],
 	["Sign_Sphere10cm_F",[1.5,-2.5,-2.6254],0],
 	["Land_PlasticBarrier_01_line_x4_F",[2.04297,1.35645,-3.27373],90],
-	["B_CargoNet_01_ammo_F",[0.618164,3.47607,-3.27473],268.267],
-	["Land_Pallet_MilBoxes_F",[-3.25,-1,-3.27373],270],
+	["Land_WoodenCrate_01_stack_x5_F",[0.694092,3.51904,-3.27373],180],
+	["Land_FoodSacks_01_cargo_white_idap_F",[-3.2334,-1.13599,-3.27473],90.0009],
+	["Land_PaperBox_01_small_closed_brown_food_F",[-0.591797,3.53906,-2.85617],359.941],
 	["Sign_Sphere10cm_F",[1.5,-3.5,-2.6254],0],
-	["CargoNet_01_barrels_F",[-1.84741,3.56982,-3.27473],0.000724815],
+	["Land_PaperBox_01_small_closed_white_IDAP_F",[-0.485596,3.52173,-3.26565],358.919],
+	["Land_Pallet_MilBoxes_F",[-1.79321,3.48291,-3.27373],270],
+	["Land_PaperBox_01_small_closed_white_med_F",[-0.635742,4.06641,-2.86004],180.147],
 	["Sign_Sphere10cm_F",[1.5,-4,-2.6254],0],
-	["Land_CampingChair_V2_F",[-1.9801,-4.10352,-3.27473],209.995],
+	["Land_PaperBox_01_small_closed_white_med_F",[-0.482666,4.01172,-3.27082],358.973],
+	["CargoNet_01_box_F",[-1.625,-4.375,-3.27473],360],
 	["Sign_Sphere10cm_F",[1.5,-4.5,-2.6254],0],
 	["Land_CampingChair_V2_F",[-0.367432,-4.76416,-3.27473],179.995],
-	["Land_CampingChair_V2_white_F",[0.485962,-4.75684,-3.27473],171.311],
-	["Land_CampingChair_V2_F",[-1.19116,-4.64014,-3.27473],209.995],
-	["CargoNet_01_box_F",[-3.42212,3.54199,-3.27473],360],
-	["FlexibleTank_01_forest_F",[-4.92773,0.197266,-3.15432],9.15385],
-	["FlexibleTank_01_forest_F",[-4.90576,0.8125,-3.15432],62.0192],
+	["Land_CampingChair_V2_white_F",[0.486084,-4.75684,-3.27473],171.311],
+	["FlexibleTank_01_forest_F",[-5.00342,0.108398,-3.15432],9.15505],
+	["Land_PaperBox_01_small_closed_brown_IDAP_F",[-4.63623,1.47241,-3.15431],90.0012],
+	["Land_PaperBox_01_small_closed_white_IDAP_F",[-4.82056,0.860107,-3.15431],0.00207918],
+	["CargoNet_01_barrels_F",[-3.5481,3.61621,-3.27473],85.2629],
+	["Land_PaperBox_01_small_closed_white_IDAP_F",[-4.99219,1.61426,-2.74444],0.0138714],
 	["Sign_Sphere10cm_F",[1.5,-5,-2.6254],0],
-	["FlexibleTank_01_sand_F",[-5.05371,1.51855,-3.15432],134.655],
-	["Box_NATO_AmmoVeh_F",[-3.28333,-4.36621,-3.24418],6.77898e-005],
+	["Box_NATO_AmmoVeh_F",[-3.28345,-4.36621,-3.24418],0.000596176],
+	["Land_PaperBox_01_small_closed_brown_F",[-5.125,1.5,-3.15431],269.996],
 	["SignAd_Sponsor_ARMEX_F",[-4.75,3.25,-3.8754],90],
-	["Land_Stretcher_01_olive_F",[-0.344727,-5.90234,-3.15431],89.9981],
+	["Land_PortableDesk_01_black_F",[-0.148438,-5.87207,-3.15428],359.999],
 	["Land_KartStand_01_F",[4.05396,-4.60742,-3.27473],267.507],
-	["Land_Trophy_01_bronze_F",[4,5.25,-2.3433],0.0352424],
-	["Land_Trophy_01_silver_F",[4.5,5.25,-2.3433],0.0379381],
+	["Land_Trophy_01_bronze_F",[4,5.24976,-2.34327],0.000808725],
+	["Land_Stretcher_01_olive_F",[-2.5564,-5.86499,-3.15431],89.9995],
+	["Land_Trophy_01_silver_F",[4.5,5.25,-2.34329],359.998],
 	["SignAd_Sponsor_Redstone_F",[-4.75,-4.75,-3.8754],90],
-	["Land_KartTyre_01_x4_F",[5.33826,-4.11963,-3.28576],282.581],
-	["Land_CampingTable_F",[4.5,5.25,-3.1569],0.000900539],
-	["Land_Trophy_01_gold_F",[5,5.25,-2.3433],0.0385555],
-	["Land_KartTyre_01_x4_F",[5.32849,-4.69043,-3.28576],359.928],
+	["Land_KartTyre_01_x4_F",[5.33813,-4.11963,-3.28576],282.583],
+	["Land_CampingTable_F",[4.5,5.25,-3.1569],359.997],
+	["Land_Trophy_01_gold_F",[5,5.25,-2.3433],0.011044],
+	["Land_KartTyre_01_x4_F",[5.32861,-4.69043,-3.28576],359.926],
 	["Land_PlasticBarrier_01_line_x6_F",[4.18066,6.16211,-3.15331],0],
 	["Land_PlasticBarrier_01_line_x2_F",[7.37109,0.723633,-3.27373],270],
-	["Land_KartTrolly_01_F",[8.12927,-1.74951,-3.15431],0.000426723]
+	["Land_KartTrolly_01_F",[8.12915,-1.74951,-3.15431],0.000423011]
 ];
 
 private _objects = [_centerPos, _placementArray, 0, _angle, true, 1] call SCO_fnc_placeObjectsFromArray;
 { _x enableSimulationGlobal false; } forEach _objects;
-_objects params ["_building", "_initialSlingload", "_raceObject", "_lobbyCenterObject", "_utilitiesObject"];
-_building enableSimulationGlobal true;
-["respawn_west_lobby", (getMarkerPos _marker) getPos [10, markerDir _marker + 270], "Lobby Building", [1, 1], "Default", "ICON", "Empty"] call SCO_fnc_createMarker;
+_objects params ["_building", "_initialSlingload", "_lobbyCenterObject", "_raceObject", "_utilitiesObject", "_battlegroundObject", "_sectorControlObject"];
 
+//building
+_building enableSimulationGlobal true;
+private _lobbyRespawn = ["respawn_west_lobby", (getMarkerPos _marker) getPos [10, markerDir _marker + 250], "Mission and Lobby Building", [1, 1], "Default", "ICON", "Empty"] call SCO_fnc_createMarker;
+
+//slingload
+private _slingloadableClassnames = [
+	"Land_Device_slingloadable_F", "B_Slingload_01_Ammo_F", 
+	"B_Slingload_01_Cargo_F", "B_Slingload_01_Fuel_F", 
+	"B_Slingload_01_Medevac_F", "B_Slingload_01_Repair_F",
+	"Land_Pod_Heli_Transport_04_covered_F", "Land_Pod_Heli_Transport_04_medevac_F"
+];
+private _slingloadPos = getPosASL _initialSlingload;
+private _slingloadDir = getDir _initialSlingload;
+deleteVehicle _initialSlingload;
+
+//lobby center
+private _lobbyMarker = ["lobby_area", getPos _lobbyCenterObject, "Lobby Range", [3, 5.4], "ColorOrange", "RECTANGLE", "SolidBorder", _angle, 0.5] call SCO_fnc_createMarker;
+
+//race object
 if (["EnableRacing" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
 {
 	//race center
+	["race_object", getPos _raceObject, "", [0.5, 0.5], "ColorOrange", "ICON", "mil_triangle"] call SCO_fnc_createMarker;
 	missionNamespace setVariable ["SCO_RACE_ACTIVE", false, true];
-	private _lobbyMarker = ["lobby_area", getPos _lobbyCenterObject, "Lobby Range", [3, 5.4], "ColorOrange", "RECTANGLE", "SolidBorder", _angle, 0.5] call SCO_fnc_createMarker;
 	{
 		_x params ["_mode", "_distance", "_enableDamage"];
 
@@ -139,22 +165,21 @@ if (["EnableRacing" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
 			};
 		}, [_lobbyMarker, _x], 2, true, true, "", "!SCO_RACE_ACTIVE"]] remoteExec ["addAction", 0, true];
 	} forEach [[0, 5000, false], [0, 5000, true], [0, 10000, true], [1, 0, false], [1, 0, true], [3, 0, true]]; //[mode, distance, allowDamage]
+}
+else
+{
+	deleteVehicle _raceObject;
 };
 
 //utilites object
-private _slingloadableClassnames = [
-	"Land_Device_slingloadable_F", "B_Slingload_01_Ammo_F", 
-	"B_Slingload_01_Cargo_F", "B_Slingload_01_Fuel_F", 
-	"B_Slingload_01_Medevac_F", "B_Slingload_01_Repair_F",
-	"Land_Pod_Heli_Transport_04_covered_F", "Land_Pod_Heli_Transport_04_medevac_F"
-];
-private _slingloadPos = getPosASL _initialSlingload;
-private _slingloadDir = getDir _initialSlingload;
-deleteVehicle _initialSlingload;
-
+["util_object", getPos _utilitiesObject, "", [0.5, 0.5], "ColorOrange", "ICON", "mil_triangle"] call SCO_fnc_createMarker;
 [_utilitiesObject, ["Teleport to spawn", { (_this select 1) setPos getMarkerPos "respawn_west"}]] remoteExec ["addAction", 0, true];
-[_utilitiesObject, ["Give me Zeus ability", { [_this select 1, curator1] remoteExec ["assignCurator", 2] }, nil, 1.5, true, true, "", "isNull getAssignedCuratorUnit curator1"]] remoteExec ["addAction", 0, true];
-[_utilitiesObject, ["Remove my Zeus ability", {	[curator1] remoteExec ["unassignCurator", 2] }, nil, 1.5, true, true, "", "getAssignedCuratorUnit curator1 == _this"]] remoteExec ["addAction", 0, true];
+
+if (["EnableZeus" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
+{
+	[_utilitiesObject, ["Give me Zeus ability", { [_this select 1, curator1] remoteExec ["assignCurator", 2] }, nil, 1.5, true, true, "", "isNull getAssignedCuratorUnit curator1"]] remoteExec ["addAction", 0, true];
+	[_utilitiesObject, ["Remove my Zeus ability", {	[curator1] remoteExec ["unassignCurator", 2] }, nil, 1.5, true, true, "", "getAssignedCuratorUnit curator1 == _this"]] remoteExec ["addAction", 0, true];
+};
 
 {
 	[_utilitiesObject, [format ["Spawn %1 on roof", getText (configFile >> "cfgVehicles" >> _x >> "displayName")], 
@@ -174,3 +199,57 @@ deleteVehicle _initialSlingload;
 		}, [_x, _slingloadPos, _slingloadDir, _slingloadableClassnames]]] remoteExec ["addAction", 0, true];
 } forEach _slingloadableClassnames;
 
+//battleground object
+if (["EnableBattleground" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
+{
+	//build a list of locations that one can teleport to
+	["battleground_object", getPos _battlegroundObject, "", [0.5, 0.5], "ColorOrange", "ICON", "mil_triangle"] call SCO_fnc_createMarker;
+	private _radius = ["TargetSize", 400] call BIS_fnc_getParamValue;
+	private _poiList = ["NameVillage", "NameCity", "NameCityCapital", "NameLocal"];
+	private _towns = nearestLocations [getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), _poiList, worldSize];
+
+	//exclude locations that are within some distance of the spawn
+	private _blackListed = [];
+	{
+		_blackListed append nearestLocations [getMarkerPos _x, _poiList, _radius * 3];
+	} foreach SCO_BLACKLISTED_MARKERS;
+
+	{
+		[_battlegroundObject, [format ["Battleground: %1", text _x], { _this call SCO_fnc_generateBattlegroundAndTeleport }, [_x, _radius, _lobbyRespawn]]] remoteExec ["addAction", 0, true];
+	} foreach (_towns - _blackListed);
+}
+else
+{
+	deleteVehicle _battlegroundObject;
+};
+
+//sector control object
+if (["EnableSectorControl" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
+{
+	["sector_object", getPos _sectorControlObject, "", [0.5, 0.5], "ColorOrange", "ICON", "mil_triangle"] call SCO_fnc_createMarker;
+	{
+		[_sectorControlObject, [
+			format ["Sector Control: %1 waves", _x], 
+			{ [_this, "functions\sector\fn_generateRandomSectorControl.sqf"] remoteExec ["execVM", 2] },
+			_x, 1.5, true, true, "", "count (entities 'ModuleSector_F') == 0"
+		]] remoteExec ["addAction", 0, true];
+	} forEach [1, 2, 3, 4, 5, 8, 10];
+	
+	[_sectorControlObject, ["Teleport near active sector",
+		{
+			params ["_target", "_caller", "_actionId", "_arguments"];
+			private _activeSector = entities 'ModuleSector_F' select 0;
+			if (!isNil "_activeSector") then
+			{
+				private _startRadius = _activeSector getVariable "size";
+				private _safePos = [getPos _activeSector, _startRadius, _startRadius + 100, 3, 0, 0, 0, [], [getPos _caller, getPos _caller]] call BIS_fnc_findSafePos;
+				_caller setPos _safePos;
+				_caller setDir (_safePos getDir _activeSector);
+			};
+		}, nil, 1.5, true, true, "", "count (entities 'ModuleSector_F') > 0"]
+	] remoteExec ["addAction", 0, true];
+}
+else
+{
+	deleteVehicle _sectorControlObject;
+};

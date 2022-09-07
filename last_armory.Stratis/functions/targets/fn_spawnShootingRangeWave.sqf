@@ -38,6 +38,9 @@ for "_i" from 1 to _waveAmount do
 	sleep _waveInterval;
 };
 
-waitUntil {{alive _x} count _allUnits == 0};
+waitUntil {({alive _x} count _allUnits == 0) or (scriptDone _scoreCalculator)};
+{
+	deleteVehicle _x;
+} forEach _allUnits;
 ["Ending shooting range wave function"] call SCO_fnc_printDebug;
 missionNamespace setVariable ["SCO_SHOOTING_RANGE_WAVE_ACTIVE", false, true];

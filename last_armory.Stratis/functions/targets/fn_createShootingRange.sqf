@@ -4,8 +4,7 @@ private _centerPos = getMarkerPos _areaMarker;
 private _radius = getMarkerSize _areaMarker select 0;
 
 //outer wall
-private _shootingRangeWall = [_centerPos, _radius, ["Land_ConcreteWall_01_l_8m_F"], 8, 0] call SCO_fnc_createBorder;
-private _shootingRangeWallPoles = [_centerPos, _radius+0.1, ["Land_ConcreteWall_01_l_pole_F"], 8, 0, 0, false, 180/(count _shootingRangeWall)] call SCO_fnc_createBorder;
+private _shootingRangeWall = [_centerPos, _radius, ["Land_ConcreteWall_01_l_8m_F"], 7.98, 0] call SCO_fnc_createBorder;
 
 //spawn points
 private _spawnPoints = [_centerPos, _radius - 2, ["Sign_Arrow_Pink_F"], 8, 0] call SCO_fnc_createBorder;

@@ -226,13 +226,18 @@ else
 //sector control object
 if (["EnableSectorControl" call BIS_fnc_getParamValue] call SCO_fnc_parseBoolean) then
 {
+	missionNamespace setVariable ["SCO_SECTOR_ACTIVE", false, true];
 	["sector_object", getPos _sectorControlObject, "", [0.5, 0.5], "ColorOrange", "ICON", "mil_triangle"] call SCO_fnc_createMarker;
 	{
 		[_sectorControlObject, [
 			format ["Sector Control: %1 waves", _x], 
-			{ [_this, "functions\sector\fn_generateRandomSectorControl.sqf"] remoteExec ["execVM", 2] },
-			_x, 1.5, true, true, "", "count (entities 'ModuleSector_F') == 0"
-		]] remoteExec ["addAction", 0, true];
+			{
+				params ["_target", "_caller", "_actionId", "_waves"];
+				missionNamespace setVariable ["SCO_SECTOR_ACTIVE", true, true];
+				"Building Sector Control. Please wait..." remoteExec ["systemChat", 0];
+				[[_waves], "functions\sector\fn_generateRandomSectorControl.sqf"] remoteExec ["execVM", 2];
+			},
+			_x, 1.5, true, true, "", "!SCO_SECTOR_ACTIVE"]] remoteExec ["addAction", 0, true];
 	} forEach [1, 2, 3, 4, 5, 8, 10];
 	
 	[_sectorControlObject, ["Teleport near active sector",

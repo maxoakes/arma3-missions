@@ -1,5 +1,5 @@
-params ["_target", "_caller", "_actionId", "_waveLimit"];
-[format ["Creating sector via %1. isDedicated:%2, isServer:%3 hasInterface:%4", _caller, isDedicated, isServer, hasInterface]] call SCO_fnc_printDebug;
+params ["_waveLimit"];
+[format ["Creating sector via %1. isDedicated:%2, isServer:%3 hasInterface:%4", clientOwner, isDedicated, isServer, hasInterface]] call SCO_fnc_printDebug;
 private _unitsPerWave = ["SectorWaveUnitCount", 1] call BIS_fnc_getParamValue;
 private _radius = ["SectorSize", 25] call BIS_fnc_getParamValue;
 
@@ -19,19 +19,20 @@ private _allLightOpforVehicleClassnames = "
 	count ((configName _x) call BIS_fnc_vehicleCrewTurrets) > 1" 
 	configClasses (configFile >> "CfgVehicles") apply {(configName _x)};
 
-//identify possible locations to put sector
-private _objectTypes = ["House", "Building"];
-private _possibleSectorCenterObjects = nearestObjects [[worldSize/2, worldSize/2], _objectTypes, worldSize, true];
-
-//get a list of buildings that are close to the spawn or its markers
-private _blacklistedBuildings = [];
+//pick a random location, then a random building in that location
+private _locationTypes = ["Name", "NameCity", "NameCityCapital", "NameLocal", "NameMarine", "NameVillage", "ViewPoint", "Hill", "Airport"];
+private _locations = nearestLocations [getArray (configFile >> "CfgWorlds" >> worldName >> "centerPosition"), _locationTypes, worldSize];
+private _blacklisted = [];
 {
-	_blacklistedBuildings append nearestObjects [getMarkerPos _x, _objectTypes, 2000];
-} forEach SCO_BLACKLISTED_MARKERS;
+	_blacklisted append nearestLocations [getMarkerPos _x, _locationTypes, 1500];
+} foreach SCO_BLACKLISTED_MARKERS;
+
+private _possibleLocations = _locations - _blacklisted;
+private _selectedLocation = selectRandom _possibleLocations;
+private _possibleSectorCenterObjects = nearestObjects [locationPosition _selectedLocation, ["House", "Building"], 1000, true];
 
 //get the position of a random building from the valid selection
-private _sectorPos = getPos (selectRandom (_possibleSectorCenterObjects - _blacklistedBuildings));
-private _nearbyLocations = nearestLocations [_sectorPos, ["NameVillage", "NameCity", "NameCityCapital", "NameLocal"], 2000];
+private _sectorPos = getPos selectRandom _possibleSectorCenterObjects;
 private _sectorName = "Sector";
 
 //create the sector control module
@@ -54,7 +55,7 @@ format ["Sector Control created near %1", text _nearbyLocation] remoteExec ["sys
 
 //spawn initial number of squads. 2 to 4, weighted to 3
 private _initialNumSquads = floor random [2,3,5];
-private _initialSafePosArray = [_sectorPos, 0, _radius, 5, 0, 0, 0, [], [_sectorPos, _sectorPos]];
+private _initialSafePosArray = [_sectorPos, 0, _radius, 10, 0, 0, 0, [], [_sectorPos, _sectorPos]];
 for "_i" from 1 to _initialNumSquads do
 {
 	private _safePos = _initialSafePosArray call BIS_fnc_findSafePos;
@@ -77,6 +78,7 @@ for "_i" from 1 to _initialNumSquads do
 private _safePos = _initialSafePosArray call BIS_fnc_findSafePos;
 private _array = [_safePos, 0, selectRandom _allLightOpforVehicleClassnames, east] call BIS_fnc_spawnVehicle;
 private _vehicleName = getText (configFile >> "CfgVehicles" >> typeOf (_array select 0) >> "displayName");
+(_array select 0) setVehiclePosition [_safePos, [], 0, "NONE"];
 format ["Sector Control: Spawned %1.", _vehicleName] remoteExec ["systemChat", 0];
 
 //wait until sector is under west control
@@ -178,6 +180,7 @@ else
 sleep 3;
 //final clean up
 deleteVehicle _module;
+missionNamespace setVariable ["SCO_SECTOR_ACTIVE", false, true];
 
 //teleport players back to spawn
 private _returnPos = getMarkerPos "respawn_west";

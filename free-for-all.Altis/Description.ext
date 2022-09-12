@@ -2,6 +2,7 @@
 #include "cfgRoles.hpp"
 #include "cfgFunctions.hpp"
 
+briefingName = "Scouter's Free-for-All";
 onLoadName = "Free-for-All: Stratis";
 onLoadMission = "A free-for-all deathmatch for 2-16 players. Parameters allow for many different locations and settings.";
 author = "Scouter";

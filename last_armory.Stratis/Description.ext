@@ -1,5 +1,6 @@
 #include "cfgFunctions.hpp"
 
+briefingName = "Scouter's Armory";
 onLoadName = "Scouter's Final Armory: Stratis";
 onLoadMission = "Pick a gun, pick a vehicle, shoot some targets, do whatever. Check the map's briefing menu in-game to see all the features.";
 author = "Scouter";

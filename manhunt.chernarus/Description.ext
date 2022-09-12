@@ -1,6 +1,7 @@
 #include "cfgRespawnInventory.hpp"
 #include "cfgFunctions.hpp"
 
+briefingName = "Scouter's Manhunt";
 author = "Scouter";
 onLoadName = "Manhunt: Chernarus";
 onLoadMission = "Find and kill the specified target, confirm the kill, and leave the area.";

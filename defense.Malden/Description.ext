@@ -1,5 +1,6 @@
 #include "cfgFunctions.hpp"
 
+briefingName = "Scouter's Wave Defense";
 onLoadName = "Wave Defense";
 onLoadMission = "Defend an area from waves of enemies.";
 author = "Scouter";

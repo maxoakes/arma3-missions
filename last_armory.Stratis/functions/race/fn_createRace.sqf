@@ -114,19 +114,23 @@ private _finishRadius = 6;
 	_raceWP setWaypointSpeed "FULL";
 	_raceWP setWaypointName "Race";
 	_raceWP setWaypointCompletionRadius _finishRadius;
-	_raceWP setWaypointStatements ["true", "deleteWaypoint [group this, currentWaypoint group this];" ];
+	_raceWP setWaypointStatements ["true", "deleteWaypoint [group this, currentWaypoint group this]"];
 	if (_mode == 3) then
 	{
 		_finishRadius = 20;
 		_raceWP setWaypointCompletionRadius _finishRadius;
-		_raceWP setWaypointType "LAND";
-		_raceWP setWaypointScript "A3\functions_f\waypoints\fn_wpLand.sqf";
+		if (!isPlayer _x) then
+		{
+			_raceWP setWaypointType "LAND";
+			_raceWP setWaypointScript "A3\functions_f\waypoints\fn_wpLand.sqf";
+		};
 	};
 } forEach _participants;
 
 //start race procedure
 sleep 5;
-"The race will start in 8 seconds when the flare appears" remoteExec ["systemChat", 0];
+"Racers, set a waypoint on the finish line." remoteExec ["systemChat", 0];
+"The race will start in 8 seconds when the flare appears." remoteExec ["systemChat", 0];
 sleep 5;
 
 //start the race
@@ -151,7 +155,7 @@ sleep 5;
 {
 	if (isPlayer _x) then
 	{
-		_x setPos getMarkerPos "respawn_west";
+		[_x, getMarkerPos "respawn_west"] remoteExec ["setPos", _x];
 	}
 	else
 	{

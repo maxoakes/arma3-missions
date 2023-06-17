@@ -1,0 +1,1026 @@
+version=54;
+class EditorData
+{
+	moveGridStep=1;
+	angleGridStep=0.2617994;
+	scaleGridStep=1;
+	autoGroupingDist=10;
+	toggles=5;
+	class ItemIDProvider
+	{
+		nextID=172;
+	};
+	class MarkerIDProvider
+	{
+		nextID=5;
+	};
+	class Camera
+	{
+		pos[]={4894.1748,62.46217,4635.853};
+		dir[]={0.25279722,-0.70990515,-0.65736461};
+		up[]={0.25481007,0.70429724,-0.66259873};
+		aside[]={-0.93336236,0,-0.35893536};
+	};
+};
+binarizationWanted=0;
+sourceName="escape";
+addons[]=
+{
+	"CUP_Creatures_Military_TakiInsurgents",
+	"CUP_WheeledVehicles_Hilux",
+	"CUP_AirVehicles_CH47",
+	"A3_Ui_F",
+	"CUP_Wheeled_SUV",
+	"A3_Characters_F_Enoch"
+};
+class AddonsMetaData
+{
+	class List
+	{
+		items=6;
+		class Item0
+		{
+			className="CUP_Creatures_Military_TakiInsurgents";
+			name="CUP_Creatures_Military_TakiInsurgents";
+		};
+		class Item1
+		{
+			className="CUP_WheeledVehicles_Hilux";
+			name="CUP_WheeledVehicles_Hilux";
+		};
+		class Item2
+		{
+			className="CUP_AirVehicles_CH47";
+			name="CUP_AirVehicles_CH47";
+		};
+		class Item3
+		{
+			className="A3_Ui_F";
+			name="Arma 3 - User Interface";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+		class Item4
+		{
+			className="CUP_Wheeled_SUV";
+			name="CUP_Wheeled_SUV";
+		};
+		class Item5
+		{
+			className="A3_Characters_F_Enoch";
+			name="Arma 3 Contact Platform - Characters and Clothing";
+			author="Bohemia Interactive";
+			url="https://www.arma3.com";
+		};
+	};
+};
+dlcs[]=
+{
+	"CUP_Units",
+	"CUP_Vehicles"
+};
+randomSeed=7051185;
+class ScenarioData
+{
+	author="[CKW] Scouter";
+};
+class Mission
+{
+	class Intel
+	{
+		timeOfChanges=1800.0002;
+		startWeather=0.084176198;
+		startWind=0.1;
+		startWaves=0.1;
+		forecastWeather=0.28084946;
+		forecastWind=0.1;
+		forecastWaves=0.1;
+		forecastLightnings=0.1;
+		year=2009;
+		day=29;
+		minute=9;
+		startFogDecay=0.014;
+		forecastFogDecay=0.014;
+	};
+	class Entities
+	{
+		items=45;
+		class Item0
+		{
+			dataType="Group";
+			side="East";
+			class Entities
+			{
+				items=2;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={3970.0491,16.697561,3164.5793};
+						angles[]={6.2531939,0,0.0050033992};
+					};
+					side="East";
+					flags=4;
+					class Attributes
+					{
+					};
+					id=14;
+					type="CUP_O_TK_INS_Soldier";
+					atlOffset=-1.9073486e-006;
+				};
+				class Item1
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={3969.9861,18.306267,3164.6304};
+						angles[]={6.2531939,0,0.0050033992};
+					};
+					side="East";
+					flags=2;
+					class Attributes
+					{
+					};
+					id=15;
+					type="CUP_O_TK_INS_Soldier";
+					atlOffset=1.6074867;
+				};
+			};
+			class Attributes
+			{
+			};
+			class CrewLinks
+			{
+				class LinkIDProvider
+				{
+					nextID=2;
+				};
+				class Links
+				{
+					items=2;
+					class Item0
+					{
+						linkID=0;
+						item0=14;
+						item1=13;
+						class CustomData
+						{
+							role=1;
+						};
+					};
+					class Item1
+					{
+						linkID=1;
+						item0=15;
+						item1=13;
+						class CustomData
+						{
+							role=2;
+							turretPath[]={0};
+						};
+					};
+				};
+			};
+			id=12;
+			atlOffset=-1.9073486e-006;
+		};
+		class Item1
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={3969.9861,18.304829,3164.5803};
+				angles[]={6.2531939,0,0.0050033992};
+			};
+			side="East";
+			flags=6;
+			class Attributes
+			{
+			};
+			id=13;
+			type="CUP_O_Hilux_igla_TK_INS";
+			atlOffset=-1.9073486e-006;
+		};
+		class Item2
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={3487.7366,25.900444,3914.1631};
+			};
+			side="Empty";
+			flags=4;
+			class Attributes
+			{
+			};
+			id=26;
+			type="CUP_B_CH47F_USA";
+		};
+		class Item3
+		{
+			dataType="Marker";
+			position[]={4004.4871,25.298,3542.4031};
+			name="aa_0";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=36;
+			atlOffset=-0.00048065186;
+		};
+		class Item4
+		{
+			dataType="Marker";
+			position[]={4101.6675,25.682352,3595.4336};
+			name="aa_1";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=38;
+			atlOffset=-0.00048065186;
+		};
+		class Item5
+		{
+			dataType="Marker";
+			position[]={3418.8142,16.111824,4676.7861};
+			name="aa_2";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=39;
+			atlOffset=-0.00048065186;
+		};
+		class Item6
+		{
+			dataType="Marker";
+			position[]={3475.6104,26.875868,4958.688};
+			name="aa_3";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=40;
+			atlOffset=-0.00048065186;
+		};
+		class Item7
+		{
+			dataType="Marker";
+			position[]={3972.8337,31.677225,6050.459};
+			name="aa_4";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=41;
+			atlOffset=-0.00048065186;
+		};
+		class Item8
+		{
+			dataType="Marker";
+			position[]={2918.2095,29.666086,4944.9004};
+			name="aa_5";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=42;
+			atlOffset=-0.00048065186;
+		};
+		class Item9
+		{
+			dataType="Marker";
+			position[]={2735.3181,36.398136,5170.0986};
+			name="aa_6";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=43;
+			atlOffset=-0.00048065186;
+		};
+		class Item10
+		{
+			dataType="Marker";
+			position[]={2169.219,38.025177,4580.8706};
+			name="aa_7";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=44;
+			atlOffset=-0.00048065186;
+		};
+		class Item11
+		{
+			dataType="Marker";
+			position[]={1936.1875,38.838581,4701.6494};
+			name="aa_8";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=45;
+			atlOffset=-0.00048065186;
+		};
+		class Item12
+		{
+			dataType="Marker";
+			position[]={3666.0935,13.344589,4322.0918};
+			name="aa_9";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=46;
+			atlOffset=-0.00048065186;
+		};
+		class Item13
+		{
+			dataType="Marker";
+			position[]={2735.3083,41.383865,3879.8906};
+			name="aa_10";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=47;
+			atlOffset=-0.00048065186;
+		};
+		class Item14
+		{
+			dataType="Marker";
+			position[]={3106.719,13.31153,3729.374};
+			name="aa_11";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=48;
+			atlOffset=-0.00048065186;
+		};
+		class Item15
+		{
+			dataType="Marker";
+			position[]={2747.6577,14.826914,3194.197};
+			name="aa_12";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=49;
+			atlOffset=-0.00048065186;
+		};
+		class Item16
+		{
+			dataType="Marker";
+			position[]={3140.0083,12.248977,2763.708};
+			name="aa_13";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=50;
+			atlOffset=-0.00048065186;
+		};
+		class Item17
+		{
+			dataType="Marker";
+			position[]={3941.8672,11.010729,2765.8137};
+			name="aa_14";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=51;
+			atlOffset=-0.00048065186;
+		};
+		class Item18
+		{
+			dataType="Marker";
+			position[]={3755.9749,11.579486,2782.8699};
+			name="aa_15";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=52;
+			atlOffset=-0.00048065186;
+		};
+		class Item19
+		{
+			dataType="Marker";
+			position[]={3502.2041,12.311561,2988.0947};
+			name="aa_16";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=53;
+			atlOffset=-0.00048065186;
+		};
+		class Item20
+		{
+			dataType="Marker";
+			position[]={4511.168,14.306817,3305.6096};
+			name="aa_17";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=54;
+			atlOffset=-0.00048065186;
+		};
+		class Item21
+		{
+			dataType="Marker";
+			position[]={4454.5591,18.306292,3825.5127};
+			name="aa_18";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=55;
+			atlOffset=-0.00048065186;
+		};
+		class Item22
+		{
+			dataType="Marker";
+			position[]={3685.2988,17.031166,4037.4043};
+			name="aa_19";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=56;
+			atlOffset=-0.00048065186;
+		};
+		class Item23
+		{
+			dataType="Marker";
+			position[]={3437.4597,22.306875,3531.5981};
+			name="aa_20";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=57;
+			atlOffset=-0.00048065186;
+		};
+		class Item24
+		{
+			dataType="Marker";
+			position[]={3524.1077,22.388712,4247.9854};
+			name="aa_21";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=58;
+			atlOffset=-0.00048065186;
+		};
+		class Item25
+		{
+			dataType="Marker";
+			position[]={3156.947,15.934458,4266.0923};
+			name="aa_22";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=59;
+			atlOffset=-0.00048065186;
+		};
+		class Item26
+		{
+			dataType="Marker";
+			position[]={3562.1567,20.555542,1972.5544};
+			name="aa_23";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=60;
+			atlOffset=-0.00048065186;
+		};
+		class Item27
+		{
+			dataType="Marker";
+			position[]={3485.864,20.311682,1918.3679};
+			name="aa_24";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=61;
+			atlOffset=-0.00048065186;
+		};
+		class Item28
+		{
+			dataType="Marker";
+			position[]={3138.8557,3.2858002,1828.1954};
+			name="aa_25";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=62;
+			atlOffset=-0.00048065186;
+		};
+		class Item29
+		{
+			dataType="Marker";
+			position[]={3916.2107,10.421024,2247.6057};
+			name="aa_26";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=63;
+			atlOffset=-0.00048065186;
+		};
+		class Item30
+		{
+			dataType="Marker";
+			position[]={4673.7202,18.885218,4111.5249};
+			name="aa_27";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=64;
+			atlOffset=-0.00048065186;
+		};
+		class Item31
+		{
+			dataType="Marker";
+			position[]={3899.6045,14.996213,4157.7593};
+			name="aa_28";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=65;
+			atlOffset=-0.00048065186;
+		};
+		class Item32
+		{
+			dataType="Marker";
+			position[]={3821.4746,15.944358,4486.4609};
+			name="aa_29";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=66;
+			atlOffset=-0.00048065186;
+		};
+		class Item33
+		{
+			dataType="Marker";
+			position[]={4215.606,17,4138.7549};
+			name="cache_0";
+			type="mil_destroy";
+			colorName="ColorYellow";
+			id=68;
+		};
+		class Item34
+		{
+			dataType="Marker";
+			position[]={4645.1499,18.965101,3684.7678};
+			name="cache_1";
+			type="mil_destroy";
+			colorName="ColorYellow";
+			id=69;
+		};
+		class Item35
+		{
+			dataType="Marker";
+			position[]={3768.3909,14.500634,4313.3911};
+			name="cache_2";
+			type="mil_destroy";
+			colorName="ColorYellow";
+			id=70;
+		};
+		class Item36
+		{
+			dataType="Marker";
+			position[]={3825.1868,16.097719,4091.5129};
+			name="cache_3";
+			type="mil_destroy";
+			colorName="ColorYellow";
+			id=71;
+		};
+		class Item37
+		{
+			dataType="Marker";
+			position[]={2273.9453,110.89088,3877.5698};
+			name="aa_30";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=72;
+			atlOffset=-0.00048828125;
+		};
+		class Item38
+		{
+			dataType="Marker";
+			position[]={1310.2346,293.66797,3556.0022};
+			name="aa_31";
+			type="mil_destroy";
+			colorName="ColorRed";
+			id=73;
+			atlOffset=-0.00048828125;
+		};
+		class Item39
+		{
+			dataType="Marker";
+			position[]={4324.6001,16.945206,4189.3179};
+			name="cache_4";
+			type="mil_destroy";
+			colorName="ColorYellow";
+			id=74;
+		};
+		class Item40
+		{
+			dataType="Marker";
+			position[]={4262.6118,17,4178.3096};
+			name="cache_5";
+			type="mil_destroy";
+			colorName="ColorYellow";
+			id=75;
+		};
+		class Item41
+		{
+			dataType="Marker";
+			position[]={4847.833,37.664467,4599.8643};
+			name="respawn_guerrila_0";
+			type="Empty";
+			id=152;
+			atlOffset=3.8146973e-006;
+		};
+		class Item42
+		{
+			dataType="Object";
+			class PositionInfo
+			{
+				position[]={4856.7817,38.555737,4616.0625};
+				angles[]={0.057436496,4.2769699,6.270689};
+			};
+			side="Empty";
+			flags=4;
+			class Attributes
+			{
+			};
+			id=154;
+			type="CUP_C_SUV_TK";
+			atlOffset=-0.0085525513;
+		};
+		class Item43
+		{
+			dataType="Marker";
+			position[]={3950.0149,16.502001,4104.3672};
+			name="map_center";
+			markerType="ELLIPSE";
+			type="";
+			colorName="ColorEAST";
+			fillName="Border";
+			a=100;
+			b=100;
+			drawBorder=1;
+			id=157;
+			atlOffset=0.00047111511;
+		};
+		class Item44
+		{
+			dataType="Group";
+			side="Independent";
+			class Entities
+			{
+				items=8;
+				class Item0
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4861,37.35144,4627.0498};
+					};
+					side="Independent";
+					flags=7;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayer=1;
+					};
+					id=159;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male03POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=0.94999999;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item1
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4861,37.388939,4624.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=165;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male01POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=1.03;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item2
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4858,37.33144,4630.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=166;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male03POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=0.94999999;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item3
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4858,37.371441,4624.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=167;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male01POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=1.04;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item4
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4864,37.411438,4624.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=168;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male02POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=0.99000001;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item5
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4864,37.211437,4630.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=169;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male01POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=0.95999998;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item6
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4864,37.283939,4627.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=170;
+					type="I_L_Looter_Pistol_F";
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male03POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=1.04;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+				class Item7
+				{
+					dataType="Object";
+					class PositionInfo
+					{
+						position[]={4858,37.358944,4627.0498};
+					};
+					side="Independent";
+					flags=5;
+					class Attributes
+					{
+						description="CIA Agent";
+						isPlayable=1;
+					};
+					id=171;
+					type="I_L_Looter_Pistol_F";
+					atlOffset=3.8146973e-006;
+					class CustomAttributes
+					{
+						class Attribute0
+						{
+							property="speaker";
+							expression="_this setspeaker _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="STRING";
+									value="Male02POL";
+								};
+							};
+						};
+						class Attribute1
+						{
+							property="pitch";
+							expression="_this setpitch _value;";
+							class Value
+							{
+								class data
+								{
+									singleType="SCALAR";
+									value=0.94999999;
+								};
+							};
+						};
+						nAttributes=2;
+					};
+				};
+			};
+			class Attributes
+			{
+			};
+			id=158;
+		};
+	};
+};

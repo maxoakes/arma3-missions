@@ -1,0 +1,48 @@
+Language, English
+STR_ACTION_HEAL, Heal Yourself
+STR_ACTION_AMMO, Add Ammo for this Weapon 
+STR_ACTION_INTEL, Read Messages
+STR_ACTION_CONFIRM, Confirm Identity of %1
+STR_MARKER_EXTRACT, Extraction
+
+STR_HINT_AMMO_RESULT, Filled inventory with %1.
+STR_TASK_TENT_DESC, It is likely that the warload is in his HQ tent. Eliminate him and confirm your kill.
+STR_TASK_TENT_TITLE, Identify and Eliminate the Warlord
+STR_TASK_TENT_LOC, HQ Tent
+
+STR_TASK_TENT_UPDATE_DESC, The warlord is not in his tent.
+STR_TASK_TENT_UPDATE_TITLE, Kill the Warlord
+STR_TASK_TENT_UPDATE_LOC, Unknown
+
+STR_TASK_INTEL_DESC, The warload is not at his tent. Find intel that can help ascertain his whereabouts.
+STR_TASK_INTEL_TITLE, Find the warlord's location
+STR_TASK_INTEL_DESC, Computer
+
+STR_TASK_EXTRACT_DESC, The warlord has been confirmed dead. Get everyone into the extraction vehicle.
+STR_TASK_EXTRACT_TITLE, Get to the Extraction Vehicle
+STR_TASK_EXTRACT_LOC, Vehicle
+
+STR_TASK_SECURE_DESC, The extraction helicopter has been found by an enemy patrol. Kill all of the enemies at the extraction site.
+STR_TASK_SECURE_TITLE, Secure the Extraction Vehicle
+STR_TASK_SECURE_LOC, Extraction Area
+
+STR_DIARY_INITIAL_TITLE, Target: Dmitri Kozlov
+STR_DIARY_INITIAL_TEXT, "<img image='images\warlord.jpg' width='200' height='200'/><br></br><br></br>Dmitri Kozlov<br></br><br></br>Responsible for the recent genocide in the Chernarus region. Believed to have nearly 4000 soldiers under his command. Currently, he is still operating within Chernarus. We believe he is in his command tent.<br></br><br></br>Your mission is to track down Kozlov and eliminate him. Your team will also need to confirm his identity before or after he is killed.<br></br><br></br>There are likely several patrols in the region, both on foot and in vehicles. It will be best to avoid open and urban areas."
+
+STR_DIARY_ENEMIES_TITLE, Enemy Forces
+STR_DIARY_ENEMIES_TEXT, There are likely patrols in all cities. Satellite reconnaissance has shown dozens of patrols both on foot and in vehicles. Sticking to roads will be dangerous as you are likely to encounter armed vehicle patrols.
+
+STR_DIARY_TENT_TITLE, Headquarters
+STR_DIARY_TENT_TEXT, Kozlov was not in his HQ tent. We need to find out where he is currently. There are a few computers in the tent. We should be able to find out where is from here.
+
+STR_DIARY_MEETING_TITLE, Meeting
+STR_DIARY_MEETING_TEXT, We have found Kozlov's location. We will need to travel to his actual location to continue the mission. There will likely be a lot of resistance.
+
+STR_DIARY_EXTRACT_TITLE, Extract
+STR_DIARY_EXTRACT_TEXT, Kozlov has been eliminated. It is time to leave the region. We will need to get back to our extraction vehicle.
+
+STR_DIARY_SECURE_TITLE, Secure
+STR_DIARY_SECURE_TEXT, An enemy patrol has found our extraction helicopter. We need to remove any threats before we can leave the area.
+
+STR_DIARY_ENTRY_TITLE, Entry
+STR_DIARY_ENTRY_TEXT, We arrived on a helicopter that is marked in a hidden location. We will need to come back to it when we are done with the mission.

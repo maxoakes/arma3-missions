@@ -15,7 +15,7 @@ allowFunctionsLog = 1;
 
 respawn = BASE;
 respawnTemplates[] = {"MenuPosition", "MenuInventory"};
-respawnDelay = 20;
+respawnDelay = 5;
 respawnOnStart = 1;
 
 reviveMode = 1;
@@ -45,28 +45,28 @@ class Params
 		title = "Environment: Start time of mission";
 		values[] = {0, 3, 6, 9, 12, 15, 18, 21};
 		texts[] = {"00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00"};
-		default = 15;
+		default = 12;
 	};
 	class TimeScale
 	{
 		title = "Environment: Time Scale";
 		values[] = {1, 2, 3, 4, 5, 6, 8, 10, 12, 20, 60};
 		texts[] = {"Realtime", "2x", "3x", "4x", "5x", "6x", "8x", "10x", "12x", "20x", "60x"};
-		default = 4;
+		default = 8;
 	};
 	class OvercastPercent
 	{
 		title = "Environment: Overcast Amount";
 		values[] = {0, 10, 25, 50, 75, 90, 100};
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
-		default = 50;
+		default = 0;
 	};
 	class FogPercent
 	{
 		title = "Environment: Fog Amount";
 		values[] = {0, 10, 25, 50, 75, 90, 100};
 		texts[] = {"0%", "10%", "25%", "50%", "75%", "90%", "100%"};
-		default = 25;
+		default = 0;
 	};
 	class RainPercent
 	{
@@ -160,11 +160,24 @@ class Params
 		values[] = {1, 2, 3, 4};
 		default = 1;
 	};
+	class NumberResupplyCaches
+	{
+		title = "Objectives: Number of resupply caches available";
+		values[] = {0, 1, 2, 3, 4, 5, 6};
+		default = 2;
+	};
 	class Debug
 	{
 		title = "Debug Mode";
 		values[] = {1, 0};
 		texts[] = {"On", "Off"};
 		default = 0;
+	};
+	class DebugSpawnPatrols
+	{
+		title = "Spawn Patrols";
+		values[] = {1, 0};
+		texts[] = {"On", "Off"};
+		default = 1;
 	};
 };

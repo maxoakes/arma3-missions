@@ -20,18 +20,18 @@
 	Once the array of obtained, the entry that contains the tent should be 
 	moved be placed at the head of the array.
 
-		private _objects = [];
-		private _originObject = cursorObject;
-		{
-			private _classname = typeOf _x;
-			if (_classname == "#mark" or _classname == "" or _classname == "#animator) then { continue; };
-			private _posRel = _originObject worldToModel getPosATL _x; 
-			private _dir = getDir _x;
-			_objects pushBack [_classname, _posRel, _dir, getPosASL _x];
-		} forEach nearestObjects [_originObject, [], 30];
-		_objects;
+private _objects = [];
+private _originObject = cursorObject;
+{
+	private _c = typeOf _x;
+	if (_c == "#mark" or _c == "" or _c == "#animator") then { continue; };
+	private _posRel = _originObject worldToModel getPosATL _x; 
+	private _dir = getDir _x;
+	_objects pushBack [_c, _posRel, _dir, getPosASL _x];
+} forEach nearestObjects [_originObject, [], 30];
+_objects;
 */
-params ["_pos", "_placementArray", ["_idxPrimaryObject", 0], ["_angle", 0], ["_isATL", true], ["_verticalOffsetAboveLevel", 0], ["_isRootFlat", false]];
+params ["_pos", "_placementArray", ["_idxPrimaryObject", 0], ["_angle", 0], ["_isATL", true], ["_verticalOffsetAboveLevel", 0], ["_isRootFlat", false], ['_canDamage', false]];
 
 //create reference object
 private _rootObject = createVehicle [(_placementArray select _idxPrimaryObject) select 0, _pos, [], 0, "CAN_COLLIDE"];
@@ -62,7 +62,7 @@ for "_i" from 0 to count _placementArray-1 do
 	private _obj = createVehicle [_className, _pos, [], 0, "CAN_COLLIDE"];
 	_obj setDir (_dir + _angle);
 	if (_isRootFlat) then {	_obj setVectorUp [0, 0, 1];	};
-	_obj allowDamage false;
+	_obj allowDamage _canDamage;
 	private _correctPosASL = _rootObject modelToWorldWorld _relPos;
 	_obj setPosASL _correctPosASL;
 	

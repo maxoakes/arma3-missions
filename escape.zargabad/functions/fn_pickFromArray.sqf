@@ -16,11 +16,14 @@ params ["_array", "_num"];
 _temp = _array;
 _output = [];
 
-for "_i" from 0 to _num do
+if (_num > 0) then
 {
-	private _randInd = floor(random (count _array));
-	_output pushBackUnique (_temp select _randInd);
- 	_temp deleteAt _randInd;
+	for "_i" from 1 to _num do
+	{
+		private _randInd = floor(random (count _array));
+		_output pushBackUnique (_temp select _randInd);
+		_temp deleteAt _randInd;
+	};
 };
 
 //return

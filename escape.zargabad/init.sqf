@@ -12,8 +12,9 @@ CONFIRMED_KILL = false;
 
 private _aiSkillRange = [(("MaxEnemySkill" call BIS_fnc_getParamValue)/10)-0.3 max 0, (("MaxEnemySkill" call BIS_fnc_getParamValue)/10)+0.1 min 1.0];
 private _aiSkill = ("MaxEnemySkill" call BIS_fnc_getParamValue)/10;
-private _numAATargets = ("NumberAA" call BIS_fnc_getParamValue);
-private _numDemoTargets = ("NumberTargets" call BIS_fnc_getParamValue);
+private _numAATargets = "NumberAA" call BIS_fnc_getParamValue;
+private _numDemoTargets = "NumberTargets" call BIS_fnc_getParamValue;
+private _numResupplyCaches = "NumberResupplyCaches" call BIS_fnc_getParamValue;
 
 //easily configurable variables
 private _parkedVehiclesHighPool = ["C_Hatchback_01_F","C_Hatchback_01_sport_F","C_SUV_01_F"];
@@ -29,6 +30,18 @@ private _airPatrolRussiaPool = ["CUP_O_Mi8_RU", "CUP_O_Mi8_RU", "CUP_O_Mi8AMT_RU
 private _airPatrolDesertPool = ["CUP_O_UH1H_gunship_TKA","CUP_O_UH1H_slick_TKA","CUP_O_Mi24_D_Dynamic_TK"];
 private _patrolUnitRussiaPool = ["CUP_O_INS_Soldier_AA","CUP_O_INS_Soldier_Ammo","CUP_O_INS_Soldier_AT","CUP_O_INS_Soldier_AR","CUP_O_INS_Soldier_Engineer","CUP_O_INS_Soldier_MG","CUP_O_INS_Soldier","CUP_O_INS_Soldier_AK74","CUP_O_INS_Soldier_LAT","CUP_O_INS_Sniper","CUP_O_INS_Villager3","CUP_O_INS_Woodlander3","CUP_O_INS_Worker2"];
 private _patrolUnitDesertPool = ["CUP_O_TK_INS_Soldier_AA","CUP_O_TK_INS_Soldier_AR","CUP_O_TK_INS_Guerilla_Medic","CUP_O_TK_INS_Soldier_MG","CUP_O_TK_INS_Bomber","CUP_O_TK_INS_Mechanic","CUP_O_TK_INS_Soldier_GL","CUP_O_TK_INS_Soldier","CUP_O_TK_INS_Soldier_FNFAL","CUP_O_TK_INS_Soldier_Enfield","CUP_O_TK_INS_Soldier_AAT","CUP_O_TK_INS_Soldier_AT","CUP_O_TK_INS_Sniper","CUP_O_TK_INS_Soldier_TL","CUP_O_TK_Commander","CUP_O_TK_Soldier,AT","CUP_O_TK_Soldier_AR","CUP_O_TK_SpecOps_MG","CUP_O_TK_SpecOps","CUP_O_TK_SpecOps_TL"];
+private _parkedVehicleCargoPool = ["",
+	"CUP_arifle_AK47","CUP_30Rnd_762x39_AK47_M",
+	"CUP_arifle_AKS_Gold","CUP_30Rnd_762x39_AK47_M",
+	"CUP_arifle_AKM","CUP_30Rnd_545x39_AK_M",
+	"CUP_arifle_RPK74","CUP_75Rnd_TE4_LRT4_Green_Tracer_545x39_RPK_M",
+	"CUP_srifle_ksvk","CUP_5Rnd_127x108_KSVK_M"];
+private _parkedVehicleCargoWeights = [.75,
+	0.5,1.0,
+	0.1,1.0,
+	0.5,1.0,
+	0.3,0.9,
+	0.3,0.8];
 private _aaDesertPool = [];
 
 if (isServer) then
@@ -54,16 +67,17 @@ if (isServer) then
 
 	private _selectedAA = [_possibleAAMarkers, _numAATargets] call SCO_fnc_pickFromArray;
 	private _selectedDemo = [_possibleDemoMarkers, _numDemoTargets] call SCO_fnc_pickFromArray;
-	[format ["AA:%1, Demo:%2", _selectedAA, _selectedDemo]] call SCO_fnc_printDebug;
+	private _selectedResupply = [_resupplyMarkers, _numResupplyCaches] call SCO_fnc_pickFromArray;
+	
+	[format ["AA:%1, Demo:%2, Resupply:%3", _selectedAA, _selectedDemo, _selectedResupply]] call SCO_fnc_printDebug;
 
 	private _posSpawn = getMarkerPos "respawn_guerrila_0";
 	{
 		_x setPos _posSpawn; 
 	} forEach units independent;
 
-	_timestampTuples pushBack [diag_tickTime, "Done setting up markers"];
+	_timestampTuples pushBack [diag_tickTime, "Done setting up objective locations and markers"];
 
-	// BEGIN spawn parked vehicles
 	// get the expected mission area and radius
 	private _mapCenterMarker = "map_center";
 	private _missionRadius = 700;
@@ -81,48 +95,115 @@ if (isServer) then
 	private _poiTypes = ["Name", "NameVillage", "NameCity", "NameCityCapital", "NameLocal", "Airport", 
 		"Hill", "RockArea", "VegetationBroadleaf", "VegetationFir", "VegetationPalm", "VegetationVineyard", "ViewPoint"];
 	private _allMissionPOI = nearestLocations [getMarkerPos _mapCenterMarker, _poiTypes, _missionRadius * 1.2] - nearestLocations [_posSpawn, _poiTypes, 500];
-	private _parkedVehicleSegments = [];
+
+	// for each poi area, find ALL road segments
+	private _validRoads = [];
 	{
-		// create marker for poi
 		private _size = size _x vectorMultiply 2;
-		[format ["poi-%1", _forEachIndex], locationPosition _x, text _x, _size, "ColorOpfor", "ELLIPSE", "Border"] call SCO_fnc_createMarker;
-		// get all roads
-		private _roads = (locationPosition _x) nearRoads (_size select 0);
-		private _area = 3.14 * (_size select 0)^2;
-		private _numParkingPositions = ceil random [count _roads/30, count _roads/25, ceil (_area/24000)];
-		private _chosen = [_roads, _numParkingPositions] call SCO_fnc_pickFromArray;
-		_parkedVehicleSegments append _chosen;
-		[format ["POI %1 with %2 roads, A=%3 sq m, Score=%4.", text _x, count _roads, _area, _numParkingPositions]] call SCO_fnc_printDebug;
+		private _poiid = _forEachIndex;
+		[format ["poi-%1", _poiid], locationPosition _x, text _x, _size, "ColorOpfor", "ELLIPSE", "Border"] call SCO_fnc_createMarker;
+		private _allRoads = (locationPosition _x) nearRoads (_size select 0);
+		{
+			if (toLower typeName _x == "number") then { continue };
+			getRoadInfo _x params ["_mapType", "_width", "_isPedestrian", "_texture", "_textureEnd", "_material", "_begPos", "_endPos", "_isBridge", "_aiOffset"];
+			private _roadPos = (_begPos vectorAdd _endPos) vectorMultiply 0.5;
+			private _roadDir = _begPos getDir _endPos;
+			private _ind = _validRoads pushBackUnique [_roadPos, _roadDir];
+			// valid if it is a road not already in array, is a main road or dirt road, and is close to a building
+			private _isValid = (_ind > -1) and (toLower _mapType == "road" or toLower _mapType == "track") and (_width > 0) and 
+				(count nearestTerrainObjects [_roadPos, ["House", "Building", "Church", "Hospital", "Chapel", "Fortress", "Fuelstation", "Lighthouse"], 25] > 0);
+			if (_isValid) then
+			{
+				if (_debugMode) then
+				{
+					[format ["road-%1-%2", _poiid, _forEachIndex], _roadPos, "", [0.2, 0.2], "ColorCIV", "ICON", "mil_box", _roadDir] call SCO_fnc_createMarker;
+				};
+			};
+		} forEach _allRoads;
 	} forEach _allMissionPOI;
 
-	_parkedVehicleSegments = flatten _parkedVehicleSegments;
-	_timestampTuples pushBack [diag_tickTime, "Done getting mission area"];
-
-	// perform the vehicle spawning
+	// perform the spawn
+	private _targetParkedAmount = 70;
+	private _parkedCarChance = _targetParkedAmount / (count _validRoads);
+	private _actualParkedAmount = 0;
 	{
-		getRoadInfo _x params ["_mapType", "_width", "_isPedestrian", "_texture", "_textureEnd", "_material", "_begPos", "_endPos", "_isBridge"];
-		private _thisRoadSegmentPos = (_begPos vectorAdd _endPos) vectorMultiply 0.5;
-		private _thisRoadSegmentDir = _begPos getDir _endPos;
+		if ((random 1) < _parkedCarChance) then
+		{
+			_x params ["_roadPos", "_roadDir"];
+			private _parkedVehicles = [_roadPos, ceil random [0, 0.5, 2], _parkedVehiclesDesertPool, 8] call SCO_fnc_spawnParkedVehicles;
+			{
+				clearItemCargoGlobal _x;
+				clearBackpackCargoGlobal _x;
+				clearWeaponCargoGlobal _x;
+				clearMagazineCargoGlobal _x;
+				[_x, _parkedVehicleCargoPool, _parkedVehicleCargoWeights, 4] call SCO_fnc_addToCargoRandom;
+			} forEach _parkedVehicles;
+			if (_debugMode) then
+			{
+				[format ["parked-%1", _forEachIndex], _roadPos, "", [0.5, 0.5], "ColorGUER", "ICON", "mil_box", _roadDir] call SCO_fnc_createMarker;
+			};
+			_actualParkedAmount = _actualParkedAmount + 1;
+		};
+	} forEach _validRoads;
+	[format ["Parked Vehicle Chance: %1 from %2 possible segs. Target: %3, Actual: %4", _parkedCarChance, count _validRoads, _targetParkedAmount, _actualParkedAmount]] call SCO_fnc_printDebug;
+	_timestampTuples pushBack [diag_tickTime, "Done spawning parked vehicles"];
+
+	private _demoScene = [
+		["Fort_Crate_wood",[0,0,-0.486649],0],
+		["Fort_Crate_wood",[1.05444,0.0229492,-0.486649],268.085],
+		["Fort_Crate_wood",[0.477783,0.00634766,0.496206],268.085],
+		["Fort_Crate_wood",[-1.12671,-0.00756836,-0.486649],174.306],
+		["Fort_Crate_wood",[-0.634766,-0.000976563,0.496206],87.7676],
+		["AmmoCrates_NoInteractive_Large",[0.710449,-1.02686,-0.486649],0],
+		["Land_Missle_Trolley_02_F",[-2.14063,-0.312988,-0.508165],6.22563]
+	];
+
+	//setup foot patrols for all demo targets
+	{
+		private _demoPos = getMarkerPos _x;
+		private _sceneObjects = [_demoPos, _demoScene, 0, random 360, true, 0, false, true] call SCO_fnc_placeObjectsFromArray;
+		{
+			_x addEventHandler [ "HandleDamage", {
+				_eventObject = _this select 0;
+				_eventOrigin = _this select 4;
+
+				if (_eventOrigin isKindOf "TimeBombCore" or _eventOrigin isKindOf "PipeBombBase") then
+				{
+					[format ["Demo site event: %1", _this]] call SCO_fnc_printDebug;
+				}
+			}];
+		} forEach _sceneObjects;
+		[_demoPos, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 200] call SCO_fnc_spawnFootPatrolGroup;
 		if (_debugMode) then
 		{
 			[
-				format ["parked-vehicle-centeroid-%1", _forEachIndex], //var name
-				_thisRoadSegmentPos, //position
-				"", //display name
+				format ["demo-site-%1", _forEachIndex], //var name
+				_demoPos, //position
+				"Demo", //display name
 				[0.5, 0.5], //size
-				"ColorGreen", //color string
+				"ColorRed", //color string
 				"ICON", //type
-				"mil_triangle", //style
-				_thisRoadSegmentDir
+				"mil_destroy" //style
 			] call SCO_fnc_createMarker;
-			[_thisRoadSegmentPos, ceil random 3, _parkedVehiclesDesertPool, 5] call SCO_fnc_spawnParkedVehicles;
 		};
-	} forEach _parkedVehicleSegments;
-	
-	_timestampTuples pushBack [diag_tickTime, "Done spawning parked vehicles"];
+	} forEach _selectedDemo;
+	{
+		[getMarkerPos _x, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 300] call SCO_fnc_spawnFootPatrolGroup;
+		if (_debugMode) then
+		{
+			[
+				format ["aa-site-%1", _forEachIndex], //var name
+				getMarkerPos _x, //position
+				"AA", //display name
+				[0.5, 0.5], //size
+				"ColorYellow", //color string
+				"ICON", //type
+				"mil_destroy" //style
+			] call SCO_fnc_createMarker;
+		};
+	} forEach _selectedAA;
 
 	// spawn resupply caches
-	private _numResupplyCaches = "NumberResupplyCaches" call BIS_fnc_getParamValue;
 	if (_numResupplyCaches > 0) then
 	{
 		private _resupplyUS = [
@@ -173,7 +254,6 @@ if (isServer) then
 		];
 
 		private _resupplyScenes = [_resupplyUS, _resupplyTakistan, _resupplyUN];
-		private _selectedResupply = [_resupplyMarkers, _numResupplyCaches] call SCO_fnc_pickFromArray;
 		{
 			private _selectedResupplyScene = _resupplyScenes # floor random count _resupplyScenes;
 			private _selectedPos = getMarkerPos _x;
@@ -191,39 +271,7 @@ if (isServer) then
 		} forEach _selectedResupply;
 	};
 
-	_timestampTuples pushBack [diag_tickTime, "Done spawning resupply caches"];
-
-	//setup foot patrols for all demo targets
-	{
-		[getMarkerPos _x, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 200] call SCO_fnc_spawnFootPatrolGroup;
-		if (_debugMode) then
-		{
-			[
-				format ["demo-site-%1", _forEachIndex], //var name
-				getMarkerPos _x, //position
-				"Demo", //display name
-				[0.5, 0.5], //size
-				"ColorRed", //color string
-				"ICON", //type
-				"mil_destroy" //style
-			] call SCO_fnc_createMarker;
-		};
-	} forEach _selectedDemo;
-	{
-		[getMarkerPos _x, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 300] call SCO_fnc_spawnFootPatrolGroup;
-		if (_debugMode) then
-		{
-			[
-				format ["aa-site-%1", _forEachIndex], //var name
-				getMarkerPos _x, //position
-				"AA", //display name
-				[0.5, 0.5], //size
-				"ColorYellow", //color string
-				"ICON", //type
-				"mil_destroy" //style
-			] call SCO_fnc_createMarker;
-		};
-	} forEach _selectedAA;
+	_timestampTuples pushBack [diag_tickTime, "Done spawning AA, demo sites and caches"];
 
 	private _enemyMode = "DebugSpawnPatrols" call BIS_fnc_getParamValue;
 	if (_enemyMode == 1) then

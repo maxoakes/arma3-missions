@@ -6,6 +6,7 @@ class CfgFunctions
 		class NormalFunctions
 		{
 			file = "functions";
+			class addToCargoRandom {};
 			class addToUnitInventory {};
 			class createMarker {};
 			class placeObjectsFromArray {};
@@ -18,8 +19,6 @@ class CfgFunctions
 			class spawnHitSquad {};
 			class spawnParkedVehicles {};
 			class spawnRadialUnits {};
-
-			//custom
 			class printDebug {};
 		};
 		class SpawnFunctions

@@ -8,18 +8,18 @@ class EditorData
 	toggles=1;
 	class ItemIDProvider
 	{
-		nextID=275;
+		nextID=280;
 	};
 	class MarkerIDProvider
 	{
-		nextID=6;
+		nextID=8;
 	};
 	class Camera
 	{
-		pos[]={4875.2422,50.091457,4626.1958};
-		dir[]={-0.73895216,-0.44837487,-0.50290143};
-		up[]={-0.37067652,0.89384562,-0.25226769};
-		aside[]={-0.56262672,0,0.82671118};
+		pos[]={4867.4282,47.762394,4611.1357};
+		dir[]={-0.72811282,-0.67686111,0.10821656};
+		up[]={-0.66950691,0.73611069,0.099506192};
+		aside[]={0.14701124,0,0.98913479};
 	};
 };
 binarizationWanted=0;
@@ -542,17 +542,36 @@ class Mission
 			dataType="Object";
 			class PositionInfo
 			{
-				position[]={4860.0854,38.547443,4611.0176};
-				angles[]={6.2581916,2.334621,0.0050033992};
+				position[]={4860.0854,38.547047,4611.0176};
+				angles[]={6.2581921,2.3346224,0.0050090947};
 			};
 			side="Empty";
 			flags=4;
 			class Attributes
 			{
+				health=0.97482562;
+				fuel=0.88491809;
 			};
 			id=154;
 			type="CUP_C_SUV_TK";
-			atlOffset=0.0053977966;
+			atlOffset=0.0050010681;
+			class CustomAttributes
+			{
+				class Attribute0
+				{
+					property="ammoBox";
+					expression="[_this,_value] call bis_fnc_initAmmoBox;";
+					class Value
+					{
+						class data
+						{
+							singleType="STRING";
+							value="[[[[""CUP_hgun_M9"",""CUP_arifle_M4A1""],[3,1]],[[""SmokeShell"",""SmokeShellOrange"",""Chemlight_red"",""CUP_15Rnd_9x19_M9"",""CUP_30Rnd_556x45_Stanag_Mk16_black""],[2,2,2,10,6]],[[""FirstAidKit"",""Medikit"",""ToolKit"",""V_Press_F"",""H_Construction_basic_yellow_F"",""H_PASGT_basic_blue_F"",""H_PASGT_basic_black_F"",""H_Cap_Black_IDAP_F"",""CUP_H_C_MAGA_01""],[10,1,1,3,2,2,2,1,1]],[[""CUP_B_MedicPack_ACU""],[2]]],false]";
+						};
+					};
+				};
+				nAttributes=1;
+			};
 		};
 		class Item41
 		{
@@ -563,8 +582,8 @@ class Mission
 			type="";
 			colorName="ColorEAST";
 			fillName="Border";
-			a=100;
-			b=100;
+			a=700;
+			b=700;
 			drawBorder=1;
 			id=157;
 			atlOffset=0.00047111511;
@@ -575,7 +594,7 @@ class Mission
 			side="Independent";
 			class Entities
 			{
-				items=8;
+				items=4;
 				class Item0
 				{
 					dataType="Object";
@@ -676,53 +695,6 @@ class Mission
 					dataType="Object";
 					class PositionInfo
 					{
-						position[]={4864.5283,37.428562,4621.7666};
-					};
-					side="Independent";
-					flags=5;
-					class Attributes
-					{
-						description="CIA Agent";
-						isPlayable=1;
-					};
-					id=166;
-					type="I_L_Looter_Pistol_F";
-					class CustomAttributes
-					{
-						class Attribute0
-						{
-							property="speaker";
-							expression="_this setspeaker _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="Male03POL";
-								};
-							};
-						};
-						class Attribute1
-						{
-							property="pitch";
-							expression="_this setpitch _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="SCALAR";
-									value=0.94999999;
-								};
-							};
-						};
-						nAttributes=2;
-					};
-				};
-				class Item3
-				{
-					dataType="Object";
-					class PositionInfo
-					{
 						position[]={4864.5283,37.475346,4615.7666};
 					};
 					side="Independent";
@@ -766,150 +738,7 @@ class Mission
 						nAttributes=2;
 					};
 				};
-				class Item4
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={4870.5283,37.455639,4615.7666};
-					};
-					side="Independent";
-					flags=5;
-					class Attributes
-					{
-						description="CIA Agent";
-						isPlayable=1;
-					};
-					id=168;
-					type="I_L_Looter_Pistol_F";
-					atlOffset=3.8146973e-006;
-					class CustomAttributes
-					{
-						class Attribute0
-						{
-							property="speaker";
-							expression="_this setspeaker _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="Male02POL";
-								};
-							};
-						};
-						class Attribute1
-						{
-							property="pitch";
-							expression="_this setpitch _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="SCALAR";
-									value=0.99000001;
-								};
-							};
-						};
-						nAttributes=2;
-					};
-				};
-				class Item5
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={4870.5283,37.513798,4621.7666};
-					};
-					side="Independent";
-					flags=5;
-					class Attributes
-					{
-						description="CIA Agent";
-						isPlayable=1;
-					};
-					id=169;
-					type="I_L_Looter_Pistol_F";
-					class CustomAttributes
-					{
-						class Attribute0
-						{
-							property="speaker";
-							expression="_this setspeaker _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="Male01POL";
-								};
-							};
-						};
-						class Attribute1
-						{
-							property="pitch";
-							expression="_this setpitch _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="SCALAR";
-									value=0.95999998;
-								};
-							};
-						};
-						nAttributes=2;
-					};
-				};
-				class Item6
-				{
-					dataType="Object";
-					class PositionInfo
-					{
-						position[]={4870.5283,37.488316,4618.7666};
-					};
-					side="Independent";
-					flags=5;
-					class Attributes
-					{
-						description="CIA Agent";
-						isPlayable=1;
-					};
-					id=170;
-					type="I_L_Looter_Pistol_F";
-					atlOffset=-3.8146973e-006;
-					class CustomAttributes
-					{
-						class Attribute0
-						{
-							property="speaker";
-							expression="_this setspeaker _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="STRING";
-									value="Male03POL";
-								};
-							};
-						};
-						class Attribute1
-						{
-							property="pitch";
-							expression="_this setpitch _value;";
-							class Value
-							{
-								class data
-								{
-									singleType="SCALAR";
-									value=1.04;
-								};
-							};
-						};
-						nAttributes=2;
-					};
-				};
-				class Item7
+				class Item3
 				{
 					dataType="Object";
 					class PositionInfo

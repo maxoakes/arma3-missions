@@ -4,7 +4,7 @@ params ["_patrolCenter", "_patrolRadius", "_blacklistedPos", "_blacklistedRadius
 private _spawnedGroups = [];
 for "_i" from 1 to _maxVehicles do
 {
-	private _spawnPos = [[[_patrolCenter, _patrolRadius]], [[_blacklistedPos, _blacklistedRadius]]] call BIS_fnc_randomPos;
+	private _spawnPos = [[[getMarkerPos _patrolCenter, _patrolRadius]], [[_blacklistedPos, _blacklistedRadius]]] call BIS_fnc_randomPos;
 
 	//spawn the vehicle
 	private _result = [_spawnPos, 0, selectRandom _patrolVehiclePool, _side] call BIS_fnc_spawnVehicle;
@@ -13,7 +13,7 @@ for "_i" from 1 to _maxVehicles do
 	_group setGroupIdGlobal [format ["Air Vehicle Patrol %1", {side _x == _side} count allGroups]];
 
 	//create patrol destinations
-	[_group, _patrolCenter, _patrolRadius] call BIS_fnc_taskPatrol;
+	[_group, getMarkerPos _patrolCenter, _patrolRadius] call BIS_fnc_taskPatrol;
 
 	//unlimited fuel
 	_vehicle addEventHandler ["Fuel", {

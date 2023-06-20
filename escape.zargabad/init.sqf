@@ -321,15 +321,18 @@ if (isServer) then
 			private _selectedPos = getMarkerPos _x;
 			private _resupplyDir = getDir (nearestBuilding _selectedPos) + 90; //align it with a nearby building
 			private _objects = [_selectedPos, _selectedResupplyScene, 0, _resupplyDir, true, 1, true] call SCO_fnc_placeObjectsFromArray;
-			[
-				format ["resupply-site-%1", _forEachIndex], //var name
-				_selectedPos, //position
-				"Resupply", //display name
-				[1, 1], //size
-				"ColorBlue", //color string
-				"ICON", //type
-				"mil_flag" //style
-			] call SCO_fnc_createMarker;
+			if (_debugMode) then
+			{
+				[
+					format ["resupply-site-%1", _forEachIndex], //var name
+					_selectedPos, //position
+					"Resupply", //display name
+					[1, 1], //size
+					"ColorBlue", //color string
+					"ICON", //type
+					"mil_flag" //style
+				] call SCO_fnc_createMarker;
+			};
 		} forEach _selectedResupply;
 	};
 
@@ -348,7 +351,7 @@ if (isServer) then
 		[independent, _allMissionPOI, east, _patrolUnitDesertPool, _aiSkillRange, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
 		
 		// setup air patrols
-		[_mapCenterMarker, _missionRadius*1.25, _posSpawn, 1000, _airPatrolDesertPool, "NumberAirPatrols" call BIS_fnc_getParamValue, east] spawn SCO_fnc_manageAirPatrols;
+		[_mapCenterMarker, _missionRadius*1.25, _posSpawn, 500, _airPatrolDesertPool, "NumberAirPatrols" call BIS_fnc_getParamValue, east] spawn SCO_fnc_manageAirPatrols;
 
 		// setup vehicle patrols that target players
 		private _numNearbyVehicles = "NearbyVehiclePatrol" call BIS_fnc_getParamValue;

@@ -61,10 +61,11 @@ if (count _cachePairs > 0) then
 		_cacheTasks pushBackUnique _taskName;
 
 		// objective completion check
-		[_cacheListener, _taskName] spawn
+		[_cacheListener, _taskName, _cacheMarker] spawn
 		{
-			_this params ["_eventListeners", "_task"];
+			_this params ["_eventListeners", "_task", "_marker"];
 			waitUntil {{!(scriptDone _x)} count _eventListeners == 0};
+			[format ["respawn_guerrila_%1", _task], getMarkerPos _marker, "Demo Site", [1,1], "ColorBlue", "ICON", "respawn_inf"] call SCO_fnc_createMarker;
 			[_task, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		};
 	} forEach _cachePairs;
@@ -96,10 +97,11 @@ if (count _aaObjects > 0) then
 		_aaTasks pushBackUnique _taskName;
 
 		// objective completion check
-		[_x, _taskName] spawn
+		[_x, _taskName, getPos _x] spawn
 		{
-			_this params ["_aa", "_task"];
+			_this params ["_aa", "_task", "_pos"];
 			waitUntil {(damage _aa) > 0.9};
+			[format ["respawn_guerrila_%1", _task], _pos, "AA Site", [1,1], "ColorBlue", "ICON", "respawn_inf"] call SCO_fnc_createMarker;
 			[_task, "SUCCEEDED"] call BIS_fnc_taskSetState;
 		};
 	} forEach _aaObjects;
@@ -109,6 +111,23 @@ if (count _aaObjects > 0) then
 //wait until all AA and caches are dead to continue
 waitUntil { ({!(_x call BIS_fnc_taskCompleted)} count _aaTasks) == 0 and ({!(_x call BIS_fnc_taskCompleted)} count _cacheTasks) == 0};
 ["taskResupply","CANCELED", false] call BIS_fnc_taskSetState;
+
+//create next objective to leave the map
+[
+	_playerSide, //side
+	"taskWin", //id 
+	[ //desc
+		"$STR_TASK_WIN_DESC", 
+		"$STR_TASK_WIN_TITLE", 
+		"$STR_TASK_WIN_LOC"
+	], 
+	_extractionMarker, //dest
+	true, //state
+	99, //priority
+	false, //show notification
+	"default", //type
+	true //visible in 3d
+] call BIS_fnc_taskCreate;
 
 //create next objective to leave the map
 [
@@ -127,28 +146,11 @@ waitUntil { ({!(_x call BIS_fnc_taskCompleted)} count _aaTasks) == 0 and ({!(_x 
 	true //visible in 3d
 ] call BIS_fnc_taskCreate;
 
-//create next objective to leave the map
-[
-	_playerSide, //side
-	"taskWin", //id 
-	[ //desc
-		"$STR_TASK_WIN_DESC", 
-		"$STR_TASK_WIN_TITLE", 
-		"$STR_TASK_WIN_LOC"
-	], 
-	_extractionMarker, //dest
-	true, //state
-	99, //priority
-	true, //show notification
-	"default", //type
-	true //visible in 3d
-] call BIS_fnc_taskCreate;
-
 //add diary entry for all players
 {player createDiaryRecord ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
 // _extractionMarker setMarkerAlpha 1;
 
-waitUntil {({(getMarkerPos _extractionMarker distance2D _x) < 1000 and alive _x} count units _playerSide == count units _playerSide) or (({canMove _x} count _escapeVehicles) == 0)};
+waitUntil {({(getMarkerPos _extractionMarker distance2D _x) < 1000 and alive _x} count allPlayers == count allPlayers) or (({canMove _x} count _escapeVehicles) == 0)};
 
 if (({canMove _x} count _escapeVehicles) == 0) then
 {

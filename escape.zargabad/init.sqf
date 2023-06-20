@@ -23,13 +23,14 @@ private _parkedVehiclesDesertPool = ["CUP_C_S1203_CIV","CUP_C_S1203_Ambulance_CI
 private _parkedVehiclesEuropePool = ["CUP_C_Skoda_CR_CIV","CUP_C_Skoda_Blue_CIV","CUP_C_Skoda_Green_CIV","CUP_C_Skoda_Red_CIV","CUP_C_Skoda_White_CIV","CUP_C_Datsun_Covered","CUP_C_Datsun_Plain","CUP_C_Datsun_Tubeframe","CUP_C_Volha_CR_CIV","CUP_C_Lada_CIV","CUP_LADA_LM_CIV","CUP_C_Lada_Red_CIV","CUP_C_Lada_White_CIV","CUP_C_SUV_CIV","CUP_C_Golf4_red_Civ","CUP_C_Golf4_CR_Civ","CUP_C_Golf4_Sport_CR_Civ"];
 private _convoyVehicle2035Pool = ["O_MRAP_02_hmg_F","O_LSV_02_armed_F","O_LSV_02_AT_F","O_G_Offroad_01_armed_F"];
 private _convoyVehicleRussiaPool = ["CUP_O_UAZ_Open_RU","CUP_O_UAZ_MG_CSAT","CUP_O_UAZ_AGS30_CSAT","CUP_O_Hilux_M2_OPF_G_F","CUP_O_Hilux_AGS30_OPF_G_F","CUP_O_Hilux_unarmed_OPF_G_F"];
-private _convoyVehicleDesertPool = ["CUP_O_Hilux_DSHKM_TK_INS","CUP_O_Hilux_ilga_TK_INS","CUP_O_Hilux_M2_TK_INS","CUP_O_Hilux_metis_TK_INS","CUP_O_LR_MG_TKM","CUP_O_LR_SPG9_TKM","CUP_O_Hilux_zu23_TK_INS","CUP_O_BTR40_MG_TKM","CUP_I_Datsun_PK_TK","CUP_I_Datsun_PK_TK_Random"];
+private _convoyVehicleDesertPool = ["CUP_O_Hilux_DSHKM_TK_INS","CUP_O_Hilux_M2_TK_INS","CUP_O_Hilux_metis_TK_INS","CUP_O_LR_MG_TKM","CUP_O_LR_SPG9_TKM","CUP_O_BTR40_MG_TKM","CUP_I_Datsun_PK_TK","CUP_I_Datsun_PK_TK_Random"];
 private _convoyTankRussiaPool = ["CUP_O_T72_RU", "CUP_O_T90_RU", "CUP_O_BRDM2_RUS", "CUP_O_BMP2_RU", "CUP_O_GAZ_Vodnik_PK_RU"];
 private _convoyTankDesertPool = ["CUP_I_BRDM2_TK_Gue","CUP_O_T55_TK","CUP_O_T72_TK"];
 private _airPatrolRussiaPool = ["CUP_O_Mi8_RU", "CUP_O_Mi8_RU", "CUP_O_Mi8AMT_RU", "CUP_O_Ka52_RU"];
 private _airPatrolDesertPool = ["CUP_O_UH1H_gunship_TKA","CUP_O_UH1H_slick_TKA","CUP_O_Mi24_D_Dynamic_TK"];
 private _patrolUnitRussiaPool = ["CUP_O_INS_Soldier_AA","CUP_O_INS_Soldier_Ammo","CUP_O_INS_Soldier_AT","CUP_O_INS_Soldier_AR","CUP_O_INS_Soldier_Engineer","CUP_O_INS_Soldier_MG","CUP_O_INS_Soldier","CUP_O_INS_Soldier_AK74","CUP_O_INS_Soldier_LAT","CUP_O_INS_Sniper","CUP_O_INS_Villager3","CUP_O_INS_Woodlander3","CUP_O_INS_Worker2"];
 private _patrolUnitDesertPool = ["CUP_O_TK_INS_Soldier_AA","CUP_O_TK_INS_Soldier_AR","CUP_O_TK_INS_Guerilla_Medic","CUP_O_TK_INS_Soldier_MG","CUP_O_TK_INS_Bomber","CUP_O_TK_INS_Mechanic","CUP_O_TK_INS_Soldier_GL","CUP_O_TK_INS_Soldier","CUP_O_TK_INS_Soldier_FNFAL","CUP_O_TK_INS_Soldier_Enfield","CUP_O_TK_INS_Soldier_AAT","CUP_O_TK_INS_Soldier_AT","CUP_O_TK_INS_Sniper","CUP_O_TK_INS_Soldier_TL","CUP_O_TK_Commander","CUP_O_TK_Soldier,AT","CUP_O_TK_Soldier_AR","CUP_O_TK_SpecOps_MG","CUP_O_TK_SpecOps","CUP_O_TK_SpecOps_TL"];
+private _aaDesertPool = ["CUP_O_Ural_ZU23_TKM","CUP_O_Ural_ZU23_TKA","CUP_I_Ural_ZU23_TK_Gue","CUP_O_LR_AA_TKM","CUP_O_LR_AA_TKA","CUP_O_ZSU23_TK","CUP_B_nM1097_AVENGER_USA_DES", "CUP_O_ZU23_TK_INS"];
 private _parkedVehicleCargoPool = ["",
 	"CUP_arifle_AK47","CUP_30Rnd_762x39_AK47_M",
 	"CUP_arifle_AKS_Gold","CUP_30Rnd_762x39_AK47_M",
@@ -42,10 +43,10 @@ private _parkedVehicleCargoWeights = [.75,
 	0.5,1.0,
 	0.3,0.9,
 	0.3,0.8];
-private _aaDesertPool = [];
 
 if (isServer) then
 {
+	private _allEscapeVehicles = [escape_veh_0, escape_veh_1, escape_veh_2, escape_veh_3, escape_veh_4, escape_veh_5];
 	private _debugMode = [("Debug" call BIS_fnc_getParamValue)] call SCO_fnc_parseBoolean or is3DENPreview;
 	private _timestampTuples = [];
 	_timestampTuples pushBack [0, "Start of isServer"];
@@ -153,25 +154,64 @@ if (isServer) then
 		["Fort_Crate_wood",[1.05444,0.0229492,-0.486649],268.085],
 		["Fort_Crate_wood",[0.477783,0.00634766,0.496206],268.085],
 		["Fort_Crate_wood",[-1.12671,-0.00756836,-0.486649],174.306],
-		["Fort_Crate_wood",[-0.634766,-0.000976563,0.496206],87.7676],
-		["AmmoCrates_NoInteractive_Large",[0.710449,-1.02686,-0.486649],0],
-		["Land_Missle_Trolley_02_F",[-2.14063,-0.312988,-0.508165],6.22563]
+		["AmmoCrates_NoInteractive_Large",[0.710449,-1.02686,-0.486649],0]
 	];
 
+	private _siteCompleteListener = {
+		params ["_markerName", "_varName", "_sceneObjects"];
+		[format ["Checking for success of site %1.", _markerName]] call SCO_fnc_printDebug;
+
+		while {true} do 
+		{
+			if (missionNamespace getVariable _varName) then
+			{
+				{
+					private _exp = createVehicle ["ATMine_Range_Ammo", getPos _x, [], 0, "CAN_COLLIDE"];
+					_exp setDamage 1;
+					deleteVehicle _x;
+				} forEach _sceneObjects;
+
+				break;
+			};
+			sleep 0.1;
+		};
+		[format ["Exited checking of site %1.", _markerName]] call SCO_fnc_printDebug;
+	};
+
 	//setup foot patrols for all demo targets
+	private _demoSiteListenersPositions = [];
 	{
+		private _siteVarName = format ["%1_COMPLETE", _x];
+		missionNamespace setVariable [_siteVarName, false, true];
 		private _demoPos = getMarkerPos _x;
+		private _scriptHandles = [];
 		private _sceneObjects = [_demoPos, _demoScene, 0, random 360, true, 0, false, true] call SCO_fnc_placeObjectsFromArray;
 		{
 			_x addEventHandler [ "HandleDamage", {
 				_eventObject = _this select 0;
 				_eventOrigin = _this select 4;
 
-				if (_eventOrigin isKindOf "TimeBombCore" or _eventOrigin isKindOf "PipeBombBase") then
+				if (_eventOrigin isKindOf ["MineGeneric", configFile >> "CfgAmmo"] or 
+					_eventOrigin isKindOf ["RocketCore", configFile >> "CfgAmmo"] or 
+					_eventOrigin isKindOf ["TimeBombCore", configFile >> "CfgAmmo"] or
+					_eventOrigin isKindOf ["FuelExplosion", configFile >> "CfgAmmo"]) then
 				{
-					[format ["Demo site event: %1", _this]] call SCO_fnc_printDebug;
+					// successful explosion
+					// find the nearest cache marker (marker for this cache)
+					private _allCacheMarkers = ["cache_"] call SCO_fnc_getMarkers;
+					private _thisMarker = ([_allCacheMarkers, [], {_eventObject distance2D getMarkerPos _x}, "ASCEND"] call BIS_fnc_sortBy) select 0;
+					private _thisSiteVarName = format ["%1_COMPLETE", _thisMarker];
+					[format ["BOOM!: %1", _eventOrigin]] call SCO_fnc_printDebug;
+					missionNamespace setVariable [_thisSiteVarName, true, true];
+					_eventObject removeEventHandler [_thisEvent, _thisEventHandler];
+				} 
+				else
+				{
+					_eventObject setDamage 0;
 				}
 			}];
+			private _handle = [_x, _siteVarName, _sceneObjects] spawn _siteCompleteListener;
+			_scriptHandles pushBack _handle;
 		} forEach _sceneObjects;
 		[_demoPos, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 200] call SCO_fnc_spawnFootPatrolGroup;
 		if (_debugMode) then
@@ -186,14 +226,34 @@ if (isServer) then
 				"mil_destroy" //style
 			] call SCO_fnc_createMarker;
 		};
+		_demoSiteListenersPositions pushBack [_scriptHandles, _x]
 	} forEach _selectedDemo;
+
+	private _turrentGroup = createGroup east;
+	private _allAATargets = [];
 	{
-		[getMarkerPos _x, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 300] call SCO_fnc_spawnFootPatrolGroup;
+		private _sitePos = getMarkerPos _x;
+		private _aaVeh = createVehicle [selectRandom _aaDesertPool, _sitePos, [], 0, "CAN_COLLIDE"];
+		_aaVeh setDir random 360;
+		_aaVeh lockDriver true;
+		private _allTurrets = allTurrets [_aaVeh, true];
+		{
+			private _gunner = _turrentGroup createUnit [selectRandom _patrolUnitDesertPool, _sitePos, [], 0, "NONE"];
+			_gunner moveInTurret [_aaVeh, _x];
+			_gunner setSkill ["aimingAccuracy", 0.8];
+			_gunner setSkill ["courage", 0.9];
+			_gunner setSkill ["spotDistance", 1];
+			_gunner setSkill ["commanding", 1];
+			_aaVeh lockTurret [_x, true];
+		} forEach _allTurrets;
+		_allAATargets pushBack _aaVeh;
+
+		[_sitePos, east, (ceil random 4) + 4, _patrolUnitDesertPool, _aiSkillRange, 0, 300] call SCO_fnc_spawnFootPatrolGroup;
 		if (_debugMode) then
 		{
 			[
 				format ["aa-site-%1", _forEachIndex], //var name
-				getMarkerPos _x, //position
+				_sitePos, //position
 				"AA", //display name
 				[0.5, 0.5], //size
 				"ColorYellow", //color string
@@ -202,6 +262,8 @@ if (isServer) then
 			] call SCO_fnc_createMarker;
 		};
 	} forEach _selectedAA;
+	_turrentGroup setBehaviour "CARELESS";
+	_turrentGroup setCombatMode "RED";
 
 	// spawn resupply caches
 	if (_numResupplyCaches > 0) then
@@ -273,14 +335,15 @@ if (isServer) then
 
 	_timestampTuples pushBack [diag_tickTime, "Done spawning AA, demo sites and caches"];
 
+	// all objectives have been spawned, so generate the task manager
+	[_demoSiteListenersPositions, _allAATargets, _selectedResupply, _allEscapeVehicles, _posSpawn, independent, "extraction"] spawn SCO_fnc_manageTasks;
+
 	private _enemyMode = "DebugSpawnPatrols" call BIS_fnc_getParamValue;
 	if (_enemyMode == 1) then
 	{
 		//setup vehicle patrols
 		private _numRegionVehicles = (("AreaVehiclePatrolDensity" call BIS_fnc_getParamValue) * (count _allMissionPOI)) min 10;
 		[_allMissionPOI, _convoyTankDesertPool + _convoyVehicleDesertPool, _numRegionVehicles, east] spawn SCO_fnc_manageVehiclePatrols;
-
-		// [_tent, _intel, _posMeeting, _warlordUnit, _extractVeh, _patrolUnitPool, _convoyVehiclePool + _convoyVehiclePoolCUP] spawn SCO_fnc_manageTasks;
 		
 		[independent, _allMissionPOI, east, _patrolUnitDesertPool, _aiSkillRange, 5, "POIFootPatrolMultiplier" call BIS_fnc_getParamValue] spawn SCO_fnc_manageFootPatrolsPOI;
 		

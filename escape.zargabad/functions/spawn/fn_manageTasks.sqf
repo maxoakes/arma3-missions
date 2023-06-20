@@ -54,7 +54,7 @@ if (count _cachePairs > 0) then
 			getMarkerPos _cacheMarker, //dest
 			true, //state
 			_cacheID, //priority
-			true, //show notification
+			false, //show notification
 			"destroy", //type
 			true //visible in 3d
 		] call BIS_fnc_taskCreate;
@@ -108,6 +108,7 @@ if (count _aaObjects > 0) then
 
 //wait until all AA and caches are dead to continue
 waitUntil { ({!(_x call BIS_fnc_taskCompleted)} count _aaTasks) == 0 and ({!(_x call BIS_fnc_taskCompleted)} count _cacheTasks) == 0};
+["taskResupply","CANCELED", false] call BIS_fnc_taskSetState;
 
 //create next objective to leave the map
 [
@@ -145,19 +146,19 @@ waitUntil { ({!(_x call BIS_fnc_taskCompleted)} count _aaTasks) == 0 and ({!(_x 
 
 //add diary entry for all players
 {player createDiaryRecord ["Diary", [localize "STR_DIARY_EXTRACT_TITLE", localize "STR_DIARY_EXTRACT_TEXT"], taskNull, "", false]} remoteExec ["call", 0, true];
-_extractionMarker setMarkerAlpha 1;
+// _extractionMarker setMarkerAlpha 1;
 
-waitUntil {({(getMarkerPos _extractionMarker distance2D _x) < 1000 and alive _x} count units _playerSide == 0) or (({canMove _x} count _escapeVehicles) == 0)};
+waitUntil {({(getMarkerPos _extractionMarker distance2D _x) < 1000 and alive _x} count units _playerSide == count units _playerSide) or (({canMove _x} count _escapeVehicles) == 0)};
 
 if (({canMove _x} count _escapeVehicles) == 0) then
 {
-	["taskExtract","FAILED"] call BIS_fnc_taskSetState;
-	["taskWin","FAILED"] call BIS_fnc_taskSetState;
+	["taskExtract","FAILED", true] call BIS_fnc_taskSetState;
+	["taskWin","FAILED", false] call BIS_fnc_taskSetState;
 	"EveryoneLost" call BIS_fnc_endMissionServer;
 }
 else
 {
-	["taskExtract","SUCCEEDED"] call BIS_fnc_taskSetState;
-	["taskWin","SUCCEED"] call BIS_fnc_taskSetState;
+	["taskExtract","SUCCEEDED", true] call BIS_fnc_taskSetState;
+	["taskWin","SUCCEED", false] call BIS_fnc_taskSetState;
 	"EveryoneWon" call BIS_fnc_endMissionServer;
 };

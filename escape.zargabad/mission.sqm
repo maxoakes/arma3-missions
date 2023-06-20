@@ -16,10 +16,10 @@ class EditorData
 	};
 	class Camera
 	{
-		pos[]={3315.0122,14.644761,1395.7332};
-		dir[]={-0.22268942,-0.85062391,0.47628608};
-		up[]={-0.36027783,0.5257746,0.77055889};
-		aside[]={0.90587497,0,0.42354539};
+		pos[]={4864.3936,43.316883,4620.3477};
+		dir[]={-0.92729163,-0.37116724,-0.048774883};
+		up[]={-0.37065941,0.92856234,-0.019496636};
+		aside[]={-0.052527167,9.9254976e-008,0.99862653};
 	};
 };
 binarizationWanted=0;
@@ -596,7 +596,7 @@ class Mission
 						class data
 						{
 							singleType="STRING";
-							value="[[[[""CUP_hgun_M9"",""CUP_arifle_M4A1"",""CUP_launch_RPG7V_PGO7V""],[3,1,1]],[[""SmokeShell"",""SmokeShellOrange"",""Chemlight_red"",""CUP_15Rnd_9x19_M9"",""CUP_30Rnd_556x45_Stanag_Mk16_black"",""CUP_HandGrenade_L109A1_HE"",""CUP_HandGrenade_L109A2_HE"",""O_IR_Grenade"",""DemoCharge_Remote_Mag"",""SatchelCharge_Remote_Mag"",""CUP_PipeBomb_M"",""CUP_TimeBomb_M"",""ATMine_Range_Mag"",""CUP_IED_V2_M"",""CUP_IED_V4_M"",""ClaymoreDirectionalMine_Remote_Mag"",""APERSMine_Range_Mag"",""CUP_PG7V_M"",""CUP_PG7VL_M""],[2,2,2,10,6,2,2,2,2,2,2,2,2,2,2,2,2,2,2]],[[""FirstAidKit"",""Medikit"",""ToolKit"",""V_Press_F"",""H_Construction_basic_yellow_F"",""H_PASGT_basic_blue_F"",""H_PASGT_basic_black_F"",""H_Cap_Black_IDAP_F"",""CUP_H_C_MAGA_01""],[10,1,1,3,2,2,2,1,1]],[[""CUP_B_MedicPack_ACU""],[2]]],false]";
+							value="[[[[""CUP_hgun_M9"",""CUP_arifle_M4A1""],[3,1]],[[""SmokeShell"",""Chemlight_red"",""CUP_15Rnd_9x19_M9"",""CUP_30Rnd_556x45_Stanag_Mk16_black"",""DemoCharge_Remote_Mag"",""SatchelCharge_Remote_Mag"",""CUP_PipeBomb_M"",""ATMine_Range_Mag"",""ClaymoreDirectionalMine_Remote_Mag""],[2,2,10,6,2,2,2,2,2]],[[""FirstAidKit"",""Medikit"",""ToolKit"",""V_Press_F"",""H_PASGT_basic_blue_F"",""H_PASGT_basic_black_F"",""H_Cap_Black_IDAP_F"",""CUP_H_C_MAGA_01""],[10,1,1,3,2,2,1,1]],[[""CUP_B_MedicPack_ACU""],[2]]],false]";
 						};
 					};
 				};
